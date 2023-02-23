@@ -51,7 +51,7 @@ public class User {
   private String nickName;
 
   @Column(name = "gender", nullable = false)
-  private Integer gender;
+  private Boolean gender;
 
   @Column(name = "reward", nullable = false)
   private Boolean reward;
