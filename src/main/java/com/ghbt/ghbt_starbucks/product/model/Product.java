@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.product.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,22 +18,16 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String name;
-
     @Column(nullable = false)
     private Integer price;
-
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateDate;
-
 }
