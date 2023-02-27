@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.shippingaddress.model;
+package com.ghbt.ghbt_starbucks.shipping_address.model;
 
 import com.ghbt.ghbt_starbucks.user.model.User;
 import javax.persistence.Column;
@@ -28,12 +28,31 @@ public class ShippingAddress extends BaseTimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private User users;
 
-  @Column(name = "address")
-  private String Address;
+  @Column(name = "receiver")
+  private String receiver;
 
-  @Column(name = "is_use")
-  private Boolean isUse;
+  @Column(name = "zip_code")
+  private String zipCode;
 
-  @Column(name = "address_name")
-  private String AddressName;
+  @Column(name = "address_nickname")
+  private String addressNickname;
+
+  @Column(name = "detail_address")
+  private String detailAddress;
+
+  @Column(name = "base_address")
+  private String baseAddress;
+
+  @Column(name = "phone_number_1")
+  private String phoneNumber1;
+
+  @Column(name = "phone_number_2")
+  private String phoneNumber2;
+
+  @Column(name = "notice")
+  private String notice;
+
+  @Column(name = "is_default")
+  private Boolean isDefault;
+
 }

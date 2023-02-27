@@ -1,7 +1,7 @@
 package com.ghbt.ghbt_starbucks.user.model;
 
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
-import com.ghbt.ghbt_starbucks.shippingaddress.model.ShippingAddress;
+import com.ghbt.ghbt_starbucks.shipping_address.model.ShippingAddress;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
