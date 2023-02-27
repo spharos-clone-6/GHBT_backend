@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.gift_card.model;
 
+import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class GiftCard {
+public class GiftCard extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

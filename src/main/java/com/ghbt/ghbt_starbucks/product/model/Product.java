@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.product.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +26,9 @@ public class Product {
     @Column(nullable = false)
     private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date createDate;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date updateDate;
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    private Date createDate;
+//
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    private Date updateDate;
 }

@@ -2,6 +2,7 @@ package com.ghbt.ghbt_starbucks.cart.model;
 
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.user.model.User;
+import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Cart {
+public class Cart extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

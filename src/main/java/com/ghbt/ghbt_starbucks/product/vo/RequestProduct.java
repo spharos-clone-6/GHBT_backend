@@ -14,8 +14,4 @@ public class RequestProduct {
 
     private String description;
 
-    private Date createDate;
-
-    private Date updateDate;
-
 }
