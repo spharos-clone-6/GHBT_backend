@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -28,7 +27,6 @@ public class AuthService {
 
   private final String SERVER = "Server";
 
-  @Transactional
   public TokenDto login(LoginDto loginDto) {
     UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -45,7 +43,6 @@ public class AuthService {
     return jwtTokenProvider.validateAccessTokenOnlyExpired(requestAccessToken);
   }
 
-  @Transactional
   public TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {
     String requestAccessToken = resolveToken(requestAccessTokenInHeader);
 
@@ -73,7 +70,6 @@ public class AuthService {
   }
 
   // 토큰 발급
-  @Transactional
   public TokenDto generateToken(String provider, String email, String authorities) {
     // RT가 이미 있을 경우
     if (redisService.getValues("RT(" + provider + "):" + email) != null) {
@@ -85,7 +81,6 @@ public class AuthService {
     return tokenDto;
   }
 
-  @Transactional
   public void saveRefreshToken(String provider, String principal, String refreshToken) {
     redisService.setValuesWithTimeout("RT(" + provider + "):" + principal,
         refreshToken, // value
@@ -110,7 +105,6 @@ public class AuthService {
   }
 
   // 로그아웃
-  @Transactional
   public void logout(String requestAccessTokenInHeader) {
     String requestAccessToken = resolveToken(requestAccessTokenInHeader);
     String principal = getPrincipal(requestAccessToken);
