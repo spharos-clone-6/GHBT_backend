@@ -1,12 +1,9 @@
 package com.ghbt.ghbt_starbucks.user.model;
 
-import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.shippingaddress.model.ShippingAddress;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,11 +11,9 @@ import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -31,37 +26,34 @@ public class User {
   @OneToMany
   private List<ShippingAddress> shippingAddressList;
 
-  @Column(name = "name")
+  @Column(name = "name", nullable = false, length = 255)
   private String name;
 
-  @Enumerated(EnumType.STRING)
-  private Role role;
-
-  @Column(name = "user_uuid")
+  @Column(name = "user_uuid", nullable = false, length = 255)
   private String userUUID;
 
-  @Column(name = "password", nullable = false)
+  @Column(name = "password", nullable = false, length = 255)
   private String password;
 
-  @Column(name = "phone_number")
+  @Column(name = "phone_number", nullable = false, length = 255)
   private String phoneNumber;
 
-  @Column(name = "email", nullable = false)
+  @Column(name = "email", nullable = false, length = 255)
   private String email;
 
-  @Column(name = "is_agree")
+  @Column(name = "is_agree", nullable = false)
   private Boolean isAgree;
 
   @Column(name = "star")
   private Integer star;
 
-  @Column(name = "nick_name")
+  @Column(name = "nick_name", nullable = false)
   private String nickName;
 
-  @Column(name = "gender")
+  @Column(name = "gender", nullable = false)
   private Boolean gender;
 
-  @Column(name = "reward")
+  @Column(name = "reward", nullable = false)
   private Boolean reward;
 
   @Column(name = "cash_recipe")
@@ -69,12 +61,4 @@ public class User {
 
   @Column(name = "business_recipe")
   private String businessRecipe;
-
-  public static User signinUser(SignupDto signupDto) {
-    return new UserBuilder()
-        .email(signupDto.getEmail())
-        .password(signupDto.getPassword())
-        .role(Role.USER)
-        .build();
-  }
 }
