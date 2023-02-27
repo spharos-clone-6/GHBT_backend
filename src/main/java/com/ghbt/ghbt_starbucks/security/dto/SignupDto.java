@@ -19,9 +19,9 @@ public class SignupDto {
   }
 
   public static SignupDto encodePassword(SignupDto signupDto, String encodedPassword) {
-    SignupDto signDtoWithEncodedPassword = new SignupDto();
-    signDtoWithEncodedPassword.email = signupDto.getEmail();
-    signDtoWithEncodedPassword.password = encodedPassword;
-    return signDtoWithEncodedPassword;
+    SignupDto signupDtoWithEncodedPassword = new SignupDto();
+    signupDtoWithEncodedPassword.email = signupDto.getEmail();
+    signupDtoWithEncodedPassword.password = encodedPassword;
+    return signupDtoWithEncodedPassword;
   }
 }
