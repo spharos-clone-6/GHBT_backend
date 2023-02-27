@@ -1,7 +1,7 @@
 package com.ghbt.ghbt_starbucks.product.service;
 
 import com.ghbt.ghbt_starbucks.product.model.Product;
-import com.ghbt.ghbt_starbucks.product.repository.ProductRepository;
+import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ProductServiceImple implements IProductService{
     @Autowired
-    private final ProductRepository productRepository;
+    private final IProductRepository IProductRepository;
 
 
     @Override
@@ -24,10 +24,8 @@ public class ProductServiceImple implements IProductService{
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
                 .price(requestProduct.getPrice())
-                .createDate(requestProduct.getCreateDate())
-                .updateDate(requestProduct.getUpdateDate())
                 .build();
-        Product resProduct = productRepository.save(product);
+        Product resProduct = IProductRepository.save(product);
 
         ResponseProduct responseProduct = ResponseProduct.builder()
                 .id(resProduct.getId())
@@ -40,7 +38,7 @@ public class ProductServiceImple implements IProductService{
 
     @Override
     public ResponseProduct getProduct(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = IProductRepository.findById(id).get();
         ResponseProduct responseProduct = ResponseProduct.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -52,7 +50,7 @@ public class ProductServiceImple implements IProductService{
 
     @Override
     public List<Product> getAllProduct() {
-        List<Product> productList = productRepository.findAll();
+        List<Product> productList = IProductRepository.findAll();
         return productList;
     }
 
