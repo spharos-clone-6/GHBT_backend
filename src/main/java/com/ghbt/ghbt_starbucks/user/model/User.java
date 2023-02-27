@@ -31,37 +31,37 @@ public class User {
   @OneToMany
   private List<ShippingAddress> shippingAddressList;
 
-  @Column(name = "name", nullable = false)
+  @Column(name = "name")
   private String name;
 
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @Column(name = "user_uuid", nullable = false)
+  @Column(name = "user_uuid")
   private String userUUID;
 
   @Column(name = "password", nullable = false)
   private String password;
 
-  @Column(name = "phone_number", nullable = false)
+  @Column(name = "phone_number")
   private String phoneNumber;
 
   @Column(name = "email", nullable = false)
   private String email;
 
-  @Column(name = "is_agree", nullable = false)
+  @Column(name = "is_agree")
   private Boolean isAgree;
 
   @Column(name = "star")
   private Integer star;
 
-  @Column(name = "nick_name", nullable = false)
+  @Column(name = "nick_name")
   private String nickName;
 
-  @Column(name = "gender", nullable = false)
+  @Column(name = "gender")
   private Boolean gender;
 
-  @Column(name = "reward", nullable = false)
+  @Column(name = "reward")
   private Boolean reward;
 
   @Column(name = "cash_recipe")
