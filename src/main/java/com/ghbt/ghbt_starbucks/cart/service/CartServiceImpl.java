@@ -26,6 +26,8 @@ public class CartServiceImpl implements ICartService{
 
     @Override
     public void addCart(RequestCart requestCart) {
+
+
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
         User user = iUserRepository.findById(requestCart.getUserId()).get();
@@ -35,6 +37,8 @@ public class CartServiceImpl implements ICartService{
                 .user(user)
                 .quantity(requestCart.getQuantity())
                 .build();
+
+        iCartRepository.save(cart);
     }
 
     @Override

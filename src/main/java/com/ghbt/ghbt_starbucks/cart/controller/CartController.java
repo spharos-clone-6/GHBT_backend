@@ -16,7 +16,7 @@ public class CartController {
 
     private final ICartService iCartService;
 
-    @PostMapping("/")
+    @PostMapping()
     public void addCart(@RequestBody RequestCart requestCart){
         iCartService.addCart(requestCart);
     }
