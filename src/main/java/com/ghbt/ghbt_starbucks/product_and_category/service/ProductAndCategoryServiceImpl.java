@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductAndCategoryServiceImple implements IProductAndCategoryService{
+public class ProductAndCategoryServiceImpl implements IProductAndCategoryService{
 
     private final IProductAndCategoryRepository IProductAndCategoryRepository;
 

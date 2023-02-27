@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class ProductServiceImple implements IProductService{
+public class ProductServiceImpl implements IProductService{
     @Autowired
     private final IProductRepository IProductRepository;
 

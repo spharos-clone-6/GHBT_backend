@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 
-public class CategoryServiceImple implements ICategoryService{
+public class CategoryServiceImpl implements ICategoryService{
 
     private final ICategoryRepository ICategoryRepository;
 
