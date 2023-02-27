@@ -4,12 +4,14 @@ import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
 import com.ghbt.ghbt_starbucks.category.vo.RequestCategory;
 import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Data
 @RequiredArgsConstructor
 
 public class CategoryServiceImpl implements ICategoryService{
@@ -43,6 +45,7 @@ public class CategoryServiceImpl implements ICategoryService{
                 .build();
         return responseCategory;
     }
+
 
     @Override
     public List<Category> getAllCategory() {
