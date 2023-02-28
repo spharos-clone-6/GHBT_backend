@@ -11,10 +11,10 @@ public interface IShippingAddressService {
   Long saveShippingAddress(RequestShippingAddress requestShippingAddress, User user);
 
   //기본 배송지 조회.
-  ResponseShippingAddress getDefaultShippingAddress(User user);
+  ResponseShippingAddress getDefaultShippingAddress(Long shippingAddressId);
 
   //모든 배송지 조회.
-  List<ResponseShippingAddress> getAllShippingAddress(User user);
+  List<ResponseShippingAddress> getAllShippingAddress();
 
   //배송지 삭제
   void deleteShippingAddress(Long ShippingAddressId);

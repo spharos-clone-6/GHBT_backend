@@ -47,17 +47,15 @@ public class ShippingAddressService implements IShippingAddressService {
   }
 
   @Override
-  public ResponseShippingAddress getDefaultShippingAddress(User user) {
-    ShippingAddress shippingAddress = iShippingAddressRepository.findByUserIdAndIsDefault(
-        user.getId(), true).get();
+  public ResponseShippingAddress getDefaultShippingAddress(Long shippingAddressId) {
+    ShippingAddress shippingAddress = iShippingAddressRepository.findById(shippingAddressId).get();
     return ResponseShippingAddress.from(shippingAddress);
   }
 
   @Override
-  public List<ResponseShippingAddress> getAllShippingAddress(User user) {
+  public List<ResponseShippingAddress> getAllShippingAddress() {
 
-    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAllByUserId(
-        user.getId());
+    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAll();
 
     return shippingAddresses.stream()
         .map(ResponseShippingAddress::from)
