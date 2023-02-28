@@ -2,9 +2,13 @@ package com.ghbt.ghbt_starbucks.purchase.vo;
 
 import com.ghbt.ghbt_starbucks.purchase.model.ShippingStatus;
 import com.ghbt.ghbt_starbucks.user.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestPurchase {
 
     private Integer quantity;

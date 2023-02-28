@@ -9,10 +9,12 @@ import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements IPurchaseService {
 
@@ -24,6 +26,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
 
     @Override
+    @Transactional
     public Long addPurchase(RequestPurchase requestPurchase, Long userId) {
 
         User findUser = iUserRepository.findById(userId).get();
@@ -44,18 +47,39 @@ public class PurchaseServiceImpl implements IPurchaseService {
         Purchase savedPurchase = iPurchaseRepository.save(purchase);
         return savedPurchase.getId();
 
-//                ResponsePurchase responsePurchase = ResponsePurchase.builder()
-//                        .id(requestPurchase.getId())
-//                        .user(user)
-//                        .productId(resPurchase.getProductId())
-//                        .productName(resPurchase.getProductName())
-//                        .price((resPurchase.getPrice()))
-//                        .quantity(resPurchase.getQuantity())
-//                        .purchaseGroup(resPurchase.getPurchaseGroup())
-//                        .shippingAddress(requestPurchase.getShippingAddress())
-//                        .shippingStatus(resPurchase.getShippingStatus())
-//                        .build();
+    }
 
+    @Override
+    public ResponsePurchase getPurchaseById(Long id) {
+
+        Purchase purchase =  iPurchaseRepository.findById(id).get();
+        ResponsePurchase responsePurchase = ResponsePurchase.builder()
+                .quantity(purchase.getQuantity())
+                .purchaseGroup(purchase.getPurchaseGroup())
+                .shippingStatus((purchase.getShippingStatus()))
+                .shippingAddress(purchase.getShippingAddress())
+                .productId(purchase.getProductId())
+                .productName(purchase.getProductName())
+                .price((purchase.getPrice()))
+                .build();
+        return responsePurchase;
+    }
+
+    @Override
+    public List<Purchase> getAllPurchaseByUserId(Long userId){
+
+        List<Purchase> purchaseList = iPurchaseRepository.findAllByUser_Id(userId);
+        return purchaseList;
+    }
+
+    @Override
+    @Transactional
+    public Long updatePurchase(RequestPurchase requestPurchase, Long id){
+        Purchase purchase = iPurchaseRepository.findById(id).get();
+
+        purchase.setShippingAddress(requestPurchase.getShippingAddress());
+
+        return purchase.getId();
     }
 
 }
