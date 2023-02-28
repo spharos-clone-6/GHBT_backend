@@ -28,4 +28,9 @@ public class CartController {
     public List<ResponseCart> responseCart(@PathVariable Long id){
         return iCartService.getAllCartByUserId(id);
     }
+
+    @GetMapping("/{id}")
+    public ResponseCart getResponseCart(@PathVariable Long id){
+        return iCartService.getCart(id);
+    }
 }
