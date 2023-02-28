@@ -10,7 +10,6 @@ import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,6 +68,7 @@ public class ProductServiceImpl implements IProductService{
 
     @Override
     public List<Product> getAllProduct() {
+
         List<Product> productList = iProductRepository.findAll();
         return productList;
     }
