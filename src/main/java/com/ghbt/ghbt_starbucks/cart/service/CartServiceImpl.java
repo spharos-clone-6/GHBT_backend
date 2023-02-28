@@ -66,8 +66,6 @@ public class CartServiceImpl implements ICartService{
             ResponseCart responseCart = modelMapper.map(cart,ResponseCart.class);
             responseCartList.add(responseCart);
         });
-
         return responseCartList;
-
     }
 }

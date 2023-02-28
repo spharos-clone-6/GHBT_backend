@@ -34,6 +34,7 @@ public class User extends BaseTimeEntity {
   private List<ShippingAddress> shippingAddressList;
 
   @Column(name = "name")
+
   private String name;
 
   @Enumerated(EnumType.STRING)
