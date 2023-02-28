@@ -6,5 +6,6 @@ import lombok.Data;
 public class RequestCategory {
 
     private String name;
-    private Integer type;
+    private String type;
+
 }
