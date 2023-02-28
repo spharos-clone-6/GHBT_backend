@@ -57,7 +57,7 @@ public class SecurityConfig {
 
         .and()
         .authorizeRequests() // '인증'
-        .antMatchers("/mypage/**").authenticated() // 예시 마이페이지는 인증이 필요하
+        .antMatchers("/shipping-address/**").authenticated() // 예시 마이페이지는 인증이 필요하
         .antMatchers("/admin/**").hasRole("ADMIN") // 예시 관리자페이즈는 권한이 필요하다.
         .anyRequest().permitAll()
 
