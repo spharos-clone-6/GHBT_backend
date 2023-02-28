@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
 import com.ghbt.ghbt_starbucks.product_and_category.vo.RequestProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.vo.ResponseProductAndCategory;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
