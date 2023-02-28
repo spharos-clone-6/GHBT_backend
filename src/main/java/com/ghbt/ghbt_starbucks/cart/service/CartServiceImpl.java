@@ -11,8 +11,10 @@ import com.ghbt.ghbt_starbucks.user.model.User;
 import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,10 +53,21 @@ public class CartServiceImpl implements ICartService{
                 .quantity(cart.getQuantity())
                 .user(cart.getUser())
                 .build();
+
     }
 
     @Override
     public List<ResponseCart> getAllCartByUserId(Long userId) {
-         return iCartRepository.findAllByUser_Id(userId);
+        ModelMapper modelMapper = new ModelMapper();
+        List<Cart> carts= iCartRepository.findAllByUser_Id(userId);
+
+        List<ResponseCart> responseCartList = new ArrayList<>();
+        carts.forEach(cart -> {
+            ResponseCart responseCart = modelMapper.map(cart,ResponseCart.class);
+            responseCartList.add(responseCart);
+        });
+
+        return responseCartList;
+
     }
 }
