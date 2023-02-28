@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@JsonAutoDetect
+@AllArgsConstructor
 @NoArgsConstructor
 public class RequestProduct {
 
@@ -21,6 +21,6 @@ public class RequestProduct {
 
     private String description;
 
-    private List<Category> categoryList;
+    private List<String> categoryList;
 
 }
