@@ -30,9 +30,6 @@ public class User extends BaseTimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToMany
-  private List<ShippingAddress> shippingAddressList;
-
   @Column(name = "name")
   private String name;
 
