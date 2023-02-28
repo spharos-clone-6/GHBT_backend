@@ -9,7 +9,6 @@ import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
 import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.util.List;
 @Service
 @Data
 @RequiredArgsConstructor
-
 public class ProductServiceImpl implements IProductService{
     @Autowired
     private final IProductRepository iProductRepository;
@@ -37,10 +35,10 @@ public class ProductServiceImpl implements IProductService{
                 .build();
         Product resProduct = iProductRepository.save(product);
 
-        for (Category cate :requestProduct.getCategoryList()) {
-            Category category= iCategoryRepository.findByName(cate.getName());
+        for (String cate :requestProduct.getCategoryList()) {
+            Category category= iCategoryRepository.findByName(cate);
             ProductAndCategory productAndCategory = ProductAndCategory.builder()
-                    .id(resProduct.getId())
+                    .productId(resProduct)
                     .categoryId(category)
                     .build();
             ProductAndCategory resProductAndCategory = iProductAndCategoryRepository.save(productAndCategory);
