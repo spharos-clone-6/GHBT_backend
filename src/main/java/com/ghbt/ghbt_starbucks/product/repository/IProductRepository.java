@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
-    @Query("SELECT p.id,p.name ,p.price,p.description from product_and_category pac left join category c on pac.category_id =c.id left join product p on pac.product_id  = p.id where c.name = :name")
-    List<String> productForCategory(@Param("name") String name);
+//    @Query("SELECT p.id,p.name ,p.price,p.description from product_and_category pac left join category c on pac.category_id =c.id left join product p on pac.product_id  = p.id where c.name = :name")
+//    List<String> productForCategory(@Param("name") String name);
 }
