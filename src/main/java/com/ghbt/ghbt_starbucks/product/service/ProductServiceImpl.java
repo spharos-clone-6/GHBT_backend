@@ -1,21 +1,29 @@
 package com.ghbt.ghbt_starbucks.product.service;
 
+import com.ghbt.ghbt_starbucks.category.model.Category;
+import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
 import com.ghbt.ghbt_starbucks.product.model.Product;
-import com.ghbt.ghbt_starbucks.product.repository.ProductRepository;
+import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
+import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
+import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Data
 @RequiredArgsConstructor
-
-public class ProductServiceImple implements IProductService{
+public class ProductServiceImpl implements IProductService{
     @Autowired
-    private final ProductRepository productRepository;
+    private final IProductRepository iProductRepository;
+    private final IProductAndCategoryRepository iProductAndCategoryRepository;
+    private final ICategoryRepository iCategoryRepository;
 
 
     @Override
@@ -24,10 +32,19 @@ public class ProductServiceImple implements IProductService{
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
                 .price(requestProduct.getPrice())
-                .createDate(requestProduct.getCreateDate())
-                .updateDate(requestProduct.getUpdateDate())
                 .build();
-        Product resProduct = productRepository.save(product);
+        Product resProduct = iProductRepository.save(product);
+
+        for (String cate :requestProduct.getCategoryList()) {
+            Category category= iCategoryRepository.findByName(cate);
+            ProductAndCategory productAndCategory = ProductAndCategory.builder()
+                    .productId(resProduct)
+                    .categoryId(category)
+                    .build();
+            ProductAndCategory resProductAndCategory = iProductAndCategoryRepository.save(productAndCategory);
+        }
+
+
 
         ResponseProduct responseProduct = ResponseProduct.builder()
                 .id(resProduct.getId())
@@ -40,7 +57,7 @@ public class ProductServiceImple implements IProductService{
 
     @Override
     public ResponseProduct getProduct(Long id) {
-        Product product = productRepository.findById(id).get();
+        Product product = iProductRepository.findById(id).get();
         ResponseProduct responseProduct = ResponseProduct.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -52,7 +69,7 @@ public class ProductServiceImple implements IProductService{
 
     @Override
     public List<Product> getAllProduct() {
-        List<Product> productList = productRepository.findAll();
+        List<Product> productList = iProductRepository.findAll();
         return productList;
     }
 

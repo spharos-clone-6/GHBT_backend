@@ -1,18 +1,18 @@
 package com.ghbt.ghbt_starbucks.product_and_category.service;
 
-import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
 import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
-import com.ghbt.ghbt_starbucks.product_and_category.repository.ProductAndCategoryRepository;
+import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
 import com.ghbt.ghbt_starbucks.product_and_category.vo.RequestProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.vo.ResponseProductAndCategory;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ProductAndCategoryServiceImple implements IProductAndCategoryService{
+public class ProductAndCategoryServiceImpl implements IProductAndCategoryService{
 
-    private final ProductAndCategoryRepository productAndCategoryRepository;
+    private final IProductAndCategoryRepository IProductAndCategoryRepository;
 
     @Override
     public ResponseProductAndCategory addProductAndCategory(RequestProductAndCategory requestProductAndCategory) {
@@ -20,7 +20,7 @@ public class ProductAndCategoryServiceImple implements IProductAndCategoryServic
                 .categoryId(requestProductAndCategory.getCategoryId())
                 .productId(requestProductAndCategory.getProductId())
                 .build();
-        ProductAndCategory resProductAndCategory = productAndCategoryRepository.save(productAndCategory);
+        ProductAndCategory resProductAndCategory = IProductAndCategoryRepository.save(productAndCategory);
 
         ResponseProductAndCategory responseProductAndCategory = ResponseProductAndCategory.builder()
                 .id(resProductAndCategory.getId())
@@ -32,7 +32,7 @@ public class ProductAndCategoryServiceImple implements IProductAndCategoryServic
 
     @Override
     public ResponseProductAndCategory getProductAndCategory(Long id) {
-        ProductAndCategory productAndCategory = productAndCategoryRepository.findById(id).get();
+        ProductAndCategory productAndCategory = IProductAndCategoryRepository.findById(id).get();
         ResponseProductAndCategory responseProductAndCategory = ResponseProductAndCategory.builder()
                 .categoryId(productAndCategory.getCategoryId())
                 .productId(productAndCategory.getProductId())

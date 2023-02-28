@@ -1,11 +1,18 @@
 package com.ghbt.ghbt_starbucks.product.vo;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ghbt.ghbt_starbucks.category.model.Category;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RequestProduct {
 
     private String name;
@@ -14,8 +21,6 @@ public class RequestProduct {
 
     private String description;
 
-    private Date createDate;
-
-    private Date updateDate;
+    private List<String> categoryList;
 
 }

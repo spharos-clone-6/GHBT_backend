@@ -1,21 +1,22 @@
 package com.ghbt.ghbt_starbucks.category.service;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
-import com.ghbt.ghbt_starbucks.category.repository.CategoryRepository;
+import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
 import com.ghbt.ghbt_starbucks.category.vo.RequestCategory;
 import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
-import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Data
 @RequiredArgsConstructor
 
-public class CategoryServiceImple implements ICategoryService{
+public class CategoryServiceImpl implements ICategoryService{
 
-    private final CategoryRepository categoryRepository;
+    private final ICategoryRepository ICategoryRepository;
 
 
     @Override
@@ -24,7 +25,7 @@ public class CategoryServiceImple implements ICategoryService{
                 .name(requestCategory.getName())
                 .type(requestCategory.getType())
                 .build();
-        Category resCategory = categoryRepository.save(category);
+        Category resCategory = ICategoryRepository.save(category);
 
         ResponseCategory responseCategory = ResponseCategory.builder()
                 .id(resCategory.getId())
@@ -36,7 +37,7 @@ public class CategoryServiceImple implements ICategoryService{
 
     @Override
     public ResponseCategory getCategory(Long id) {
-        Category category = categoryRepository.findById(id).get();
+        Category category = ICategoryRepository.findById(id).get();
         ResponseCategory responseCategory = ResponseCategory.builder()
                 .id(category.getId())
                 .name(category.getName())
@@ -45,9 +46,10 @@ public class CategoryServiceImple implements ICategoryService{
         return responseCategory;
     }
 
+
     @Override
     public List<Category> getAllCategory() {
-        List<Category> categoryList = categoryRepository.findAll();
+        List<Category> categoryList = ICategoryRepository.findAll();
         return categoryList;
     }
 }
