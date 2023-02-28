@@ -3,9 +3,12 @@ package com.ghbt.ghbt_starbucks.cart.controller;
 
 import com.ghbt.ghbt_starbucks.cart.service.ICartService;
 import com.ghbt.ghbt_starbucks.cart.vo.RequestCart;
+import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cart")
@@ -16,8 +19,13 @@ public class CartController {
 
     private final ICartService iCartService;
 
-    @PostMapping("/")
+    @PostMapping()
     public void addCart(@RequestBody RequestCart requestCart){
         iCartService.addCart(requestCart);
+    }
+
+    @GetMapping("/my_cart/{id}")
+    public List<ResponseCart> responseCart(@PathVariable Long id){
+        return iCartService.getAllCartByUserId(id);
     }
 }

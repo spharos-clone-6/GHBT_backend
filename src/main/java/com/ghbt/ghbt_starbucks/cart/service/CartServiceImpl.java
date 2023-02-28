@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.cart.model.Cart;
 
 import com.ghbt.ghbt_starbucks.cart.repository.ICartRepository;
 import com.ghbt.ghbt_starbucks.cart.vo.RequestCart;
+import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.user.model.User;
@@ -26,6 +27,8 @@ public class CartServiceImpl implements ICartService{
 
     @Override
     public void addCart(RequestCart requestCart) {
+
+
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
         User user = iUserRepository.findById(requestCart.getUserId()).get();
@@ -35,15 +38,23 @@ public class CartServiceImpl implements ICartService{
                 .user(user)
                 .quantity(requestCart.getQuantity())
                 .build();
+
+        iCartRepository.save(cart);
     }
 
     @Override
-    public Cart getCart(Long cartId) {
-        return iCartRepository.findById(cartId).get();
+    public ResponseCart getCart(Long cartId) {
+        Cart cart = iCartRepository.findById(cartId).get();
+
+        return ResponseCart.builder()
+                .product(cart.getProduct())
+                .quantity(cart.getQuantity())
+                .user(cart.getUser())
+                .build();
     }
 
     @Override
-    public List<Cart> getAllCartByUserId(Long userId) {
+    public List<ResponseCart> getAllCartByUserId(Long userId) {
          return iCartRepository.findAllByUser_Id(userId);
     }
 }
