@@ -23,6 +23,12 @@ public class Category extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer type;
+    private String type;
+
+
+
+
+
+
 
 }

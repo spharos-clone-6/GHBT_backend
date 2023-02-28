@@ -13,5 +13,5 @@ import javax.persistence.criteria.CriteriaBuilder;
 public class ResponseCategory {
     private Long id;
     private String name;
-    private Integer type;
+    private String type;
 }

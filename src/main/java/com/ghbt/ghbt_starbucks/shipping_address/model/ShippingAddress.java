@@ -7,15 +7,19 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
+import javax.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
+@Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -26,7 +30,8 @@ public class ShippingAddress extends BaseTimeEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  private User users;
+  @JoinColumn(name = "user_id")
+  private User user;
 
   @Column(name = "receiver")
   private String receiver;
@@ -54,5 +59,21 @@ public class ShippingAddress extends BaseTimeEntity {
 
   @Column(name = "is_default")
   private Boolean isDefault;
+
+  //==편의메서드==//
+  public void update(String receiver, String addressNickname, String baseAddress,
+      String detailAddress, String zipCode,
+      String phoneNumber1, String phoneNumber2, String notice, Boolean isDefault) {
+
+    this.receiver = receiver;
+    this.addressNickname = addressNickname;
+    this.baseAddress = baseAddress;
+    this.detailAddress = detailAddress;
+    this.zipCode = zipCode;
+    this.phoneNumber1 = phoneNumber1;
+    this.phoneNumber2 = phoneNumber2;
+    this.notice = notice;
+    this.isDefault = isDefault;
+  }
 
 }

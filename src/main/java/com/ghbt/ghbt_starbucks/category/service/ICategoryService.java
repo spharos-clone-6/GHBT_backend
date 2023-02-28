@@ -10,4 +10,5 @@ public interface ICategoryService {
     ResponseCategory addCategory(RequestCategory requestCategory);
     ResponseCategory getCategory(Long id);
     List<Category> getAllCategory();
+
 }
