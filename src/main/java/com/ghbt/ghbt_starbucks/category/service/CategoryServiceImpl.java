@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CategoryServiceImpl implements ICategoryService{
 
-    private final ICategoryRepository ICategoryRepository;
+    private final ICategoryRepository iCategoryRepository;
 
 
     @Override
@@ -25,7 +25,7 @@ public class CategoryServiceImpl implements ICategoryService{
                 .name(requestCategory.getName())
                 .type(requestCategory.getType())
                 .build();
-        Category resCategory = ICategoryRepository.save(category);
+        Category resCategory = iCategoryRepository.save(category);
 
         ResponseCategory responseCategory = ResponseCategory.builder()
                 .id(resCategory.getId())
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     public ResponseCategory getCategory(Long id) {
-        Category category = ICategoryRepository.findById(id).get();
+        Category category = iCategoryRepository.findById(id).get();
         ResponseCategory responseCategory = ResponseCategory.builder()
                 .id(category.getId())
                 .name(category.getName())
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements ICategoryService{
 
     @Override
     public List<Category> getAllCategory() {
-        List<Category> categoryList = ICategoryRepository.findAll();
+        List<Category> categoryList = iCategoryRepository.findAll();
         return categoryList;
     }
 }

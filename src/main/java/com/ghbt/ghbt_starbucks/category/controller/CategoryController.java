@@ -29,4 +29,5 @@ public class CategoryController {
     public List<Category> getAllCategory(){
         return iCategoryService.getAllCategory();
     }
+
 }
