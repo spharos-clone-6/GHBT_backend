@@ -70,8 +70,8 @@ public class CartServiceImpl implements ICartService{
     }
 
     @Override
-    public void deleteCart(Long Id) {
-
+    public void deleteCart(Long id) {
+        iCartRepository.deleteById(id);
     }
 
 
