@@ -27,4 +27,7 @@ public class Cart extends BaseTimeEntity {
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "deleted")
+    private boolean deleted = Boolean.FALSE;
 }
