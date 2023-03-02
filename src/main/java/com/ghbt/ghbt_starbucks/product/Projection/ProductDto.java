@@ -1,10 +1,9 @@
-package com.ghbt.ghbt_starbucks.product.productDto;
+package com.ghbt.ghbt_starbucks.product.Projection;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.criteria.CriteriaBuilder;
 @Getter
 @Setter
 @ToString

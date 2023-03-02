@@ -2,8 +2,7 @@ package com.ghbt.ghbt_starbucks.product.controller;
 
 import com.ghbt.ghbt_starbucks.category.service.ICategoryService;
 import com.ghbt.ghbt_starbucks.product.model.Product;
-import com.ghbt.ghbt_starbucks.product.productDto.ProductDto;
-import com.ghbt.ghbt_starbucks.product.productDto.ProductListByCategory;
+import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.service.IProductService;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
@@ -40,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("/getproduct/{search}")
-    public List<ProductListByCategory> findAllProductType(@PathVariable String search){
+    public List<IProductListByCategory> findAllProductType(@PathVariable String search){
         log.info("getproduct Controller가 작동했습니다.");
         log.info("@PathVariable (\"search\") String search)가 호출 되었습니다. ");
         return iProductService.getProductForCategory(search);
