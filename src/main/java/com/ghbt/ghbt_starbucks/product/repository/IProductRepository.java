@@ -4,6 +4,8 @@ import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +17,5 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT id AS id, name AS name, price AS price, description AS description FROM product where name LIKE %:search%", nativeQuery = true)
     List<IProductSearch> findProduct (@Param("search")  String search);
+
 }
