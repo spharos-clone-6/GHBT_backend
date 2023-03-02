@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
-import javax.validation.constraints.NotEmpty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -76,4 +75,7 @@ public class ShippingAddress extends BaseTimeEntity {
     this.isDefault = isDefault;
   }
 
+  public void changeIsDefault() {
+    this.isDefault = false;
+  }
 }
