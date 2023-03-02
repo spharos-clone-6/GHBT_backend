@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.cart.repository;
 
 import com.ghbt.ghbt_starbucks.cart.model.Cart;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,8 +10,9 @@ import java.util.List;
 public interface ICartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByUser_Id(Long userid);
 
-    @Query( value = "SELECT id from cart where deleted = TRUE",nativeQuery = true)
-    Cart findByDeletedId(Long id);
+    @Query( value = "SELECT c.id from cart c left join `user` u on u.id = c.user_id left join product p on p.id = c.product_id where deleted = TRUE and u.id = :userId and p.id = :productId;",nativeQuery = true)
+    Cart findByDeletedId(@Param("userId") String userId, @Param("productId") String productId);
+
 
     Cart updateByDeletedColumn(Long id);
 }

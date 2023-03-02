@@ -31,6 +31,10 @@ public class CartServiceImpl implements ICartService{
     public void addCart(RequestCart requestCart) {
 
 
+        Cart preCart = iCartRepository.findByDeletedId(requestCart.getUserId());
+
+
+
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
         User user = iUserRepository.findById(requestCart.getUserId()).get();
