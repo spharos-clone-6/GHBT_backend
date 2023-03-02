@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.product.service;
 
+import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
@@ -13,5 +14,6 @@ public interface IProductService {
     List<Product> getAllProduct();
 
     List<IProductListByCategory> getProductForCategory(String search);
+    List<IProductSearch> getSearchProduct(String search);
 
 }
