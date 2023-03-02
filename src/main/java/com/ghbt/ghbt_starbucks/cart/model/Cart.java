@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Data
-@SQLDelete(sql = "update posts set deleted_at=now() where id=?")
+@SQLDelete(sql = "update cart set deleted = true where id=?")
 @Where(clause = "deleted = false")
 public class Cart extends BaseTimeEntity {
     @Id
