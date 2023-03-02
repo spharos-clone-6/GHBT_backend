@@ -3,6 +3,7 @@ package com.ghbt.ghbt_starbucks.cart.service;
 import com.ghbt.ghbt_starbucks.cart.model.Cart;
 
 import com.ghbt.ghbt_starbucks.cart.repository.ICartRepository;
+import com.ghbt.ghbt_starbucks.cart.vo.FindOneCartId;
 import com.ghbt.ghbt_starbucks.cart.vo.RequestCart;
 import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -31,9 +32,13 @@ public class CartServiceImpl implements ICartService{
     public void addCart(RequestCart requestCart) {
 
 
-        Cart preCart = iCartRepository.findByDeletedId(requestCart.getUserId());
+        FindOneCartId preCheckCartId = iCartRepository.findByDeletedId(requestCart.getUserId().toString(),requestCart.getProductId().toString());
 
-
+        if(preCheckCartId != null) {
+            Cart preCart = iCartRepository.findById(preCheckCartId.getId()).get();
+            preCart.setDeleted(true);
+            iCartRepository.save(preCart);
+        }
 
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
