@@ -31,7 +31,8 @@ public class ShippingAddressController {
   private final IShippingAddressService iShippingAddressService;
   private final IUserRepository iUserRepository;
 
-  @PostMapping("")
+  //배송지 저장하기.
+  @PostMapping
   public ResponseEntity saveShippingAddress(
       @RequestBody @Valid RequestShippingAddress requestShippingAddress,
       Authentication authentication) {
@@ -41,20 +42,23 @@ public class ShippingAddressController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
+  //배송지 불러오기.
   @GetMapping("{shipping_address_id}")
-  public ResponseShippingAddress getDefaultShippingAddress(
+  public ResponseShippingAddress getShippingAddress(
       @PathVariable("shipping_address_id") Long shippingAddressId) {
-    ResponseShippingAddress defaultShippingAddress = iShippingAddressService.getDefaultShippingAddress(
+    ResponseShippingAddress defaultShippingAddress = iShippingAddressService.getShippingAddress(
         shippingAddressId);
     return defaultShippingAddress;
   }
 
-  @GetMapping("")
+  //모든 배송지 불러오기.
+  @GetMapping
   public Result getAllShippingAddress(Authentication authentication) {
     List<ResponseShippingAddress> allUserShippingAddress = iShippingAddressService.getAllShippingAddress();
     return new Result(allUserShippingAddress);
   }
 
+  //배송지 수정하기.
   @PutMapping("/{shipping_address_id}")
   public ResponseEntity updateShippingAddress(
       @PathVariable("shipping_address_id") Long shippingAddressId,
@@ -65,6 +69,7 @@ public class ShippingAddressController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
+  //배송지 삭제.
   @DeleteMapping("/{shipping_address_id}")
   public ResponseEntity deleteShippingAddress(
       @PathVariable("shipping_address_id") Long shippingAddressId) {
