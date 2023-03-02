@@ -32,13 +32,13 @@ public class CartServiceImpl implements ICartService{
     public void addCart(RequestCart requestCart) {
 
 
-        FindOneCartId preCheckCartId = iCartRepository.findByDeletedId(requestCart.getUserId().toString(),requestCart.getProductId().toString());
-
-        if(preCheckCartId != null) {
-            Cart preCart = iCartRepository.findById(preCheckCartId.getId()).get();
-            preCart.setDeleted(true);
-            iCartRepository.save(preCart);
-        }
+//        FindOneCartId preCheckCartId = iCartRepository.findByDeletedId(requestCart.getUserId(),requestCart.getProductId());
+//
+//        if(preCheckCartId != null) {
+//            Cart preCart = iCartRepository.findById(preCheckCartId.getId()).get();
+//            preCart.setDeleted(true);
+//            iCartRepository.save(preCart);
+//        }
 
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
