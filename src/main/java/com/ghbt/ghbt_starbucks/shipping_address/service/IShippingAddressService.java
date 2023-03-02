@@ -11,7 +11,7 @@ public interface IShippingAddressService {
   Long saveShippingAddress(RequestShippingAddress requestShippingAddress, User user);
 
   //기본 배송지 조회.
-  ResponseShippingAddress getDefaultShippingAddress(Long shippingAddressId);
+  ResponseShippingAddress getShippingAddress(Long shippingAddressId);
 
   //모든 배송지 조회.
   List<ResponseShippingAddress> getAllShippingAddress();

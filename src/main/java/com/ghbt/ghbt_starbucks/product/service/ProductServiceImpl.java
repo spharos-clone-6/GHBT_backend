@@ -2,7 +2,9 @@ package com.ghbt.ghbt_starbucks.product.service;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
+import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
+import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
@@ -74,8 +76,15 @@ public class ProductServiceImpl implements IProductService{
     }
 
     @Override
-    public Category getProductForCategory(String name) {
-//        List<String>
-        return null;
+    public List<IProductListByCategory> getProductForCategory(String search) {
+        List<IProductListByCategory> productList = iProductRepository.findAllProductType(search);
+        return productList;
     }
+
+    @Override
+    public List<IProductSearch> getSearchProduct(String search) {
+        List<IProductSearch> productList = iProductRepository.findProduct(search);
+        return productList;
+    }
+
 }
