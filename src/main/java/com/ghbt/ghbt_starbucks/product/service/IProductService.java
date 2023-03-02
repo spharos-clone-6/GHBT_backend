@@ -1,7 +1,8 @@
 package com.ghbt.ghbt_starbucks.product.service;
 
-import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.product.model.Product;
+import com.ghbt.ghbt_starbucks.product.productDto.ProductDto;
+import com.ghbt.ghbt_starbucks.product.productDto.ProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
 
@@ -12,6 +13,6 @@ public interface IProductService {
     ResponseProduct getProduct(Long id);
     List<Product> getAllProduct();
 
-    Category getProductForCategory(String name);
+    List<ProductListByCategory> getProductForCategory(String search);
 
 }
