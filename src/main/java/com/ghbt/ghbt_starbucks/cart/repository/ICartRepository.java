@@ -11,6 +11,6 @@ import java.util.List;
 public interface ICartRepository extends JpaRepository<Cart, Long> {
     List<Cart> findAllByUser_Id(Long userid);
 
-    @Query( value = "SELECT c.id from cart c left join `user` u on u.id = c.user_id left join product p on p.id = c.product_id where deleted = TRUE and u.id = :usId and p.id = :prId",nativeQuery = true)
-    FindOneCartId findByDeletedId(@Param("usId") Long usId,@Param("prId") Long prId );
+    @Query( value = "SELECT c.id from cart c left join `user` u on u.id = c.user_id left join product p on p.id = c.product_id where deleted = TRUE and u.id = :uid and p.id = :pid",nativeQuery = true)
+    FindOneCartId findByDeletedId( @Param("uid") Long uid, @Param("pid") Long pid );
 }
