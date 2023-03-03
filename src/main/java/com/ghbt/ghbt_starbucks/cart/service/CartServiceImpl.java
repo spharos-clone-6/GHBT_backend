@@ -3,7 +3,6 @@ package com.ghbt.ghbt_starbucks.cart.service;
 import com.ghbt.ghbt_starbucks.cart.model.Cart;
 
 import com.ghbt.ghbt_starbucks.cart.repository.ICartRepository;
-import com.ghbt.ghbt_starbucks.cart.vo.FindOneCartId;
 import com.ghbt.ghbt_starbucks.cart.vo.RequestCart;
 import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -31,14 +30,19 @@ public class CartServiceImpl implements ICartService{
     @Override
     public void addCart(RequestCart requestCart) {
 
+        //삭제된 cart_list 인지 확인
 
-        FindOneCartId preCheckCartId = iCartRepository.findByDeletedId(requestCart.getUserId(),requestCart.getProductId());
-//
-//        if(preCheckCartId != null) {
-//            Cart preCart = iCartRepository.findById(preCheckCartId.getId()).get();
-//            preCart.setDeleted(true);
-//            iCartRepository.save(preCart);
-//        }
+        ICartRepository.FindOneCartId preCheckCartId = iCartRepository.findAllByDeletedId(requestCart.getUserId(),requestCart.getProductId());
+
+        //삭제된 cart_list 라면 복구
+        if(preCheckCartId != null) {
+            Cart preCart = iCartRepository.findById(preCheckCartId.getId()).get();
+            preCart.setDeleted(false);
+            preCart.setQuantity(requestCart.getQuantity());
+            iCartRepository.save(preCart);
+
+            return ;
+        }
 
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
@@ -80,6 +84,7 @@ public class CartServiceImpl implements ICartService{
 
     @Override
     public void deleteCart(Long id) {
+
         iCartRepository.deleteById(id);
     }
 

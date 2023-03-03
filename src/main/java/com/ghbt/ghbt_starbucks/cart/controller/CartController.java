@@ -23,7 +23,7 @@ public class CartController {
     private final ICartService iCartService;
 
     @PostMapping()
-    @Operation(summary = "장바구니 담기", description = "[@Operation] post cart")
+    @Operation(summary = "장바구니 담기", description = "userid 와 productid 를 long으로 입력해주세요")
     public void addCart(@RequestBody RequestCart requestCart){
         iCartService.addCart(requestCart);
     }
