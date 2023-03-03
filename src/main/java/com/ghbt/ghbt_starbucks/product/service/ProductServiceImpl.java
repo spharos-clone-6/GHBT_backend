@@ -41,11 +41,14 @@ public class ProductServiceImpl implements IProductService{
         Product resProduct = iProductRepository.save(product);
 
         for (String cate :requestProduct.getCategoryList()) {
+            System.out.println(cate);
             Category category= iCategoryRepository.findByName(cate);
+            System.out.println(category);
             ProductAndCategory productAndCategory = ProductAndCategory.builder()
                     .productId(resProduct)
                     .categoryId(category)
                     .build();
+            System.out.println(productAndCategory);
             ProductAndCategory resProductAndCategory = iProductAndCategoryRepository.save(productAndCategory);
         }
 
