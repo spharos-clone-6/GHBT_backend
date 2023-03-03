@@ -22,10 +22,6 @@ public class ShippingAddressService implements IShippingAddressService {
 
   private final IShippingAddressRepository iShippingAddressRepository;
 
-  /**
-   * 추가 예외 해야할 것. user null값에 관한 이슈는 controller 에서 Exception처리를 하자. 비즈니스적인 예외처리는 완료!
-   */
-
   @Override
   @Transactional
   public Long saveShippingAddress(RequestShippingAddress requestShippingAddress, User loginUser) {
