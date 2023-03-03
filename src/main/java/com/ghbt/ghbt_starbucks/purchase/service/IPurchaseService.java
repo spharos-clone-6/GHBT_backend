@@ -1,8 +1,7 @@
 package com.ghbt.ghbt_starbucks.purchase.service;
 
-import com.ghbt.ghbt_starbucks.purchase.model.Purchase;
-import com.ghbt.ghbt_starbucks.purchase.vo.RequestPurchase;
-import com.ghbt.ghbt_starbucks.purchase.vo.ResponsePurchase;
+import com.ghbt.ghbt_starbucks.purchase.dto.RequestPurchase;
+import com.ghbt.ghbt_starbucks.purchase.dto.ResponsePurchase;
 import java.util.List;
 
 public interface IPurchaseService {
@@ -11,7 +10,7 @@ public interface IPurchaseService {
 
     ResponsePurchase getPurchaseById(Long id);
 
-    List<Purchase> getAllPurchaseByUserId(Long userId);
+    List<ResponsePurchase> getAllPurchaseByUserId(Long userId);
 
     Long updatePurchase(RequestPurchase requestPurchase, Long id);
 

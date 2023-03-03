@@ -1,35 +1,22 @@
-package com.ghbt.ghbt_starbucks.purchase.vo;
+package com.ghbt.ghbt_starbucks.purchase.dto;
 
 import com.ghbt.ghbt_starbucks.purchase.model.ShippingStatus;
-import com.ghbt.ghbt_starbucks.user.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class ResponsePurchase {
-    private Long id;
-
-    private User user;
+public class RequestPurchase {
 
     private Integer quantity;
-
     private String purchaseGroup;
-
     private ShippingStatus shippingStatus;
-
     private String shippingAddress;
-
     private String productId;
-
     private String productName;
-
     private String uuid;
-
     private Integer price;
 
 }
