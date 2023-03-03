@@ -37,4 +37,9 @@ public class CartController {
     public ResponseCart getResponseCart(@PathVariable Long id){
         return iCartService.getCart(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteCart(@PathVariable Long id){
+        iCartService.deleteCart(id);
+    }
 }

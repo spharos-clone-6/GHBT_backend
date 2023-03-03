@@ -13,9 +13,13 @@ import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCatego
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Data
@@ -55,9 +59,10 @@ public class ProductServiceImpl implements IProductService{
                 .build();
         return responseProduct;
     }
-
     @Override
     public ResponseProduct getProduct(Long id) {
+        Optional<Product> getProduct =iProductRepository.findById(id);
+        // or
         Product product = iProductRepository.findById(id).get();
         ResponseProduct responseProduct = ResponseProduct.builder()
                 .id(product.getId())
@@ -86,5 +91,10 @@ public class ProductServiceImpl implements IProductService{
         List<IProductSearch> productList = iProductRepository.findProduct(search);
         return productList;
     }
+    @Override
+    public Page<Product> getList(Pageable pageable){
+        Page<Product> paging = iProductRepository.findAll(pageable);
+        return paging;
 
+    }
 }

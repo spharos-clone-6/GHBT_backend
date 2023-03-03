@@ -2,10 +2,11 @@ package com.ghbt.ghbt_starbucks.purchase.service;
 
 import com.ghbt.ghbt_starbucks.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.purchase.repository.IPurchaseRepository;
-import com.ghbt.ghbt_starbucks.purchase.vo.RequestPurchase;
-import com.ghbt.ghbt_starbucks.purchase.vo.ResponsePurchase;
+import com.ghbt.ghbt_starbucks.purchase.dto.RequestPurchase;
+import com.ghbt.ghbt_starbucks.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.user.model.User;
 import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements IPurchaseService {
 
-    @Autowired
     private final IPurchaseRepository iPurchaseRepository;
-
-    @Autowired
     private final IUserRepository iUserRepository;
 
 
@@ -30,7 +28,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
     public Long addPurchase(RequestPurchase requestPurchase, Long userId) {
 
         User findUser = iUserRepository.findById(userId).get();
-        UUID uuid =  UUID.randomUUID();
+        UUID uuid = UUID.randomUUID();
 
         Purchase purchase = Purchase.builder()
                 .user(findUser)
@@ -52,7 +50,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public ResponsePurchase getPurchaseById(Long id) {
 
-        Purchase purchase =  iPurchaseRepository.findById(id).get();
+        Purchase purchase = iPurchaseRepository.findById(id).get();
         ResponsePurchase responsePurchase = ResponsePurchase.builder()
                 .quantity(purchase.getQuantity())
                 .purchaseGroup(purchase.getPurchaseGroup())
@@ -66,20 +64,20 @@ public class PurchaseServiceImpl implements IPurchaseService {
     }
 
     @Override
-    public List<Purchase> getAllPurchaseByUserId(Long userId){
+    public List<ResponsePurchase> getAllPurchaseByUserId(Long userId) {
 
-        List<Purchase> purchaseList = iPurchaseRepository.findAllByUser_Id(userId);
-        return purchaseList;
+        List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(userId);
+        return purchaseList.stream()
+                .map(ResponsePurchase::from)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public Long updatePurchase(RequestPurchase requestPurchase, Long id){
-        Purchase purchase = iPurchaseRepository.findById(id).get();
-
+    public Long updatePurchase(RequestPurchase requestPurchase, Long purchaseId) {
+        Purchase purchase = iPurchaseRepository.findById(purchaseId).get();
         purchase.setShippingAddress(requestPurchase.getShippingAddress());
 
         return purchase.getId();
     }
-
 }
