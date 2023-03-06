@@ -26,6 +26,7 @@ public class AuthService {
 
   private final String SERVER = "Server";
 
+
   public TokenDto login(LoginDto loginDto) {
     UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -35,6 +36,22 @@ public class AuthService {
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
     return generateToken(SERVER, authentication.getName(), getAuthorities(authentication));
+  }
+
+  // 로그아웃
+  public void logout(String requestAccessTokenInHeader) {
+    String requestAccessToken = resolveToken(requestAccessTokenInHeader);
+    String principal = getPrincipal(requestAccessToken);
+
+    String refreshTokenInRedis = redisService.getValues("RT(" + SERVER + "):" + principal);
+    if (refreshTokenInRedis != null) {
+      redisService.deleteValues("RT(" + SERVER + "):" + principal);
+    }
+    long expiration =
+        jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
+    redisService.setValuesWithTimeout(requestAccessToken,
+        "logout",
+        expiration);
   }
 
   public boolean validate(String requestAccessTokenInHeader) {
@@ -103,19 +120,5 @@ public class AuthService {
     return null;
   }
 
-  // 로그아웃
-  public void logout(String requestAccessTokenInHeader) {
-    String requestAccessToken = resolveToken(requestAccessTokenInHeader);
-    String principal = getPrincipal(requestAccessToken);
 
-    String refreshTokenInRedis = redisService.getValues("RT(" + SERVER + "):" + principal);
-    if (refreshTokenInRedis != null) {
-      redisService.deleteValues("RT(" + SERVER + "):" + principal);
-    }
-    long expiration =
-        jwtTokenProvider.getTokenExpirationTime(requestAccessToken) - new Date().getTime();
-    redisService.setValuesWithTimeout(requestAccessToken,
-        "logout",
-        expiration);
-  }
 }
