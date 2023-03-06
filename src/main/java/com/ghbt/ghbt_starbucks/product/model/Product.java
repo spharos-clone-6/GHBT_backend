@@ -26,6 +26,9 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
+    private Integer stock;
+
 //    @JsonFormat(pattern = "yyyy-MM-dd")
 //    private Date createDate;
 //
