@@ -13,7 +13,7 @@ import java.util.List;
 public interface IProductService {
     ResponseProduct addProduct(RequestProduct requestProduct);
     ResponseProduct getProduct(Long id);
-    List<Product> getAllProduct();
+    List<ResponseProduct> getAllProduct();
 
     List<IProductListByCategory> getProductForCategory(String search);
     List<IProductSearch> getSearchProduct(String search);

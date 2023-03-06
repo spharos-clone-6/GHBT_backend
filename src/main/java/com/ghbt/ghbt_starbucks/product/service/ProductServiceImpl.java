@@ -2,7 +2,6 @@ package com.ghbt.ghbt_starbucks.product.service;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
-import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
 import com.ghbt.ghbt_starbucks.error.ServiceException;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -16,13 +15,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Data
@@ -77,12 +74,12 @@ public class ProductServiceImpl implements IProductService{
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public List<ResponseProduct> getAllProduct() {
         List<Product> productList = iProductRepository.findAll();
         if (productList.isEmpty()) {
             throw new ServiceException("상품이 없습니다.",HttpStatus.NO_CONTENT);
         }
-        return productList;
+        return ResponseProduct.mapper(productList);
     }
 
     @Override
