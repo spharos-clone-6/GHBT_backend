@@ -24,7 +24,7 @@ public class ShippingAddressService implements IShippingAddressService {
 
   @Override
   @Transactional
-  public Long saveShippingAddress(RequestShippingAddress requestShippingAddress, User loginUser) {
+  public Long saveShippingAddress(User loginUser, RequestShippingAddress requestShippingAddress) {
 
     List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAllByUserId(
         loginUser.getId());
@@ -49,8 +49,8 @@ public class ShippingAddressService implements IShippingAddressService {
 
   @Override
   @Transactional
-  public Long updateShippingAddress(RequestShippingAddress requestUpdateShippingAddress,
-      Long shippingAddressId) {
+  public Long updateShippingAddress(Long shippingAddressId,
+      RequestShippingAddress requestUpdateShippingAddress) {
     List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAll();
 
     if (requestUpdateShippingAddress.getIsDefault() == TRUE) {
@@ -88,9 +88,9 @@ public class ShippingAddressService implements IShippingAddressService {
   }
 
   @Override
-  public List<ResponseShippingAddress> getAllShippingAddress() {
-
-    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAll();
+  public List<ResponseShippingAddress> getAllShippingAddress(User loginUser) {
+    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAllByUserId(
+        loginUser.getId());
     log.info("[배송지 조회] 배송지 전체가 성공적으로 조회되었습니다.");
     return shippingAddresses.stream()
         .map(ResponseShippingAddress::from)
