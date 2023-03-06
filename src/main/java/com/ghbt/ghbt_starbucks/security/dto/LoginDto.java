@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.security.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginDto {
 
+  @NotBlank
   private String email;
+  @NotBlank
   private String password;
 
   @Builder
