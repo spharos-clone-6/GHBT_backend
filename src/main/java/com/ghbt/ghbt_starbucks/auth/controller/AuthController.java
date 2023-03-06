@@ -1,10 +1,11 @@
-package com.ghbt.ghbt_starbucks.user.controller;
+package com.ghbt.ghbt_starbucks.auth.controller;
 
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.security.dto.TokenDto;
-import com.ghbt.ghbt_starbucks.security.service.AuthService;
-import com.ghbt.ghbt_starbucks.user.service.UserService;
+import com.ghbt.ghbt_starbucks.auth.service.AuthService;
+import com.ghbt.ghbt_starbucks.user.service.UserServiceImpl;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
@@ -22,26 +23,31 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
   private final AuthService authService;
-  private final UserService userService;
+  private final UserServiceImpl userServiceImpl;
   private final BCryptPasswordEncoder encoder;
 
-  private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60;
+  private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60l;
 
+  /**
+   * 회원가입
+   */
   @PostMapping("/signup")
-  public ResponseEntity<Void> signup(@RequestBody @Validated SignupDto signupDto) {
+  public ResponseEntity<Void> signup(@RequestBody @Valid SignupDto signupDto) {
     String encodedPassword = encoder.encode(signupDto.getPassword());
     SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
-
-    userService.signupUser(signupDtoWithEncodedPassword);
+    userServiceImpl.signupUser(signupDtoWithEncodedPassword);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  /**
+   * 로그인
+   */
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody @Validated LoginDto loginDto) {
+  public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
     TokenDto tokenDto = authService.login(loginDto);
 
     HttpCookie httpCookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())

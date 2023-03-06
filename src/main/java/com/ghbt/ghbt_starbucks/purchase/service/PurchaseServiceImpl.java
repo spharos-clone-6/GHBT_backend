@@ -1,14 +1,14 @@
 package com.ghbt.ghbt_starbucks.purchase.service;
 
+import com.ghbt.ghbt_starbucks.error.ServiceException;
 import com.ghbt.ghbt_starbucks.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.purchase.repository.IPurchaseRepository;
 import com.ghbt.ghbt_starbucks.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.user.model.User;
-import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -18,20 +18,16 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PurchaseServiceImpl implements IPurchaseService {
-
     private final IPurchaseRepository iPurchaseRepository;
-    private final IUserRepository iUserRepository;
-
 
     @Override
     @Transactional
-    public Long addPurchase(RequestPurchase requestPurchase, Long userId) {
+    public Long addPurchase(RequestPurchase requestPurchase, User user) {
 
-        User findUser = iUserRepository.findById(userId).get();
         UUID uuid = UUID.randomUUID();
 
         Purchase purchase = Purchase.builder()
-                .user(findUser)
+                .user(user)
                 .quantity(requestPurchase.getQuantity())
                 .purchaseGroup(requestPurchase.getPurchaseGroup())
                 .shippingStatus((requestPurchase.getShippingStatus()))
@@ -50,7 +46,8 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     public ResponsePurchase getPurchaseById(Long id) {
 
-        Purchase purchase = iPurchaseRepository.findById(id).get();
+        Purchase purchase = iPurchaseRepository.findById(id).orElseThrow(
+                () -> new ServiceException("요청하신 주문내역은 존재하지 않습니다", HttpStatus.NO_CONTENT));
         ResponsePurchase responsePurchase = ResponsePurchase.builder()
                 .quantity(purchase.getQuantity())
                 .purchaseGroup(purchase.getPurchaseGroup())
@@ -64,9 +61,12 @@ public class PurchaseServiceImpl implements IPurchaseService {
     }
 
     @Override
-    public List<ResponsePurchase> getAllPurchaseByUserId(Long userId) {
-
-        List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(userId);
+    public List<ResponsePurchase> getAllPurchaseByUserId(User user) {
+//        List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(userId);
+        List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(user.getId());
+        if (purchaseList.isEmpty()) {
+            throw new ServiceException("주문내역이 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return purchaseList.stream()
                 .map(ResponsePurchase::from)
                 .collect(Collectors.toList());
@@ -75,9 +75,9 @@ public class PurchaseServiceImpl implements IPurchaseService {
     @Override
     @Transactional
     public Long updatePurchase(RequestPurchase requestPurchase, Long purchaseId) {
-        Purchase purchase = iPurchaseRepository.findById(purchaseId).get();
+        Purchase purchase = iPurchaseRepository.findById(purchaseId).orElseThrow(
+                () -> new ServiceException("요청하신 주문은 존재하지 않습니다", HttpStatus.NO_CONTENT ));
         purchase.setShippingAddress(requestPurchase.getShippingAddress());
-
         return purchase.getId();
     }
 }

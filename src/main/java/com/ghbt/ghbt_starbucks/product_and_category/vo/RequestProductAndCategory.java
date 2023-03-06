@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RequestProductAndCategory {
 
-    private Category categoryId;
-    private Product productId;
+    private Category category;
+    private Product product;
 
 }
