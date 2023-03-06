@@ -3,6 +3,7 @@ package com.ghbt.ghbt_starbucks.purchase.controller;
 import com.ghbt.ghbt_starbucks.purchase.service.IPurchaseService;
 import com.ghbt.ghbt_starbucks.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.purchase.dto.ResponsePurchase;
+import com.ghbt.ghbt_starbucks.security.annotation.LoginUser;
 import com.ghbt.ghbt_starbucks.user.model.User;
 import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,38 +14,32 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/purchase")
+@RequestMapping("/api/purchase")
 @RequiredArgsConstructor
 public class PurchaseController {
-
     private final IPurchaseService iPurchaseService;
-    private final IUserRepository iUserRepository;
 
+    //상품 구매
     @PostMapping
-    public void addPurchase(@RequestBody RequestPurchase requestPurchase,
-                            Authentication authentication) {
-        String email = authentication.getName();
-        User user = iUserRepository.findByEmail(email).get();
-        Long purchasedId = iPurchaseService.addPurchase(requestPurchase, user.getId());
+    public ResponseEntity addPurchase(@RequestBody RequestPurchase requestPurchase, @LoginUser User loginUser) {
+        Long purchasedId = iPurchaseService.addPurchase(requestPurchase, loginUser);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @GetMapping("{purchase_id}")
-    public ResponsePurchase getPurchaseById(@PathVariable("purchase_id") Long purchaseId) {
+    @GetMapping("/{purchaseId}")
+    public ResponsePurchase getPurchaseById(@PathVariable Long purchaseId) {
         return iPurchaseService.getPurchaseById(purchaseId);
     }
 
     @GetMapping
-    public List<ResponsePurchase> getAllPurchase(Authentication authentication) {
-        String email = authentication.getName();
-        User user = iUserRepository.findByEmail(email).get();
-        return iPurchaseService.getAllPurchaseByUserId(user.getId());
+    public List<ResponsePurchase> getAllPurchase(@LoginUser User user) {
+        return iPurchaseService.getAllPurchaseByUserId(user);
     }
 
-    @PutMapping("{purchaseId}")
-    public ResponseEntity updatePurchase(@PathVariable("purchaseId") Long purchaseId, @RequestBody RequestPurchase requestPurchase) {
+    @PutMapping("/{purchaseId}")
+    public ResponseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody RequestPurchase requestPurchase) {
         iPurchaseService.updatePurchase(requestPurchase, purchaseId);
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
 }
