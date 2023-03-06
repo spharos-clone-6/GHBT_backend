@@ -9,6 +9,6 @@ import java.util.List;
 public interface ICategoryService {
     ResponseCategory addCategory(RequestCategory requestCategory);
     ResponseCategory getCategory(Long id);
-    List<Category> getAllCategory();
+    List<ResponseCategory> getAllCategory();
 
 }

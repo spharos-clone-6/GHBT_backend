@@ -20,6 +20,7 @@ public class RequestProduct {
     private Integer price;
 
     private String description;
+    private Integer stock;
 
     private List<String> categoryList;
 

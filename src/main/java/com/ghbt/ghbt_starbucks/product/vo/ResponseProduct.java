@@ -15,5 +15,6 @@ public class ResponseProduct {
     private String name;
     private Integer price;
     private String description;
+    private Integer stock;
 
 }
