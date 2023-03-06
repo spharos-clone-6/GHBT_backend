@@ -46,8 +46,7 @@ public class SecurityConfig {
         .csrf().disable()
         .httpBasic().disable()
         .formLogin().disable()
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-            UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         .and()
@@ -56,7 +55,7 @@ public class SecurityConfig {
         .accessDeniedHandler(jwtAccessDeniedHandler)
 
         .and()
-        .authorizeRequests() // '인증'
+        .authorizeRequests()
         .antMatchers("/shipping-address/**").authenticated() // 예시 마이페이지는 인증이 필요하
         .antMatchers("/admin/**").hasRole("ADMIN") // 예시 관리자페이즈는 권한이 필요하다.
         .anyRequest().permitAll()

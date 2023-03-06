@@ -33,13 +33,13 @@ public class JwtTokenProvider implements InitializingBean {
 
   private static final String AUTHORITIES_KEY = "role";
   private static final String EMAIL_KEY = "email";
-  private static final String url = "http://localhost:8080";
+  private static final String URL = "http://localhost:8080";
 
   private final String secretKey;
   private static Key signingKey;
 
-  private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 43200L;
-  private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 1209600L;
+  private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 60 * 60 * 12L;
+  private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 60 * 60 * 12 * 14L;
 
   public JwtTokenProvider(UserDetailsServiceImpl userDetailsService,
       RedisService redisService,
@@ -62,7 +62,7 @@ public class JwtTokenProvider implements InitializingBean {
         .setHeaderParam("alg", "HS512")
         .setExpiration(new Date(now + ACCESS_TOKEN_VALIDATE_MILLISECONDS))
         .setSubject("access-token")
-        .claim(url, true)
+        .claim(URL, true)
         .claim(EMAIL_KEY, email)
         .claim(AUTHORITIES_KEY, authorities)
         .signWith(signingKey, SignatureAlgorithm.HS512)
@@ -79,7 +79,7 @@ public class JwtTokenProvider implements InitializingBean {
     return new TokenDto(accessToken, refreshToken);
   }
 
-  //==토근으로부터 정보 추출==//
+  //==토큰으로부터 정보 추출==//
   public Claims getClaims(String token) {
     try {
       return Jwts.parserBuilder()
