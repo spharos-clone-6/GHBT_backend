@@ -26,7 +26,7 @@ public class AuthService {
 
   private final String SERVER = "Server";
 
-
+  //로그인
   public TokenDto login(LoginDto loginDto) {
     UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -38,7 +38,7 @@ public class AuthService {
     return generateToken(SERVER, authentication.getName(), getAuthorities(authentication));
   }
 
-  // 로그아웃
+  //로그아웃
   public void logout(String requestAccessTokenInHeader) {
     String requestAccessToken = resolveToken(requestAccessTokenInHeader);
     String principal = getPrincipal(requestAccessToken);
@@ -54,11 +54,25 @@ public class AuthService {
         expiration);
   }
 
+  // 토큰 발급
+  public TokenDto generateToken(String provider, String email, String authorities) {
+    // RT가 이미 있을 경우
+    if (redisService.getValues("RT(" + provider + "):" + email) != null) {
+      redisService.deleteValues("RT(" + provider + "):" + email);
+    }
+
+    TokenDto tokenDto = jwtTokenProvider.createToken(email, authorities);
+    saveRefreshToken(provider, email, tokenDto.getRefreshToken());
+    return tokenDto;
+  }
+
+  //토큰 검증
   public boolean validate(String requestAccessTokenInHeader) {
     String requestAccessToken = resolveToken(requestAccessTokenInHeader);
     return jwtTokenProvider.validateAccessTokenOnlyExpired(requestAccessToken);
   }
 
+  //토큰 재발급
   public TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {
     String requestAccessToken = resolveToken(requestAccessTokenInHeader);
 
@@ -85,22 +99,9 @@ public class AuthService {
     return tokenDto;
   }
 
-  // 토큰 발급
-  public TokenDto generateToken(String provider, String email, String authorities) {
-    // RT가 이미 있을 경우
-    if (redisService.getValues("RT(" + provider + "):" + email) != null) {
-      redisService.deleteValues("RT(" + provider + "):" + email);
-    }
-
-    TokenDto tokenDto = jwtTokenProvider.createToken(email, authorities);
-    saveRefreshToken(provider, email, tokenDto.getRefreshToken());
-    return tokenDto;
-  }
-
+  //==편의 메서드 ==//
   public void saveRefreshToken(String provider, String principal, String refreshToken) {
-    redisService.setValuesWithTimeout("RT(" + provider + "):" + principal,
-        refreshToken, // value
-        jwtTokenProvider.getTokenExpirationTime(refreshToken));
+    redisService.setValuesWithTimeout("RT(" + provider + "):" + principal, refreshToken, jwtTokenProvider.getTokenExpirationTime(refreshToken));
   }
 
   public String getAuthorities(Authentication authentication) {
@@ -119,6 +120,4 @@ public class AuthService {
     }
     return null;
   }
-
-
 }
