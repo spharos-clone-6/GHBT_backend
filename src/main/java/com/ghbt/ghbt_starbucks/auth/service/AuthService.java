@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.security.service;
+package com.ghbt.ghbt_starbucks.auth.service;
 
 import com.ghbt.ghbt_starbucks.security.JwtTokenProvider;
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service

@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.user.controller;
+package com.ghbt.ghbt_starbucks.auth.controller;
 
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.security.dto.TokenDto;
-import com.ghbt.ghbt_starbucks.security.service.AuthService;
+import com.ghbt.ghbt_starbucks.auth.service.AuthService;
 import com.ghbt.ghbt_starbucks.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class AuthController {
   private final UserService userService;
   private final BCryptPasswordEncoder encoder;
 
-  private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60;
+  private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60l;
 
   @PostMapping("/signup")
   public ResponseEntity<Void> signup(@RequestBody @Validated SignupDto signupDto) {
