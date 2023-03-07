@@ -37,7 +37,7 @@ public class UserServiceImpl implements IUserService {
   @Transactional
   public Long updateUser(Long userId, UpdateUserDto updateUserDto) {
     User findUser = getUser(userId);
-    return findUser.changeNickName(updateUserDto);
+    return findUser.changeNickName(updateUserDto.getNickName());
   }
 
   @Override
