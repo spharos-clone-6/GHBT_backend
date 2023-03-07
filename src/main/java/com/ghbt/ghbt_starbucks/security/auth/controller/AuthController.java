@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.auth.controller;
+package com.ghbt.ghbt_starbucks.security.auth.controller;
 
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.security.dto.TokenDto;
-import com.ghbt.ghbt_starbucks.auth.service.AuthService;
+import com.ghbt.ghbt_starbucks.security.auth.service.AuthService;
 import com.ghbt.ghbt_starbucks.user.service.UserServiceImpl;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
