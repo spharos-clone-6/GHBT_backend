@@ -1,8 +1,7 @@
 package com.ghbt.ghbt_starbucks.user.model;
 
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
-import com.ghbt.ghbt_starbucks.shipping_address.model.ShippingAddress;
-import java.util.List;
+import com.ghbt.ghbt_starbucks.user.dto.UpdateUserDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.ghbt.ghbt_starbucks.utility.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -70,11 +68,19 @@ public class User extends BaseTimeEntity {
   @Column(name = "business_recipe")
   private String businessRecipe;
 
+  //==편의 메서드==//
+  //최초 회원가입시 들어가는 정보
   public static User signinUser(SignupDto signupDto) {
     return new UserBuilder()
         .email(signupDto.getEmail())
         .password(signupDto.getPassword())
         .role(Role.USER)
         .build();
+  }
+
+  //유저 정보 수정
+  public Long changeNickName(String nickName) {
+    this.nickName = nickName;
+    return getId();
   }
 }
