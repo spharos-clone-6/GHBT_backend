@@ -20,7 +20,10 @@ public class ResponseProduct {
     private String name;
     private Integer price;
     private String description;
+    private String thumbUrl;
     private Integer stock;
+    private Integer likeCount;
+    private Boolean isBest;
 
     public static List<ResponseProduct> mapper(List<Product> products){
         List<ResponseProduct> responseProducts = new ArrayList<>();
@@ -29,7 +32,8 @@ public class ResponseProduct {
             responseProducts.add(ResponseProduct.builder()
                     .id(product.getId()).name(product.getName())
                     .price(product.getPrice()).description(product.getDescription())
-                    .stock(product.getStock()).build());
+                    .thumbUrl(product.getThumbUrl()).likeCount(product.getLikeCount())
+                    .isBest(product.getIsBest()).stock(product.getStock()).build());
         }
         return responseProducts;
     }

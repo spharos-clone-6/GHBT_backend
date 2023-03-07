@@ -37,6 +37,7 @@ public class ProductServiceImpl implements IProductService{
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
                 .price(requestProduct.getPrice())
+                .thumbUrl(requestProduct.getThumbUrl())
                 .stock(requestProduct.getStock())
                 .build();
         Product savedProduct = iProductRepository.save(product);
@@ -55,9 +56,11 @@ public class ProductServiceImpl implements IProductService{
                 .name(savedProduct.getName())
                 .price(savedProduct.getPrice())
                 .description(savedProduct.getDescription())
+                .thumbUrl(savedProduct.getThumbUrl())
                 .stock(savedProduct.getStock())
+                .likeCount(savedProduct.getLikeCount())
+                .isBest(savedProduct.getIsBest())
                 .build();
-
         return responseProduct;
     }
     @Override
@@ -68,7 +71,9 @@ public class ProductServiceImpl implements IProductService{
                 .name(product.getName())
                 .price(product.getPrice())
                 .description(product.getDescription())
+                .thumbUrl(product.getThumbUrl())
                 .stock(product.getStock())
+                .isBest(product.getIsBest())
                 .build();
         return responseProduct;
     }
@@ -114,7 +119,9 @@ public class ProductServiceImpl implements IProductService{
                 requestProduct.getPrice(),
                 requestProduct.getDescription(),
                 requestProduct.getStock(),
-                requestProduct.getLikeCount()
+                requestProduct.getLikeCount(),
+                requestProduct.getThumbUrl(),
+                requestProduct.getIsBest()
                 );
         iProductRepository.save(product);
         return product.getId();

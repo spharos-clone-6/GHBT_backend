@@ -20,9 +20,11 @@ public class RequestProduct {
     private Integer price;
 
     private String description;
+
+    private String thumbUrl;
     private Integer stock;
     private Integer likeCount;
-
+    private Boolean isBest;
     private List<String> categoryList;
 
 }
