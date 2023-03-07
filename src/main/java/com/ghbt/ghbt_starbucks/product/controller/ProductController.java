@@ -58,4 +58,12 @@ public class ProductController {
         return iProductService.getList(pageable);
     }
 
+    @PutMapping("/{product_id}")
+    public ResponseEntity updateProduct(
+            @PathVariable("product_id") Long productId,
+            @RequestBody RequestProduct requestProduct){
+        iProductService.updateProduct(productId, requestProduct);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

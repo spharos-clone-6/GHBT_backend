@@ -20,4 +20,5 @@ public interface IProductService {
 
     Page<Product> getList(Pageable pageable);
 
+    Long updateProduct(Long ProductId, RequestProduct requestProduct);
     }

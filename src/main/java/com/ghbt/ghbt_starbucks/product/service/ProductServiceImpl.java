@@ -77,7 +77,7 @@ public class ProductServiceImpl implements IProductService{
     public List<ResponseProduct> getAllProduct() {
         List<Product> productList = iProductRepository.findAll();
         if (productList.isEmpty()) {
-            throw new ServiceException("상품이 없습니다.",HttpStatus.NO_CONTENT);
+             throw new ServiceException("상품이 없습니다.",HttpStatus.NO_CONTENT);
         }
         return ResponseProduct.mapper(productList);
     }
@@ -104,5 +104,19 @@ public class ProductServiceImpl implements IProductService{
         Page<Product> paging = iProductRepository.findAll(pageable);
         return paging;
 
+    }
+
+    @Override
+    public Long updateProduct(Long ProductId, RequestProduct requestProduct) {
+        Product product = iProductRepository.findById(requestProduct.getId()).orElseThrow(
+                () -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
+        product.updateProduct(requestProduct.getName(),
+                requestProduct.getPrice(),
+                requestProduct.getDescription(),
+                requestProduct.getStock(),
+                requestProduct.getLikeCount()
+                );
+        iProductRepository.save(product);
+        return product.getId();
     }
 }
