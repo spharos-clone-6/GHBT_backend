@@ -2,15 +2,18 @@ package com.ghbt.ghbt_starbucks.shipping_address.service;
 
 import static java.lang.Boolean.*;
 
+import com.ghbt.ghbt_starbucks.error.ServiceException;
 import com.ghbt.ghbt_starbucks.shipping_address.dto.RequestShippingAddress;
 import com.ghbt.ghbt_starbucks.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.shipping_address.model.ShippingAddress;
 import com.ghbt.ghbt_starbucks.shipping_address.repository.IShippingAddressRepository;
 import com.ghbt.ghbt_starbucks.user.model.User;
+import io.jsonwebtoken.io.SerialException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +27,7 @@ public class ShippingAddressService implements IShippingAddressService {
 
   @Override
   @Transactional
-  public Long saveShippingAddress(RequestShippingAddress requestShippingAddress, User loginUser) {
+  public Long saveShippingAddress(User loginUser, RequestShippingAddress requestShippingAddress) {
 
     List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAllByUserId(
         loginUser.getId());
@@ -32,6 +35,7 @@ public class ShippingAddressService implements IShippingAddressService {
     if (allShippingAddress.isEmpty()) {
       log.info("[배송지 저장] 최초의 배송지는 (기본)배송지로 저장됩니다.");
       requestShippingAddress.setIsDefault(true);
+
     } else if (requestShippingAddress.getIsDefault() == TRUE) {
       ShippingAddress defaultshippingAddress = allShippingAddress.stream()
           .filter(s -> s.getIsDefault() == TRUE)
@@ -49,8 +53,8 @@ public class ShippingAddressService implements IShippingAddressService {
 
   @Override
   @Transactional
-  public Long updateShippingAddress(RequestShippingAddress requestUpdateShippingAddress,
-      Long shippingAddressId) {
+  public Long updateShippingAddress(Long shippingAddressId,
+      RequestShippingAddress requestUpdateShippingAddress) {
     List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAll();
 
     if (requestUpdateShippingAddress.getIsDefault() == TRUE) {
@@ -82,15 +86,19 @@ public class ShippingAddressService implements IShippingAddressService {
 
   @Override
   public ResponseShippingAddress getShippingAddress(Long shippingAddressId) {
-    ShippingAddress shippingAddress = iShippingAddressRepository.findById(shippingAddressId).get();
+    ShippingAddress shippingAddress = iShippingAddressRepository.findById(shippingAddressId)
+        .orElseThrow(() -> new ServiceException("배송지가 존재하지 않습니다.", HttpStatus.NO_CONTENT));
     log.info("[배송지 조회] 배송지 1건이 성공적으로 조회되었습니다.");
     return ResponseShippingAddress.from(shippingAddress);
   }
 
   @Override
-  public List<ResponseShippingAddress> getAllShippingAddress() {
-
-    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAll();
+  public List<ResponseShippingAddress> getAllShippingAddress(User loginUser) {
+    List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAllByUserId(
+        loginUser.getId());
+    if (shippingAddresses.isEmpty()) {
+      throw new ServiceException("배송지가 존재하지 않습니다.", HttpStatus.NO_CONTENT);
+    }
     log.info("[배송지 조회] 배송지 전체가 성공적으로 조회되었습니다.");
     return shippingAddresses.stream()
         .map(ResponseShippingAddress::from)
@@ -100,7 +108,6 @@ public class ShippingAddressService implements IShippingAddressService {
   @Override
   @Transactional
   public void deleteShippingAddress(Long shippingAddressId) {
-
     log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
     iShippingAddressRepository.deleteById(shippingAddressId);
   }
