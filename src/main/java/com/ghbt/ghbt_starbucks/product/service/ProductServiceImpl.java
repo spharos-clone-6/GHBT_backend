@@ -119,4 +119,9 @@ public class ProductServiceImpl implements IProductService{
         iProductRepository.save(product);
         return product.getId();
     }
+
+    @Override
+    public void deleteProduct(Long ProductId) {
+        iProductRepository.deleteById(ProductId);
+    }
 }
