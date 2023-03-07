@@ -15,7 +15,6 @@ public class ExceptionAdvice {
 
   @ExceptionHandler(ServiceException.class)
   public ResponseEntity serviceException(ServiceException e) {
-    return ResponseEntity.status(e.getHttpStatus())
-        .body(e.getMessage());
+    return new ResponseEntity(e.getMessage(), e.getHttpStatus());
   }
 }
