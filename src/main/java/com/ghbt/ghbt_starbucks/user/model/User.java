@@ -79,8 +79,8 @@ public class User extends BaseTimeEntity {
   }
 
   //유저 정보 수정
-  public Long changeNickName(UpdateUserDto updateUserDto) {
-    this.nickName = updateUserDto.getNickName();
+  public Long changeNickName(String nickName) {
+    this.nickName = nickName;
     return getId();
   }
 }
