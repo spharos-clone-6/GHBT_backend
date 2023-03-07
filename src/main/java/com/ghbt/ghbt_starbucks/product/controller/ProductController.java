@@ -58,4 +58,18 @@ public class ProductController {
         return iProductService.getList(pageable);
     }
 
+    @PutMapping("/{product_id}")
+    public ResponseEntity updateProduct(
+            @PathVariable("product_id") Long productId,
+            @RequestBody RequestProduct requestProduct){
+        iProductService.updateProduct(productId, requestProduct);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    @DeleteMapping("/{product_id}")
+    public ResponseEntity deleteProduct(
+            @PathVariable("product_id") Long ProductId){
+        iProductService.deleteProduct(ProductId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
