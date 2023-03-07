@@ -14,14 +14,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestProduct {
-
+    private Long id;
     private String name;
 
     private Integer price;
 
     private String description;
-    private Integer stock;
 
+    private String thumbUrl;
+    private Integer stock;
+    private Integer likeCount;
+    private Boolean isBest;
     private List<String> categoryList;
 
 }

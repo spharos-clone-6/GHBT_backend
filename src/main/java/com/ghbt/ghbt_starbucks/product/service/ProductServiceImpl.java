@@ -2,7 +2,6 @@ package com.ghbt.ghbt_starbucks.product.service;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
-import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
 import com.ghbt.ghbt_starbucks.error.ServiceException;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -16,13 +15,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Data
@@ -40,6 +37,7 @@ public class ProductServiceImpl implements IProductService{
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
                 .price(requestProduct.getPrice())
+                .thumbUrl(requestProduct.getThumbUrl())
                 .stock(requestProduct.getStock())
                 .build();
         Product savedProduct = iProductRepository.save(product);
@@ -58,9 +56,11 @@ public class ProductServiceImpl implements IProductService{
                 .name(savedProduct.getName())
                 .price(savedProduct.getPrice())
                 .description(savedProduct.getDescription())
+                .thumbUrl(savedProduct.getThumbUrl())
                 .stock(savedProduct.getStock())
+                .likeCount(savedProduct.getLikeCount())
+                .isBest(savedProduct.getIsBest())
                 .build();
-
         return responseProduct;
     }
     @Override
@@ -71,18 +71,20 @@ public class ProductServiceImpl implements IProductService{
                 .name(product.getName())
                 .price(product.getPrice())
                 .description(product.getDescription())
+                .thumbUrl(product.getThumbUrl())
                 .stock(product.getStock())
+                .isBest(product.getIsBest())
                 .build();
         return responseProduct;
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public List<ResponseProduct> getAllProduct() {
         List<Product> productList = iProductRepository.findAll();
         if (productList.isEmpty()) {
-            throw new ServiceException("상품이 없습니다.",HttpStatus.NO_CONTENT);
+             throw new ServiceException("상품이 없습니다.",HttpStatus.NO_CONTENT);
         }
-        return productList;
+        return ResponseProduct.mapper(productList);
     }
 
     @Override
@@ -107,5 +109,26 @@ public class ProductServiceImpl implements IProductService{
         Page<Product> paging = iProductRepository.findAll(pageable);
         return paging;
 
+    }
+
+    @Override
+    public Long updateProduct(Long ProductId, RequestProduct requestProduct) {
+        Product product = iProductRepository.findById(requestProduct.getId()).orElseThrow(
+                () -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
+        product.updateProduct(requestProduct.getName(),
+                requestProduct.getPrice(),
+                requestProduct.getDescription(),
+                requestProduct.getStock(),
+                requestProduct.getLikeCount(),
+                requestProduct.getThumbUrl(),
+                requestProduct.getIsBest()
+                );
+        iProductRepository.save(product);
+        return product.getId();
+    }
+
+    @Override
+    public void deleteProduct(Long ProductId) {
+        iProductRepository.deleteById(ProductId);
     }
 }
