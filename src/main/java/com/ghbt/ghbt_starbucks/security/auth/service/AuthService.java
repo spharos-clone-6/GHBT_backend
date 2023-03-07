@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.auth.service;
+package com.ghbt.ghbt_starbucks.security.auth.service;
 
 import com.ghbt.ghbt_starbucks.security.JwtTokenProvider;
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
