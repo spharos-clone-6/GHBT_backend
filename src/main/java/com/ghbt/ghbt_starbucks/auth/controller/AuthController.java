@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.security.auth.controller;
+package com.ghbt.ghbt_starbucks.auth.controller;
 
+import com.ghbt.ghbt_starbucks.auth.service.AuthService;
 import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.security.dto.TokenDto;
-import com.ghbt.ghbt_starbucks.security.auth.service.AuthService;
 import com.ghbt.ghbt_starbucks.user.service.UserServiceImpl;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
