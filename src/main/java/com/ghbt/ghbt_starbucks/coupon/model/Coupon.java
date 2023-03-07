@@ -23,8 +23,9 @@ public class Coupon extends BaseTimeEntity {
     private String name;
 
     @Column(name = "discount_price", nullable = false, length = 255)
-    private Boolean discountPrice;
+    private Integer discountPrice;
 
     @Column(name = "is_free", nullable = false, length = 255)
-    private Integer isFree;
+    private Boolean isFree;
+
 }
