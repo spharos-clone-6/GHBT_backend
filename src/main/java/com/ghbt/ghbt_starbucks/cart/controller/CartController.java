@@ -7,6 +7,7 @@ import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
 import com.ghbt.ghbt_starbucks.security.annotation.LoginUser;
 import com.ghbt.ghbt_starbucks.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
 @Slf4j
+@SecurityRequirement(name = "basicAuth")
 @CrossOrigin(origins = "http://localhost:3000")
 public class CartController {
 
