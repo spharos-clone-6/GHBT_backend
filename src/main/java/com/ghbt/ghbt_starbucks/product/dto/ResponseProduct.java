@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.product.vo;
+package com.ghbt.ghbt_starbucks.product.dto;
 
 
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;

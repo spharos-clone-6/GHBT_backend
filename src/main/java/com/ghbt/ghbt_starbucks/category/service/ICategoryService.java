@@ -1,8 +1,7 @@
 package com.ghbt.ghbt_starbucks.category.service;
 
-import com.ghbt.ghbt_starbucks.category.model.Category;
-import com.ghbt.ghbt_starbucks.category.vo.RequestCategory;
-import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
+import com.ghbt.ghbt_starbucks.category.dto.RequestCategory;
+import com.ghbt.ghbt_starbucks.category.dto.ResponseCategory;
 
 import java.util.List;
 

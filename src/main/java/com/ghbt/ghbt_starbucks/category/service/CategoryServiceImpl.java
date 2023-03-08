@@ -2,15 +2,14 @@ package com.ghbt.ghbt_starbucks.category.service;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
 import com.ghbt.ghbt_starbucks.category.repository.ICategoryRepository;
-import com.ghbt.ghbt_starbucks.category.vo.RequestCategory;
-import com.ghbt.ghbt_starbucks.category.vo.ResponseCategory;
+import com.ghbt.ghbt_starbucks.category.dto.RequestCategory;
+import com.ghbt.ghbt_starbucks.category.dto.ResponseCategory;
 import com.ghbt.ghbt_starbucks.error.ServiceException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

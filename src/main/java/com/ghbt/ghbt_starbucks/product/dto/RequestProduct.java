@@ -1,13 +1,9 @@
-package com.ghbt.ghbt_starbucks.product.vo;
+package com.ghbt.ghbt_starbucks.product.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ghbt.ghbt_starbucks.category.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 import java.util.List;
 
 @Data
