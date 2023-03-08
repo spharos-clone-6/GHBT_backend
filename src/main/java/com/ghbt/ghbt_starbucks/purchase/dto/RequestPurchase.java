@@ -16,7 +16,6 @@ public class RequestPurchase {
     private String shippingAddress;
     private String productId;
     private String productName;
-    private String uuid;
     private Integer price;
 
 }

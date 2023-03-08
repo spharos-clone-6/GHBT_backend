@@ -9,9 +9,11 @@ import com.ghbt.ghbt_starbucks.user.repository.IUserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +26,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/purchase")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class PurchaseController {
     private final IPurchaseService iPurchaseService;
 
     //상품 구매
+    @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
+            " purchaseGgroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
     @PostMapping
     public ResponseEntity addPurchase(@RequestBody RequestPurchase requestPurchase, @LoginUser User loginUser) {
         Long purchasedId = iPurchaseService.addPurchase(requestPurchase, loginUser);
@@ -50,7 +55,7 @@ public class PurchaseController {
         return iPurchaseService.getAllPurchaseByUserId(user);
     }
 
-    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다 RequestBody에서 배송지만 변경해주세요")
+    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody에서 배송지와 parameter로 주문번호를 Long 으로 입력해주세요")
     @PutMapping("/{purchaseId}")
     public ResponseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody RequestPurchase requestPurchase) {
         iPurchaseService.updatePurchase(requestPurchase, purchaseId);
@@ -58,3 +63,4 @@ public class PurchaseController {
     }
 
 }
+
