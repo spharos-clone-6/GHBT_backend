@@ -5,7 +5,7 @@ public interface IProductSearch {
     String getName();
     Integer getPrice();
     String getDescription();
-    String getThumb_url();
+    String getThumbnail_url();
     Integer getStock();
     Integer getLike_count();
     Boolean getIs_best();

@@ -21,7 +21,7 @@ public class RequestProduct {
 
     private String description;
 
-    private String thumbUrl;
+    private String thumbnailUrl;
     private Integer stock;
     private Integer likeCount;
     private Boolean isBest;

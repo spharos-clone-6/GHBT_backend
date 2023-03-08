@@ -28,7 +28,7 @@ public class Product extends BaseTimeEntity {
     private String description;
 
     @Column(nullable = false, length = 1000)
-    private String thumbUrl;
+    private String thumbnailUrl;
 
     @Column(nullable = false)
     private Integer stock;
@@ -56,7 +56,7 @@ public class Product extends BaseTimeEntity {
         this.description = description;
         this.stock = stock;
         this.likeCount = likeCount;
-        this.thumbUrl = thumbUrl;
+        this.thumbnailUrl = thumbUrl;
         this.isBest = isBest;
     }
     }
