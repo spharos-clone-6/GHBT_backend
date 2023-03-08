@@ -5,6 +5,8 @@ import com.ghbt.ghbt_starbucks.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.security.dto.TokenDto;
 import com.ghbt.ghbt_starbucks.user.service.UserServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "회원가입/로그인/로그아웃/회원탈퇴")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class AuthController {
    * 회원가입
    */
   @PostMapping("/signup")
+  @Operation(summary = "회원가입", description = "상세 기능 : 회원가입폼에 입력된 정보로 회원가입을 진행합니다.")
   public ResponseEntity<Void> signup(@RequestBody @Valid SignupDto signupDto) {
     String encodedPassword = encoder.encode(signupDto.getPassword());
     SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
@@ -48,6 +52,7 @@ public class AuthController {
    * 로그인
    */
   @PostMapping("/login")
+  @Operation(summary = "로그인", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
   public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
     TokenDto tokenDto = authService.login(loginDto);
 
@@ -63,6 +68,7 @@ public class AuthController {
         .build();
   }
 
+  @Operation(summary = "토큰 검증", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
   @PostMapping("/validate")
   public ResponseEntity validate(@RequestHeader("Authorization") String requestAccessToken) {
     if (!authService.validate(requestAccessToken)) {
@@ -73,13 +79,15 @@ public class AuthController {
   }
 
   @PostMapping("/reissue")
+  @Operation(summary = "토큰 재발급 API", description = "상세 기능 : AccessToken이 만료되었을 때 재발급해주는 API입니다.")
   public ResponseEntity reissue(
       @CookieValue(name = "refresh-token") String refreshToken,
       @RequestHeader(name = "Authorization") String accessToken) {
 
     TokenDto reissuedTokenDto = authService.reissue(accessToken, refreshToken);
     if (reissuedTokenDto != null) {
-      ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
+      ResponseCookie responseCookie = ResponseCookie.from("refresh-token",
+              reissuedTokenDto.getRefreshToken())
           .maxAge(COOKIE_EXPIRATION)
           .httpOnly(true)
           .secure(true)
@@ -101,6 +109,7 @@ public class AuthController {
   }
 
   @PostMapping("/logout")
+  @Operation(summary = "로그아웃", description = "상세 기능 : 로그인한 유저를 로그아웃을합니다.")
   public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
     authService.logout(accessToken);
     ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
