@@ -15,20 +15,21 @@ import org.springframework.context.annotation.Configuration;
     name = "basicAuth",
     scheme = "bearer")
 public class swaggerConfig {
-    @Bean
-    public GroupedOpenApi jwtApi() {
-        return GroupedOpenApi.builder()
-                .group("jwt-api")
-                .pathsToMatch("/**")
-                .build();
-    }
 
-    @Bean
-    public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                .components(new Components())
-                .info(new Info().title("Spring Boot API Example")
-                        .description("Spring Boot API 예시 프로젝트입니다.")
-                        .version("v0.0.1"));
-    }
+  @Bean
+  public GroupedOpenApi jwtApi() {
+    return GroupedOpenApi.builder()
+        .group("jwt-api")
+        .pathsToMatch("/**")
+        .build();
+  }
+
+  @Bean
+  public OpenAPI customOpenAPI() {
+    return new OpenAPI()
+        .components(new Components())
+        .info(new Info().title("Spring Boot API Example")
+            .description("Spring Boot API 예시 프로젝트입니다.")
+            .version("v0.0.1"));
+  }
 }
