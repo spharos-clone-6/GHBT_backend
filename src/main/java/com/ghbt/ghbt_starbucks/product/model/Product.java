@@ -28,7 +28,7 @@ public class Product extends BaseTimeEntity {
     private String description;
 
     @Column(nullable = false, length = 1000)
-    private String thumbUrl;
+    private String thumbnailUrl;
 
     @Column(nullable = false)
     private Integer stock;
@@ -50,13 +50,13 @@ public class Product extends BaseTimeEntity {
     }
 
     public void updateProduct(String name, Integer price, String description, Integer stock, Integer likeCount,
-                              String thumbUrl, Boolean isBest){
+                              String thumbnailUrl, Boolean isBest){
         this.name = name;
         this.price = price;
         this.description = description;
         this.stock = stock;
         this.likeCount = likeCount;
-        this.thumbUrl = thumbUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.isBest = isBest;
     }
     }

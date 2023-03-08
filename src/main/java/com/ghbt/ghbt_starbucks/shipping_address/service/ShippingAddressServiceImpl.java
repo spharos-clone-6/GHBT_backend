@@ -8,7 +8,6 @@ import com.ghbt.ghbt_starbucks.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.shipping_address.model.ShippingAddress;
 import com.ghbt.ghbt_starbucks.shipping_address.repository.IShippingAddressRepository;
 import com.ghbt.ghbt_starbucks.user.model.User;
-import io.jsonwebtoken.io.SerialException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ShippingAddressService implements IShippingAddressService {
+public class ShippingAddressServiceImpl implements IShippingAddressService {
 
   private final IShippingAddressRepository iShippingAddressRepository;
 

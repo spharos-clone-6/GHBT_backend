@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity
@@ -14,7 +13,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Coupon extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +23,7 @@ public class Coupon extends BaseTimeEntity {
     @Column(name = "discount_price", nullable = false, length = 255)
     private Integer discountPrice;
 
-    @Column(name = "is_free", nullable = false, length = 255)
-    private Boolean isFree;
+    @Column(name = "coupon_type", nullable = false, length = 255)
+    private Integer couponType;
 
 }

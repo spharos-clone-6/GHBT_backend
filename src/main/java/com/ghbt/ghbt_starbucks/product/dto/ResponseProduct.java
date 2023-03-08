@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.product.vo;
+package com.ghbt.ghbt_starbucks.product.dto;
 
 
 import com.ghbt.ghbt_starbucks.product.model.Product;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class ResponseProduct {
     private String name;
     private Integer price;
     private String description;
-    private String thumbUrl;
+    private String thumbnailUrl;
     private Integer stock;
     private Integer likeCount;
     private Boolean isBest;
@@ -32,7 +31,7 @@ public class ResponseProduct {
             responseProducts.add(ResponseProduct.builder()
                     .id(product.getId()).name(product.getName())
                     .price(product.getPrice()).description(product.getDescription())
-                    .thumbUrl(product.getThumbUrl()).likeCount(product.getLikeCount())
+                    .thumbnailUrl(product.getThumbnailUrl()).likeCount(product.getLikeCount())
                     .isBest(product.getIsBest()).stock(product.getStock()).build());
         }
         return responseProducts;

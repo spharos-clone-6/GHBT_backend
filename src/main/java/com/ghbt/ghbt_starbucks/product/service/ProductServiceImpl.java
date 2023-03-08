@@ -7,8 +7,8 @@ import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
-import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
-import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
+import com.ghbt.ghbt_starbucks.product.dto.RequestProduct;
+import com.ghbt.ghbt_starbucks.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.product_and_category.model.ProductAndCategory;
 import com.ghbt.ghbt_starbucks.product_and_category.repository.IProductAndCategoryRepository;
 import lombok.Data;
@@ -37,7 +37,7 @@ public class ProductServiceImpl implements IProductService{
                 .name(requestProduct.getName())
                 .description(requestProduct.getDescription())
                 .price(requestProduct.getPrice())
-                .thumbUrl(requestProduct.getThumbUrl())
+                .thumbnailUrl(requestProduct.getThumbnailUrl())
                 .stock(requestProduct.getStock())
                 .build();
         Product savedProduct = iProductRepository.save(product);
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements IProductService{
                 .name(savedProduct.getName())
                 .price(savedProduct.getPrice())
                 .description(savedProduct.getDescription())
-                .thumbUrl(savedProduct.getThumbUrl())
+                .thumbnailUrl(savedProduct.getThumbnailUrl())
                 .stock(savedProduct.getStock())
                 .likeCount(savedProduct.getLikeCount())
                 .isBest(savedProduct.getIsBest())
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements IProductService{
                 .name(product.getName())
                 .price(product.getPrice())
                 .description(product.getDescription())
-                .thumbUrl(product.getThumbUrl())
+                .thumbnailUrl(product.getThumbnailUrl())
                 .stock(product.getStock())
                 .isBest(product.getIsBest())
                 .build();
@@ -121,7 +121,7 @@ public class ProductServiceImpl implements IProductService{
                 requestProduct.getDescription(),
                 requestProduct.getStock(),
                 requestProduct.getLikeCount(),
-                requestProduct.getThumbUrl(),
+                requestProduct.getThumbnailUrl(),
                 requestProduct.getIsBest()
                 );
         iProductRepository.save(product);

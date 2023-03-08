@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.category.vo;
+package com.ghbt.ghbt_starbucks.category.dto;
 
 import lombok.Data;
 
