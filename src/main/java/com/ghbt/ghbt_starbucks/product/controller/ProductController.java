@@ -1,20 +1,18 @@
 package com.ghbt.ghbt_starbucks.product.controller;
 
-import com.ghbt.ghbt_starbucks.category.service.ICategoryService;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.product.service.IProductService;
-import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
-import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
+import com.ghbt.ghbt_starbucks.product.dto.RequestProduct;
+import com.ghbt.ghbt_starbucks.product.dto.ResponseProduct;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

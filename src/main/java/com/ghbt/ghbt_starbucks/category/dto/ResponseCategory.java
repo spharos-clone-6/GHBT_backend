@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.category.vo;
+package com.ghbt.ghbt_starbucks.category.dto;
 
 import com.ghbt.ghbt_starbucks.category.model.Category;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 

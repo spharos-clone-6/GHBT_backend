@@ -50,13 +50,13 @@ public class Product extends BaseTimeEntity {
     }
 
     public void updateProduct(String name, Integer price, String description, Integer stock, Integer likeCount,
-                              String thumbUrl, Boolean isBest){
+                              String thumbnailUrl, Boolean isBest){
         this.name = name;
         this.price = price;
         this.description = description;
         this.stock = stock;
         this.likeCount = likeCount;
-        this.thumbnailUrl = thumbUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.isBest = isBest;
     }
     }
