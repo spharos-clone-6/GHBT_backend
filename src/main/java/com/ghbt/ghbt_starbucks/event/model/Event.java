@@ -25,9 +25,9 @@ public class Event extends BaseTimeEntity {
     @Column(name = "description",nullable = false, length = 255)
     private String description;
 
-    @Column(name = "thumb_url",nullable = false, length = 255)
-    private String thumbUrl;
+    @Column(name = "thumbnail_url",nullable = false, length = 255)
+    private String thumbnailUrl;
 
-    @Column(name = "des_url",nullable = false, length = 255)
-    private String desUrl;
+    @Column(name = "description_url",nullable = false, length = 255)
+    private String descriptionUrl;
 }

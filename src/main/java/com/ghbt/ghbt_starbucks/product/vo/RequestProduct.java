@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestProduct {
+public class    RequestProduct {
     private Long id;
     private String name;
 
