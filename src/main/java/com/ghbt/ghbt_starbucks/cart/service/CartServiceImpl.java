@@ -28,11 +28,11 @@ public class CartServiceImpl implements ICartService{
     private final IProductRepository iProductRepository;
 
     @Override
-    public void addCart(RequestCart requestCart) {
+    public void addCart(RequestCart requestCart,User loginUser) {
 
         //삭제된 cart_list 인지 확인
 
-        ICartRepository.FindOneCartId preCheckCartId = iCartRepository.findAllByDeletedId(requestCart.getUserId(),requestCart.getProductId());
+        ICartRepository.FindOneCartId preCheckCartId = iCartRepository.findAllByDeletedId(loginUser.getId(),requestCart.getProductId());
 
         //삭제된 cart_list 라면 복구
         if(preCheckCartId != null) {
@@ -46,7 +46,7 @@ public class CartServiceImpl implements ICartService{
 
         Product product = iProductRepository.findById(requestCart.getProductId()).get();
 
-        User user = iUserRepository.findById(requestCart.getUserId()).get();
+        User user = iUserRepository.findById(loginUser.getId()).get();
 
         Cart cart = Cart.builder()
                 .product(product)
@@ -86,6 +86,18 @@ public class CartServiceImpl implements ICartService{
     public void deleteCart(Long id) {
 
         iCartRepository.deleteById(id);
+    }
+
+    @Override
+    public ResponseCart updateCart(Long cartId, Integer quantity) {
+        Cart nowCart = iCartRepository.findById(cartId).get();
+        nowCart.setQuantity(quantity);
+        Cart updatedCart = iCartRepository.save(nowCart);
+        return ResponseCart.builder()
+                .user(updatedCart.getUser())
+                .quantity(updatedCart.getQuantity())
+                .product(updatedCart.getProduct())
+                .build();
     }
 
 
