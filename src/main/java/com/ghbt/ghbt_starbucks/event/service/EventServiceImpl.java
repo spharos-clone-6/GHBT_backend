@@ -27,8 +27,16 @@ public class EventServiceImpl implements IEventService{
     }
 
     @Override
-    public ResponseEvent getEventById(Long Id) {
-        return null;
+    public ResponseEvent getEventById(Long id) {
+        Event event = iEventRepository.findById(id).get();
+
+        return ResponseEvent.builder()
+                .description(event.getDescription())
+                .descriptionUrl(event.getDescriptionUrl())
+                .id(event.getId())
+                .name(event.getName())
+                .thumbnailUrl(event.getThumbnailUrl())
+                .build();
     }
 
     @Override
