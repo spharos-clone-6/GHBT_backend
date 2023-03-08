@@ -4,30 +4,39 @@ import com.ghbt.ghbt_starbucks.category.service.ICategoryService;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.product.model.Product;
 import com.ghbt.ghbt_starbucks.product.Projection.IProductListByCategory;
+import com.ghbt.ghbt_starbucks.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.product.service.IProductService;
 import com.ghbt.ghbt_starbucks.product.vo.RequestProduct;
 import com.ghbt.ghbt_starbucks.product.vo.ResponseProduct;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "상품")
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000")
 
 public class ProductController {
     private final IProductService iProductService;
-    private final ICategoryService iCategoryService;
+    private final IProductRepository iProductRepository;
     @PostMapping
-    public ResponseProduct addProduct(@RequestBody RequestProduct requestProduct){
-        return iProductService.addProduct(requestProduct);
+    public ResponseEntity addProduct(@RequestBody List<RequestProduct> requestProductList){
+        for (RequestProduct requestProduct: requestProductList){
+            iProductService.addProduct(requestProduct);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(requestProductList);
     }
 
     @GetMapping("/{productId}") // 상품 추가
@@ -40,7 +49,7 @@ public class ProductController {
 //        return iProductService.getAllProduct();
 //    }
 
-    @GetMapping("/category-search/{search}") // 카테고리별 상품 조회
+    @GetMapping("/search-category/{search}") // 카테고리별 상품 조회
     public ResponseEntity findAllProductType(@PathVariable String search){
         List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(search);
         return ResponseEntity.status(HttpStatus.OK)
@@ -53,23 +62,36 @@ public class ProductController {
                 .body(searchProduct);
     }
 
-    @GetMapping
-    public Page<Product> productPaging(final Pageable pageable){
+    @GetMapping // 전체 상품 조회 페이지
+    public Slice<Product> productPaging(final Pageable pageable){
         return iProductService.getList(pageable);
     }
 
-    @PutMapping("/{product_id}")
+    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
+    public Slice<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord)
+//                                                             @RequestParam("page") Integer page, @RequestParam("size") Integer size
+    {
+        PageRequest pageRequest = PageRequest.of(0, 3);
+        return iProductRepository.findByName(keyWord, pageRequest);
+    }
+//    @GetMapping("/product/{key_word}")
+//    public Slice<Product> searchNameList(@PathVariable String key_word, final Pageable pageable){
+//        return iProductService.searchNameList(key_word, pageable);
+//    }
+
+    @PutMapping("/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
             @PathVariable("product_id") Long productId,
             @RequestBody RequestProduct requestProduct){
         iProductService.updateProduct(productId, requestProduct);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    @DeleteMapping("/{product_id}")
+    @DeleteMapping("/{product_id}") // 상품 삭제
     public ResponseEntity deleteProduct(
             @PathVariable("product_id") Long ProductId){
         iProductService.deleteProduct(ProductId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
 }
