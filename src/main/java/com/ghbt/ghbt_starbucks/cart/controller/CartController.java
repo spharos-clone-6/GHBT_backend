@@ -30,22 +30,27 @@ public class CartController {
         iCartService.addCart(requestCart,loginUser);
     }
 
-    @GetMapping("/my_cart/{id}")
-    public List<ResponseCart> responseCart(@PathVariable Long id){
+    @GetMapping("/my_cart")
+    @Operation(summary = "내가 담은 장바구니들 찾기", description = "로그인한 유저만 가능!!!")
+    public List<ResponseCart> responseCart(@LoginUser User loginUser){
+        Long id = loginUser.getId();
         return iCartService.getAllCartByUserId(id);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "장바구니 상품 아이디값으로 검색", description = "장바구니 cart_id 입력해주세요")
     public ResponseCart getResponseCart(@PathVariable Long id){
         return iCartService.getCart(id);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "장바구니 상품 삭제", description = "장바구니 cart_id 입력해주세요")
     public void deleteCart(@PathVariable Long id){
         iCartService.deleteCart(id);
     }
 
     @PutMapping("/{id}/{quantity}")
+    @Operation(summary = "장바구니 상품 개수 업데이트", description = "장바구니 id 값과 개수 quantity를 입력해주세요")
     public ResponseCart updateResponseCart(@PathVariable Long id, @PathVariable Integer quantity){
         return iCartService.updateCart(id,quantity);
     }
