@@ -4,6 +4,8 @@ package com.ghbt.ghbt_starbucks.cart.controller;
 import com.ghbt.ghbt_starbucks.cart.service.ICartService;
 import com.ghbt.ghbt_starbucks.cart.vo.RequestCart;
 import com.ghbt.ghbt_starbucks.cart.vo.ResponseCart;
+import com.ghbt.ghbt_starbucks.security.annotation.LoginUser;
+import com.ghbt.ghbt_starbucks.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +16,7 @@ import java.util.List;
 
 @Tag(name = "장바구니")
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,9 +25,9 @@ public class CartController {
     private final ICartService iCartService;
 
     @PostMapping()
-    @Operation(summary = "장바구니 담기", description = "userid 와 productid 를 long으로 입력해주세요")
-    public void addCart(@RequestBody RequestCart requestCart){
-        iCartService.addCart(requestCart);
+    @Operation(summary = "장바구니 담기", description = " productid(long) 수량(integer) 입력해주세요 !!로그인 유저만 가능")
+    public void addCart(@RequestBody RequestCart requestCart, @LoginUser User loginUser){
+        iCartService.addCart(requestCart,loginUser);
     }
 
     @GetMapping("/my_cart/{id}")
