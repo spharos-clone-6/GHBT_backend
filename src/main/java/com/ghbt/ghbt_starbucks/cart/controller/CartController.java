@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Cart")
+@Tag(name = "장바구니")
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
