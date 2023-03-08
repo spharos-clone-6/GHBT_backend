@@ -14,4 +14,6 @@ public interface ICartService {
     List<ResponseCart> getAllCartByUserId(Long userId);
 
     void deleteCart(Long Id);
+
+    ResponseCart updateCart(Long cartId, Integer quantity);
 }

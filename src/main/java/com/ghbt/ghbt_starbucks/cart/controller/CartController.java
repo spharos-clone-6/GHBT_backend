@@ -44,4 +44,9 @@ public class CartController {
     public void deleteCart(@PathVariable Long id){
         iCartService.deleteCart(id);
     }
+
+    @PutMapping("/{id}/{quantity}")
+    public ResponseCart updateResponseCart(@PathVariable Long id, @PathVariable Integer quantity){
+        return iCartService.updateCart(id,quantity);
+    }
 }

@@ -88,5 +88,17 @@ public class CartServiceImpl implements ICartService{
         iCartRepository.deleteById(id);
     }
 
+    @Override
+    public ResponseCart updateCart(Long cartId, Integer quantity) {
+        Cart nowCart = iCartRepository.findById(cartId).get();
+        nowCart.setQuantity(quantity);
+        Cart updatedCart = iCartRepository.save(nowCart);
+        return ResponseCart.builder()
+                .user(updatedCart.getUser())
+                .quantity(updatedCart.getQuantity())
+                .product(updatedCart.getProduct())
+                .build();
+    }
+
 
 }
