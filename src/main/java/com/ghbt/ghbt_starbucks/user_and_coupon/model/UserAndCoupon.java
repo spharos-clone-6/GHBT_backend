@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.coupon_list.model;
+package com.ghbt.ghbt_starbucks.user_and_coupon.model;
 
 
 import com.ghbt.ghbt_starbucks.coupon.model.Coupon;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CouponList {
+public class UserAndCoupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
