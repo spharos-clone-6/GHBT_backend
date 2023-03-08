@@ -6,5 +6,5 @@ public interface IProductListByCategory {
      Long getId();
      String getName();
      Integer getPrice();
-     String getThumbUrl();
+     String getThumb_url();
 }

@@ -19,5 +19,5 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT id AS id, name AS name, price AS price, description AS description, stock AS stock, is_best AS is_best,like_count AS like_count,thumb_url AS thumb_url FROM product where name LIKE %:search%", nativeQuery = true)
     List<IProductSearch> findProduct (@Param("search")  String search);
 
-    Slice<Product> findByName(@Param("keyWord")String keyWord, Pageable pageable);
+    Page<Product> findByNameContains(String keyWord, Pageable pageable);
 }
