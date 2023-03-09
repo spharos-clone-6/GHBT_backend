@@ -19,20 +19,19 @@ public class EventController {
     private final IEventService iEventService;
 
     @PostMapping()
-    public void addEvent(@RequestBody RequestEvent requestEvent){
+    public void addEvent(@RequestBody RequestEvent requestEvent) {
         iEventService.addEvent(requestEvent);
     }
 
     @GetMapping("/{id}")
-    public ResponseEvent getEventById(@PathVariable Long id){
+    public ResponseEvent getEventById(@PathVariable Long id) {
         return iEventService.getEventById(id);
     }
 
     @GetMapping("/name/{name}")
-    public ResponseEvent getEventByName(@PathVariable String name){
+    public ResponseEvent getEventByName(@PathVariable String name) {
         return iEventService.getEventByName(name);
     }
-
 
 
 }

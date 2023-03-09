@@ -13,7 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Data
+@Getter
+@Setter
 @SQLDelete(sql = "update cart set deleted = true where id=?")
 public class Cart extends BaseTimeEntity {
     @Id

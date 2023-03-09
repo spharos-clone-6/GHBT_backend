@@ -1,16 +1,14 @@
 package com.ghbt.ghbt_starbucks.api.event.model;
 
 import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Builder
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Event extends BaseTimeEntity {
