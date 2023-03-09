@@ -10,13 +10,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestProduct {
+
     private Long id;
     private String name;
-
     private Integer price;
-
     private String description;
-
     private String thumbnailUrl;
     private Integer stock;
     private Integer likeCount;

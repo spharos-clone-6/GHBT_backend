@@ -10,11 +10,12 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicInsert
 public class Product extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,14 +46,14 @@ public class Product extends BaseTimeEntity {
 
 
     @PrePersist
-    public void prePersist(){
-        this.likeCount = this.likeCount == null ? 0:this.likeCount;
+    public void prePersist() {
+        this.likeCount = this.likeCount == null ? 0 : this.likeCount;
         this.isBest = this.isBest != null && this.isBest;
         this.isNew = this.isNew != null && this.isNew;
     }
 
     public void updateProduct(String name, Integer price, String description, Integer stock, Integer likeCount,
-                              String thumbnailUrl, Boolean isBest){
+        String thumbnailUrl, Boolean isBest) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -61,5 +62,5 @@ public class Product extends BaseTimeEntity {
         this.thumbnailUrl = thumbnailUrl;
         this.isBest = isBest;
     }
-    }
+}
 
