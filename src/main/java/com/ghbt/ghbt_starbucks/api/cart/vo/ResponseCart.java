@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseCart {
+
     private Integer quantity;
     private User user;
     private Product product;
