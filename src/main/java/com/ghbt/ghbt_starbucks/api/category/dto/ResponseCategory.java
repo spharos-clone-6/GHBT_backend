@@ -18,11 +18,13 @@ public class ResponseCategory {
     private String name;
     private String type;
 
+
     public static List<ResponseCategory> mapper(List<Category> categories){
         List<ResponseCategory> responseCategories = new ArrayList<>();
 
         for (Category category : categories) {
-            responseCategories.add(ResponseCategory.builder().id(category.getId()).name(category.getName()).type(category.getType()).build());
+            responseCategories.add(ResponseCategory.builder().id(category.getId()).name(category.getName())
+                    .type(category.getType()).build());
         }
         return responseCategories;
     }

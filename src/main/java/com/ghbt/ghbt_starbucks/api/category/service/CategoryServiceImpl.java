@@ -22,30 +22,29 @@ public class CategoryServiceImpl implements ICategoryService{
 
 
     @Override
-    public ResponseCategory addCategory(RequestCategory requestCategory) {
+    public void addCategory(RequestCategory requestCategory) {
         Category category = Category.builder()
                 .name(requestCategory.getName())
                 .type(requestCategory.getType())
                 .build();
-        Category resCategory = iCategoryRepository.save(category);
+        Category saveCategory = iCategoryRepository.save(category);
 
-        ResponseCategory responseCategory = ResponseCategory.builder()
-                .id(resCategory.getId())
-                .name(resCategory.getName())
-                .type(resCategory.getType())
+        ResponseCategory.builder()
+                .id(saveCategory.getId())
+                .name(saveCategory.getName())
+                .type(saveCategory.getType())
                 .build();
-        return responseCategory;
     }
 
     @Override
     public ResponseCategory getCategory(Long id) {
         Category category = iCategoryRepository.findById(id).orElseThrow(()->new ServiceException("존재하지 않는 ID 입니다.", HttpStatus.NO_CONTENT));
-        ResponseCategory responseCategory = ResponseCategory.builder()
+
+        return ResponseCategory.builder()
                 .id(category.getId())
                 .name(category.getName())
                 .type(category.getType())
                 .build();
-        return responseCategory;
     }
 
 
@@ -55,7 +54,6 @@ public class CategoryServiceImpl implements ICategoryService{
         if(categoryList.isEmpty()){
             throw new ServiceException("검색 결과가 없습니다.",HttpStatus.NO_CONTENT);
         }
-
         return ResponseCategory.mapper(categoryList);
     }
 }
