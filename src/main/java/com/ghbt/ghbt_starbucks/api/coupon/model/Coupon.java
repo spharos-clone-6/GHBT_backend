@@ -1,18 +1,13 @@
 package com.ghbt.ghbt_starbucks.api.coupon.model;
-
-import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import javax.persistence.*;
 
 @Entity
 @Builder
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Coupon extends BaseTimeEntity {
+public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

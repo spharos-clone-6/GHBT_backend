@@ -25,14 +25,14 @@ public class PurchaseController {
 
     //상품 구매
     @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
-            " purchaseGgroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
+            " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
     @PostMapping
     public ResponseEntity addPurchase(@RequestBody RequestPurchase requestPurchase, @LoginUser User loginUser) {
         Long purchasedId = iPurchaseService.addPurchase(requestPurchase, loginUser);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long으로 입력해주세요")
+    @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")
 
     @Parameters({
             @Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")
@@ -48,7 +48,7 @@ public class PurchaseController {
         return iPurchaseService.getAllPurchaseByUserId(user);
     }
 
-    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody에서 배송지와 parameter로 주문번호를 Long 으로 입력해주세요")
+    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody 안의 배송지와 parameter 주문번호를 Long 으로 입력해주세요")
     @PutMapping("/{purchaseId}")
     public ResponseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody RequestPurchase requestPurchase) {
         iPurchaseService.updatePurchase(requestPurchase, purchaseId);

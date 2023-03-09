@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
 @Entity
@@ -25,6 +24,5 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private String type;
 
-
-
 }
+
