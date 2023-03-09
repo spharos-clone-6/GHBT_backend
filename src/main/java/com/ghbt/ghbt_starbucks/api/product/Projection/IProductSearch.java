@@ -9,4 +9,5 @@ public interface IProductSearch {
     Integer getStock();
     Integer getLike_count();
     Boolean getIs_best();
+    Boolean getIs_new();
 }

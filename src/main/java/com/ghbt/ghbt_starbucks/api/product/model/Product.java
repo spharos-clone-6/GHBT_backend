@@ -1,15 +1,13 @@
 package com.ghbt.ghbt_starbucks.api.product.model;
 
 import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @Data
@@ -37,6 +35,9 @@ public class Product extends BaseTimeEntity {
     @ColumnDefault("false")
     private Boolean isBest;
 
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isNew;
 
     @Column(nullable = false)
     @ColumnDefault("0")
@@ -46,7 +47,8 @@ public class Product extends BaseTimeEntity {
     @PrePersist
     public void prePersist(){
         this.likeCount = this.likeCount == null ? 0:this.likeCount;
-        this.isBest = this.isBest == null ? false:this.isBest;
+        this.isBest = this.isBest != null && this.isBest;
+        this.isNew = this.isNew != null && this.isNew;
     }
 
     public void updateProduct(String name, Integer price, String description, Integer stock, Integer likeCount,

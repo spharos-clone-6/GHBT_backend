@@ -23,6 +23,7 @@ public class ResponseProduct {
     private Integer stock;
     private Integer likeCount;
     private Boolean isBest;
+    private Boolean isNew;
 
     public static List<ResponseProduct> mapper(List<Product> products){
         List<ResponseProduct> responseProducts = new ArrayList<>();

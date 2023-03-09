@@ -21,6 +21,7 @@ public class RequestProduct {
     private Integer stock;
     private Integer likeCount;
     private Boolean isBest;
+    private Boolean isNew;
     private List<String> categoryList;
 
 }

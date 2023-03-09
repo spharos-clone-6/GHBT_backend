@@ -48,7 +48,7 @@ public class ProductServiceImpl implements IProductService{
                     .product(savedProduct)
                     .category(findCategory)
                     .build();
-            ProductAndCategory resProductAndCategory = iProductAndCategoryRepository.save(productAndCategory);
+            iProductAndCategoryRepository.save(productAndCategory);
         }
 
         ResponseProduct responseProduct = ResponseProduct.builder()
