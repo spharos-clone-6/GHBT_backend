@@ -77,7 +77,7 @@ public class CartServiceImpl implements ICartService{
     @Override
     public List<ResponseCart> getAllCartByUserId(Long userId) {
         ModelMapper modelMapper = new ModelMapper();
-        List<Cart> carts= iCartRepository.findAllByUser_Id(userId);
+        List<Cart> carts= iCartRepository.findAllByUser_IdAndDeleted(userId,false);
 
         List<ResponseCart> responseCartList = new ArrayList<>();
         carts.forEach(cart -> {

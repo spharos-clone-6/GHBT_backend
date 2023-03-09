@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ICartRepository extends JpaRepository<Cart, Long> {
-    List<Cart> findAllByUser_Id(Long userid);
+    List<Cart> findAllByUser_IdAndDeleted(Long userid,Boolean deleted);
 
     //and (:uid is null or u.id = :uid) and (:pid is null or p.id = :pid)
     Cart findByUserIdAndProductId(Long userId,Long productId);
