@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Entity
 @Data
 @SQLDelete(sql = "update cart set deleted = true where id=?")
-@Where(clause = "deleted = false")
 public class Cart extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
