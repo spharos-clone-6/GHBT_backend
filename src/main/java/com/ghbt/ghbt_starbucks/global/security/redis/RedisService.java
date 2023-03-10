@@ -11,25 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RedisService {
 
-  private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-  @Transactional
-  public void setValues(String key, String value) {
-    redisTemplate.opsForValue().set(key, value);
-  }
+    @Transactional
+    public void setValues(String key, String value) {
+        redisTemplate.opsForValue().set(key, value);
+    }
 
-  @Transactional
-  public void setValuesWithTimeout(String key, String value, long timeout) {
-    redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MILLISECONDS);
-  }
+    @Transactional
+    public void setValuesWithTimeout(String key, String value, long timeout) {
+        redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.MILLISECONDS);
+    }
 
-  public String getValues(String key) {
-    return redisTemplate.opsForValue().get(key);
-  }
+    public String getValues(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
 
-  @Transactional
-  public void deleteValues(String key) {
-    redisTemplate.delete(key);
-  }
+    @Transactional
+    public void deleteValues(String key) {
+        redisTemplate.delete(key);
+    }
 
 }

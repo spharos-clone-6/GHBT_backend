@@ -13,11 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-  @Override
-  public void handle(HttpServletRequest request, HttpServletResponse response,
-      AccessDeniedException accessDeniedException) throws IOException, ServletException {
-    response.setCharacterEncoding("utf-8");
-    response.sendError(403, "권한이 없습니다.");
-
-  }
+    @Override
+    public void handle(HttpServletRequest request, HttpServletResponse response,
+        AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        response.setCharacterEncoding("utf-8");
+        response.sendError(403, "권한이 없습니다.");
+    }
 }

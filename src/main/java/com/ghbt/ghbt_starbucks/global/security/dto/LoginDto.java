@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginDto {
 
-  @NotBlank
-  private String email;
-  @NotBlank
-  private String password;
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String password;
 
-  @Builder
-  public LoginDto(String email, String password) {
-    this.email = email;
-    this.password = password;
-  }
+    @Builder
+    public LoginDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

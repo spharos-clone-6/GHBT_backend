@@ -24,52 +24,52 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final JwtTokenProvider jwtTokenProvider;
-  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-  @Bean
-  public BCryptPasswordEncoder encoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public BCryptPasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public WebSecurityCustomizer webSecurityCustomizer() {
-    return (web) -> web
-        .ignoring()
-        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-  }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web
+            .ignoring()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf().disable()
-        .httpBasic().disable()
-        .formLogin().disable()
-        .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable()
+            .httpBasic().disable()
+            .formLogin().disable()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-        .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-        .accessDeniedHandler(jwtAccessDeniedHandler)
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .accessDeniedHandler(jwtAccessDeniedHandler)
 
-        .and()
-        .authorizeRequests()
-        .antMatchers("/shipping-address/**").authenticated() // 예시 마이페이지는 인증이 필요하
-        .antMatchers("/admin/**").hasRole("ADMIN") // 예시 관리자페이즈는 권한이 필요하다.
-        .anyRequest().permitAll()
+            .and()
+            .authorizeRequests()
+            .antMatchers("/shipping-address/**").authenticated() // 예시 마이페이지는 인증이 필요하
+            .antMatchers("/admin/**").hasRole("ADMIN") // 예시 관리자페이즈는 권한이 필요하다.
+            .anyRequest().permitAll()
 
-        .and()
-        .headers()
-        .frameOptions().sameOrigin();
+            .and()
+            .headers()
+            .frameOptions().sameOrigin();
 
-    return http.build();
-  }
+        return http.build();
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    @Bean
+    public AuthenticationManager authenticationManager(
+        AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 }

@@ -18,36 +18,36 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-  @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
-    String accessToken = resolveToken(request);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
+        String accessToken = resolveToken(request);
 
-    try {
-      if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("authentication 을 SecurityContextHolder 에 저장하였습니다.");
-      }
-    } catch (IncorrectClaimException e) {
-      SecurityContextHolder.clearContext();
-      log.debug("올바른 JWT 토큰이 아닙니다.");
-      response.sendError(403);
-    } catch (UsernameNotFoundException e) {
-      SecurityContextHolder.clearContext();
-      log.debug("유저를 찾을 수 없습니다.");
-      response.sendError(403);
+        try {
+            if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("authentication 을 SecurityContextHolder 에 저장하였습니다.");
+            }
+        } catch (IncorrectClaimException e) {
+            SecurityContextHolder.clearContext();
+            log.debug("올바른 JWT 토큰이 아닙니다.");
+            response.sendError(403);
+        } catch (UsernameNotFoundException e) {
+            SecurityContextHolder.clearContext();
+            log.debug("유저를 찾을 수 없습니다.");
+            response.sendError(403);
+        }
+        filterChain.doFilter(request, response);
     }
-    filterChain.doFilter(request, response);
-  }
 
-  private String resolveToken(HttpServletRequest request) {
-    String bearerToken = request.getHeader("Authorization");
-    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
-    return null;
-  }
 }
