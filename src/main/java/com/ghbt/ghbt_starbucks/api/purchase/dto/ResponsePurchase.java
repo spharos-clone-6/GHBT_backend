@@ -3,15 +3,13 @@ package com.ghbt.ghbt_starbucks.api.purchase.dto;
 import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.model.ShippingStatus;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ResponsePurchase {
 
     private Long id;
@@ -36,16 +34,16 @@ public class ResponsePurchase {
 
     public static ResponsePurchase from(Purchase purchase) {
         return ResponsePurchase.builder()
-                .id(purchase.getId())
-                .user(purchase.getUser())
-                .quantity(purchase.getQuantity())
-                .purchaseGroup(purchase.getPurchaseGroup())
-                .shippingStatus(purchase.getShippingStatus())
-                .shippingAddress(purchase.getShippingAddress())
-                .productId(purchase.getProductId())
-                .productName(purchase.getProductName())
-                .uuid(purchase.getUuid())
-                .price(purchase.getPrice())
-                .build();
+            .id(purchase.getId())
+            .user(purchase.getUser())
+            .quantity(purchase.getQuantity())
+            .purchaseGroup(purchase.getPurchaseGroup())
+            .shippingStatus(purchase.getShippingStatus())
+            .shippingAddress(purchase.getShippingAddress())
+            .productId(purchase.getProductId())
+            .productName(purchase.getProductName())
+            .uuid(purchase.getUuid())
+            .price(purchase.getPrice())
+            .build();
     }
 }
