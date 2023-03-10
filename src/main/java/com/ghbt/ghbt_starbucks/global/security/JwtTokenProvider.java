@@ -108,9 +108,6 @@ public class JwtTokenProvider implements InitializingBean {
     //== 토큰 검증 ==//
     public boolean validateRefreshToken(String refreshToken) {
         try {
-            if (redisService.getValues(refreshToken).equals("delete")) {
-                return false;
-            }
             Jwts.parserBuilder()
                 .setSigningKey(signingKey)
                 .build()
