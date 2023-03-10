@@ -9,33 +9,36 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@Tag(name ="구매", description = "구매 관련 API")
+@Tag(name = "구매", description = "구매 관련 API")
 @RestController
 @RequestMapping("/api/purchase")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class PurchaseController {
+
     private final IPurchaseService iPurchaseService;
 
     //상품 구매
     @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
-            " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
+        " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
     @PostMapping
-    public ResponseEntity addPurchase(@RequestBody RequestPurchase requestPurchase, @LoginUser User loginUser) {
-        Long purchasedId = iPurchaseService.addPurchase(requestPurchase, loginUser);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+    public ResponseEntity<Object> addPurchase(@RequestBody RequestPurchase requestPurchase,
+        @LoginUser User loginUser) {
+        iPurchaseService.addPurchase(requestPurchase, loginUser);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")
 
     @Parameters({
-            @Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")
+        @Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")
     })
     @GetMapping("/{purchaseId}")
     public ResponsePurchase getPurchaseById(@PathVariable Long purchaseId) {
@@ -50,9 +53,10 @@ public class PurchaseController {
 
     @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody 안의 배송지와 parameter 주문번호를 Long 으로 입력해주세요")
     @PutMapping("/{purchaseId}")
-    public ResponseEntity updatePurchase(@PathVariable Long purchaseId, @RequestBody RequestPurchase requestPurchase) {
+    public ResponseEntity<Objects> updatePurchase(@PathVariable Long purchaseId,
+        @RequestBody RequestPurchase requestPurchase) {
         iPurchaseService.updatePurchase(requestPurchase, purchaseId);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
