@@ -18,27 +18,29 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 
 public class CategoryController {
+
     private final ICategoryService iCategoryService;
 
     @PostMapping
-    public ResponseEntity addCategory(@RequestBody List<RequestCategory> requestCategoryList){
-        for (RequestCategory requestCategory:requestCategoryList) {
+    public ResponseEntity addCategory(@RequestBody List<RequestCategory> requestCategoryList) {
+        for (RequestCategory requestCategory : requestCategoryList) {
             iCategoryService.addCategory(requestCategory);
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(requestCategoryList);
+            .body(requestCategoryList);
     }
 
     @GetMapping("/{id}")
-    public ResponseCategory getCategory(@PathVariable Long id){
+    public ResponseCategory getCategory(@PathVariable Long id) {
         return iCategoryService.getCategory(id);
     }
+
     @GetMapping
-    public ResponseEntity getAllCategory(){
+    public ResponseEntity getAllCategory() {
         List<ResponseCategory> categoryList = iCategoryService.getAllCategory();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(categoryList);
+            .body(categoryList);
     }
 
 }

@@ -23,63 +23,62 @@ import lombok.NoArgsConstructor;
 @Entity
 public class User extends BaseTimeEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(name = "name")
+    @Column(name = "name")
+    private String name;
 
-  private String name;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-  @Enumerated(EnumType.STRING)
-  private Role role;
+    @Column(name = "user_uuid")
+    private String userUUID;
 
-  @Column(name = "user_uuid")
-  private String userUUID;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-  @Column(name = "password", nullable = false)
-  private String password;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-  @Column(name = "phone_number")
-  private String phoneNumber;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-  @Column(name = "email", nullable = false)
-  private String email;
+    @Column(name = "is_agree")
+    private Boolean isAgree;
 
-  @Column(name = "is_agree")
-  private Boolean isAgree;
+    @Column(name = "star")
+    private Integer star;
 
-  @Column(name = "star")
-  private Integer star;
+    @Column(name = "nick_name")
+    private String nickName;
 
-  @Column(name = "nick_name")
-  private String nickName;
+    @Column(name = "gender")
+    private Boolean gender;
 
-  @Column(name = "gender")
-  private Boolean gender;
+    @Column(name = "reward")
+    private Boolean reward;
 
-  @Column(name = "reward")
-  private Boolean reward;
+    @Column(name = "cash_recipe")
+    private String cashRecipe;
 
-  @Column(name = "cash_recipe")
-  private String cashRecipe;
+    @Column(name = "business_recipe")
+    private String businessRecipe;
 
-  @Column(name = "business_recipe")
-  private String businessRecipe;
+    //==편의 메서드==//
+    //최초 회원가입시 들어가는 정보
+    public static User signinUser(SignupDto signupDto) {
+        return new UserBuilder()
+            .email(signupDto.getEmail())
+            .password(signupDto.getPassword())
+            .role(Role.USER)
+            .build();
+    }
 
-  //==편의 메서드==//
-  //최초 회원가입시 들어가는 정보
-  public static User signinUser(SignupDto signupDto) {
-    return new UserBuilder()
-        .email(signupDto.getEmail())
-        .password(signupDto.getPassword())
-        .role(Role.USER)
-        .build();
-  }
-
-  //유저 정보 수정
-  public Long changeNickName(String nickName) {
-    this.nickName = nickName;
-    return getId();
-  }
+    //유저 정보 수정
+    public Long changeNickName(String nickName) {
+        this.nickName = nickName;
+        return getId();
+    }
 }

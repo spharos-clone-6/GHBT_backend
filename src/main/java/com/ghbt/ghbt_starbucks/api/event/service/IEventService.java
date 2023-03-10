@@ -7,6 +7,7 @@ public interface IEventService {
 
 
     void addEvent(RequestEvent requestEvent);
+
     ResponseEvent getEventById(Long id);
 
     ResponseEvent getEventByName(String name);

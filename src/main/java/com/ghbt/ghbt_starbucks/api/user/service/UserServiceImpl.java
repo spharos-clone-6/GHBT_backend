@@ -15,33 +15,32 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements IUserService {
 
-  private final IUserRepository iUserRepository;
+    private final IUserRepository iUserRepository;
 
+    @Override
+    @Transactional
+    public Long signupUser(SignupDto signupDto) {
+        User user = User.signinUser(signupDto);
+        User savedUser = iUserRepository.save(user);
+        return savedUser.getId();
+    }
 
-  @Override
-  @Transactional
-  public Long signupUser(SignupDto signupDto) {
-    User user = User.signinUser(signupDto);
-    User savedUser = iUserRepository.save(user);
-    return savedUser.getId();
-  }
+    @Override
+    public User getUser(Long userId) {
+        return iUserRepository.findById(userId)
+            .orElseThrow(() -> new ServiceException("요청하신 유저를 찾을 수 없습니다.", HttpStatus.NO_CONTENT));
+    }
 
-  @Override
-  public User getUser(Long userId) {
-    return iUserRepository.findById(userId)
-        .orElseThrow(() -> new ServiceException("요청하신 유저를 찾을 수 없습니다.", HttpStatus.NO_CONTENT));
-  }
+    @Override
+    @Transactional
+    public Long updateUser(Long userId, UpdateUserDto updateUserDto) {
+        User findUser = getUser(userId);
+        return findUser.changeNickName(updateUserDto.getNickName());
+    }
 
-  @Override
-  @Transactional
-  public Long updateUser(Long userId, UpdateUserDto updateUserDto) {
-    User findUser = getUser(userId);
-    return findUser.changeNickName(updateUserDto.getNickName());
-  }
-
-  @Override
-  @Transactional
-  public void deleteUser(Long userId) {
-    iUserRepository.deleteById(userId);
-  }
+    @Override
+    @Transactional
+    public void deleteUser(Long userId) {
+        iUserRepository.deleteById(userId);
+    }
 }

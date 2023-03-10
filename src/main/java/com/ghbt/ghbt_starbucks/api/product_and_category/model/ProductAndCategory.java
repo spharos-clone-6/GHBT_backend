@@ -15,17 +15,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductAndCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="CATEGORY_ID")
-    private Category category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category categoryId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PRODUCT_ID")
-    private Product product;
+    private Product productId;
 
 }
 

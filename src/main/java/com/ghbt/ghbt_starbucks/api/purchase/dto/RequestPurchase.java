@@ -1,11 +1,10 @@
 package com.ghbt.ghbt_starbucks.api.purchase.dto;
 
 import com.ghbt.ghbt_starbucks.api.purchase.model.ShippingStatus;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestPurchase {

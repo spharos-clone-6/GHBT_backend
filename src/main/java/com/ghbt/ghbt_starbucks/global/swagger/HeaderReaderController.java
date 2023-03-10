@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class HeaderReaderController {
 
-  @GetMapping
-  public ResponseEntity authHeaderChecker(HttpServletRequest request) {
-    String authorizationHeaderValue = request.getHeader("Authorization");
-    HashMap<String, String> response = new HashMap<>() {{
-      put("Authorization", authorizationHeaderValue);
-    }};
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(response);
-  }
+    @GetMapping
+    public ResponseEntity authHeaderChecker(HttpServletRequest request) {
+        String authorizationHeaderValue = request.getHeader("Authorization");
+        HashMap<String, String> response = new HashMap<>() {{
+            put("Authorization", authorizationHeaderValue);
+        }};
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(response);
+    }
 }
