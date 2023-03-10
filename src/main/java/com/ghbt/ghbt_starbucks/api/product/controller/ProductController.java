@@ -7,6 +7,7 @@ import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
+import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 
 public class ProductController {
+
     private final IProductService iProductService;
+
     private final IProductRepository iProductRepository;
 
     @PostMapping
@@ -44,22 +47,23 @@ public class ProductController {
         return iProductService.getProduct(productId);
     }
 
-    //    @GetMapping // 전체 상품 출력
-//    public List<Product> getAllProduct(){
-//        return iProductService.getAllProduct();
-//    }
+    @GetMapping("/not/page") // 전체 상품 출력
+    public List<ResponseProduct> getAllProduct() {
+        return iProductService.getAllProduct();
+    }
+
     @GetMapping("/search-category/{search}") // 카테고리별 상품 조회
     public ResponseEntity findAllProductType(@PathVariable String search) {
         List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(search);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(searchProduct);
+            .body(searchProduct);
     }
 
     @GetMapping("/search/{search}") // 검색어로 상품 검색
     public ResponseEntity findProduct(@PathVariable String search) {
         List<IProductSearch> searchProduct = iProductService.getSearchProduct(search);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(searchProduct);
+            .body(searchProduct);
     }
 
     @GetMapping // 전체 상품 조회 페이지
@@ -68,27 +72,29 @@ public class ProductController {
     }
 
     @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
-    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord)
-//                                                          @RequestParam("page") Integer page)
-    {
+    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         return iProductRepository.findByNameContains(keyWord, pageRequest);
     }
 
+    @GetMapping("/searching/{keyWord}")
+    public ResponseEntity searchingCategoryList(@PathVariable String keyWord) {
+        List<List<ProductAndCategory>> searchingList = iProductService.searchingCategoryList(keyWord);
+        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
+    }
 
     @PutMapping("/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
-            @PathVariable("product_id") Long productId,
-            @RequestBody RequestProduct requestProduct) {
+        @PathVariable("product_id") Long productId,
+        @RequestBody RequestProduct requestProduct) {
         iProductService.updateProduct(productId, requestProduct);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{product_id}") // 상품 삭제
     public ResponseEntity deleteProduct(
-            @PathVariable("product_id") Long ProductId) {
+        @PathVariable("product_id") Long ProductId) {
         iProductService.deleteProduct(ProductId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 }
