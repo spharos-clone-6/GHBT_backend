@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-  private final IUserRepository IUserRepository;
+    private final IUserRepository IUserRepository;
 
-  @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User findUser = IUserRepository.findByEmail(email)
-        .orElseThrow(() -> new UsernameNotFoundException("해당 이메일은 회원 가입이 되어있지 않습니다. -> " + email));
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User findUser = IUserRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("해당 이메일은 회원 가입이 되어있지 않습니다. -> " + email));
 
-    if (findUser != null) {
-      UserDetailsImpl userDetails = new UserDetailsImpl(findUser);
-      return userDetails;
+        if (findUser != null) {
+            UserDetailsImpl userDetails = new UserDetailsImpl(findUser);
+            return userDetails;
+        }
+        return null;
     }
-    return null;
-  }
 }

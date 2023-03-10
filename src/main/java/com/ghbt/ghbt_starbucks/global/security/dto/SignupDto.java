@@ -9,21 +9,22 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignupDto {
-  @NotBlank
-  private String email;
-  @NotBlank
-  private String password;
 
-  @Builder
-  public SignupDto(String email, String password) {
-    this.email = email;
-    this.password = password;
-  }
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String password;
 
-  public static SignupDto encodePassword(SignupDto signupDto, String encodedPassword) {
-    SignupDto signupDtoWithEncodedPassword = new SignupDto();
-    signupDtoWithEncodedPassword.email = signupDto.getEmail();
-    signupDtoWithEncodedPassword.password = encodedPassword;
-    return signupDtoWithEncodedPassword;
-  }
+    @Builder
+    public SignupDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public static SignupDto encodePassword(SignupDto signupDto, String encodedPassword) {
+        SignupDto signupDtoWithEncodedPassword = new SignupDto();
+        signupDtoWithEncodedPassword.email = signupDto.getEmail();
+        signupDtoWithEncodedPassword.password = encodedPassword;
+        return signupDtoWithEncodedPassword;
+    }
 }
