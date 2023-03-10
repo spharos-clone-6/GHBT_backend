@@ -11,6 +11,7 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product_and_category.repository.IProductAndCategoryRepository;
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @Data
@@ -36,14 +38,12 @@ public class ProductServiceImpl implements IProductService {
             .price(requestProduct.getPrice()).thumbnailUrl(requestProduct.getThumbnailUrl())
             .stock(requestProduct.getStock()).build();
         Product savedProduct = iProductRepository.save(product);
-
         for (String name : requestProduct.getCategoryList()) {
             Category findCategory = iCategoryRepository.findByName(name);
-            ProductAndCategory productAndCategory = ProductAndCategory.builder().product(savedProduct)
-                .category(findCategory).build();
+            ProductAndCategory productAndCategory = ProductAndCategory.builder().productId(savedProduct)
+                .categoryId(findCategory).build();
             iProductAndCategoryRepository.save(productAndCategory);
         }
-
         ResponseProduct.builder().id(savedProduct.getId()).name(savedProduct.getName()).price(savedProduct.getPrice())
             .description(savedProduct.getDescription()).thumbnailUrl(savedProduct.getThumbnailUrl())
             .stock(savedProduct.getStock()).likeCount(savedProduct.getLikeCount()).isBest(savedProduct.getIsBest())
@@ -77,6 +77,24 @@ public class ProductServiceImpl implements IProductService {
         }
         return productList;
     }
+
+    @Override
+    public List<List<ProductAndCategory>> searchingCategoryList(String keyWord) {
+
+        List<List<ProductAndCategory>> resultList = new ArrayList<>();
+        List<Product> productList = iProductRepository.findByNameContains(keyWord);
+        if (productList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+
+        for (Product product : productList) {
+            System.out.println(iProductAndCategoryRepository.findByProductId(product));
+            List<ProductAndCategory> productAndCategoryList = iProductAndCategoryRepository.findByProductId(product);
+            resultList.add(productAndCategoryList);
+        }
+        return resultList;
+    }
+
 
     @Override
     public List<IProductSearch> getSearchProduct(String search) {

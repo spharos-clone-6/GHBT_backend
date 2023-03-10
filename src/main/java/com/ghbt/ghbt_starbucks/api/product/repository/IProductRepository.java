@@ -3,6 +3,7 @@ package com.ghbt.ghbt_starbucks.api.product.repository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
+import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,9 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     List<IProductSearch> findProduct(@Param("search") String search);
 
     Page<Product> findByNameContains(String keyWord, Pageable pageable);
+
+    List<Product> findByNameContains(String keyWord);
+
+
+
 }

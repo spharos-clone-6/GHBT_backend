@@ -7,6 +7,7 @@ import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
+import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,6 +75,12 @@ public class ProductController {
     public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
         PageRequest pageRequest = PageRequest.of(0, 20);
         return iProductRepository.findByNameContains(keyWord, pageRequest);
+    }
+
+    @GetMapping("/searching/{keyWord}")
+    public ResponseEntity searchingCategoryList(@PathVariable String keyWord) {
+        List<List<ProductAndCategory>> searchingList = iProductService.searchingCategoryList(keyWord);
+        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
     }
 
     @PutMapping("/{product_id}") // 상품 업데이트
