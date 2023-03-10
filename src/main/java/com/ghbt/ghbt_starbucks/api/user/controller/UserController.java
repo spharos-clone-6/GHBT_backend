@@ -26,23 +26,23 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "basicAuth")
 public class UserController {
 
-  private final UserServiceImpl userService;
+    private final UserServiceImpl userService;
 
-  //회원 조회
-  @GetMapping
-  @Operation(summary = "유저 조회", description = "상세 기능 : 로그인한 유저의 상세 정보를 출력합니다.")
-  public ResponseEntity<ResponseUserDto> getUser(@LoginUser User loginUser) {
-    User findUser = userService.getUser(loginUser.getId());
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(ResponseUserDto.from(findUser));
-  }
+    //회원 조회
+    @GetMapping
+    @Operation(summary = "유저 조회", description = "상세 기능 : 로그인한 유저의 상세 정보를 출력합니다.")
+    public ResponseEntity<ResponseUserDto> getUser(@LoginUser User loginUser) {
+        User findUser = userService.getUser(loginUser.getId());
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(ResponseUserDto.from(findUser));
+    }
 
-  //회원 닉네임 수정
-  @PatchMapping
-  @Operation(summary = "닉네임 수정", description = "상세 기능 : 닉네임 수정 폼의 정보로 로그인한 유저의 닉네임을 변경합니다.")
-  public ResponseEntity updateNickName(@LoginUser User loginUser, @RequestBody UpdateUserDto updateUserDto) {
-    userService.updateUser(loginUser.getId(), updateUserDto);
-    return ResponseEntity.status(HttpStatus.OK)
-        .build();
-  }
+    //회원 닉네임 수정
+    @PatchMapping
+    @Operation(summary = "닉네임 수정", description = "상세 기능 : 닉네임 수정 폼의 정보로 로그인한 유저의 닉네임을 변경합니다.")
+    public ResponseEntity updateNickName(@LoginUser User loginUser, @RequestBody UpdateUserDto updateUserDto) {
+        userService.updateUser(loginUser.getId(), updateUserDto);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
+    }
 }

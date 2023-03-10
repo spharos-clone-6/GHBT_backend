@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateUserDto {
 
-  private String nickName;
+    private String nickName;
 
 }
