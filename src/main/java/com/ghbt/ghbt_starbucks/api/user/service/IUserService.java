@@ -6,9 +6,6 @@ import com.ghbt.ghbt_starbucks.api.user.dto.UpdateUserDto;
 
 public interface IUserService {
 
-    //유저 등록
-    Long signupUser(SignupDto signupDto);
-
     //유저 조회
     User getUser(Long userId);
 

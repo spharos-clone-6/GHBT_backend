@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @RequiredArgsConstructor
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoginUserMethodArgumentResolver loginUserMethodArgumentResolver;
 
