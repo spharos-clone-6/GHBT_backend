@@ -18,14 +18,6 @@ public class UserServiceImpl implements IUserService {
     private final IUserRepository iUserRepository;
 
     @Override
-    @Transactional
-    public Long signupUser(SignupDto signupDto) {
-        User user = User.signinUser(signupDto);
-        User savedUser = iUserRepository.save(user);
-        return savedUser.getId();
-    }
-
-    @Override
     public User getUser(Long userId) {
         return iUserRepository.findById(userId)
             .orElseThrow(() -> new ServiceException("요청하신 유저를 찾을 수 없습니다.", HttpStatus.NO_CONTENT));
