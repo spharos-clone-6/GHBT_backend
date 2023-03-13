@@ -18,19 +18,19 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class LoginUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-  private final IUserRepository iUserRepository;
+    private final IUserRepository iUserRepository;
 
-  @Override
-  public boolean supportsParameter(MethodParameter parameter) {
-    return parameter.hasParameterAnnotation(LoginUser.class);
-  }
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return parameter.hasParameterAnnotation(LoginUser.class);
+    }
 
-  @Override
-  public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-      NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    User loginUser = iUserRepository.findByEmail(authentication.getName())
-        .orElseThrow(() -> new ServiceException("유저를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
-    return loginUser;
-  }
+    @Override
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User loginUser = iUserRepository.findByEmail(authentication.getName())
+            .orElseThrow(() -> new ServiceException("유저를 찾을 수 없습니다.", HttpStatus.NO_CONTENT));
+        return loginUser;
+    }
 }
