@@ -38,8 +38,8 @@ public class JwtTokenProvider implements InitializingBean {
     private final String secretKey;
     private static Key signingKey;
 
-    private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 60 * 60 * 12L;
-    private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 60 * 60 * 12 * 14L;
+    private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 1 * 1 * 60 * 1000L;        //2시간
+    private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 7 * 24 * 60 * 60 * 1000L;  //7일
 
     public JwtTokenProvider(UserDetailsServiceImpl userDetailsService,
         RedisService redisService,
@@ -56,7 +56,6 @@ public class JwtTokenProvider implements InitializingBean {
 
     public TokenDto createToken(String email, String authorities) {
         Long now = System.currentTimeMillis();
-
         String accessToken = Jwts.builder()
             .setHeaderParam("typ", "JWT")
             .setHeaderParam("alg", "HS512")
@@ -95,8 +94,7 @@ public class JwtTokenProvider implements InitializingBean {
     public Authentication getAuthentication(String token) {
         String email = getClaims(token).get(EMAIL_KEY).toString();
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        return new UsernamePasswordAuthenticationToken(userDetails, "",
-            userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public long getTokenExpirationTime(String token) {
@@ -106,6 +104,26 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     //== 토큰 검증 ==//
+
+    //Filter 에서 사용
+    public boolean validateAccessToken(String accessToken) {
+        try {
+            if (redisService.getValues(accessToken) != null && redisService.getValues(accessToken).equals("logout")) {
+                return false;
+            }
+            Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build()
+                .parseClaimsJws(accessToken);
+            return true;
+        } catch (ExpiredJwtException e) {
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    //재발급시 사용
     public boolean validateRefreshToken(String refreshToken) {
         try {
             Jwts.parserBuilder()
@@ -128,37 +146,4 @@ public class JwtTokenProvider implements InitializingBean {
         }
         return false;
     }
-
-    //Filter 에서 사용
-    public boolean validateAccessToken(String accessToken) {
-        try {
-            if (redisService.getValues(accessToken) != null && redisService.getValues(accessToken)
-                .equals("logout")) {
-                return false;
-            }
-            Jwts.parserBuilder()
-                .setSigningKey(signingKey)
-                .build()
-                .parseClaimsJws(accessToken);
-            return true;
-        } catch (ExpiredJwtException e) {
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    //재발급 검증 API에서 사용
-    public boolean validateAccessTokenOnlyExpired(String accessToken) {
-        try {
-            return getClaims(accessToken)
-                .getExpiration()
-                .before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
 }

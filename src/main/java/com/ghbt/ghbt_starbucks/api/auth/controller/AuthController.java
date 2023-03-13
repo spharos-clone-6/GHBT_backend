@@ -4,7 +4,6 @@ import com.ghbt.ghbt_starbucks.api.auth.service.AuthService;
 import com.ghbt.ghbt_starbucks.global.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.global.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.global.security.dto.TokenDto;
-import com.ghbt.ghbt_starbucks.api.user.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -23,101 +22,96 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "회원가입/로그인/로그아웃/회원탈퇴")
+@Tag(name = "회원가입/로그인/로그아웃/jwt 재발급")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  private final AuthService authService;
-  private final UserServiceImpl userServiceImpl;
-  private final BCryptPasswordEncoder encoder;
+    private final AuthService authService;
+    private final BCryptPasswordEncoder encoder;
 
-  private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60l;
+    private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60l;
 
-  /**
-   * 회원가입
-   */
-  @PostMapping("/signup")
-  @Operation(summary = "회원가입", description = "상세 기능 : 회원가입폼에 입력된 정보로 회원가입을 진행합니다.")
-  public ResponseEntity<Void> signup(@RequestBody @Valid SignupDto signupDto) {
-    String encodedPassword = encoder.encode(signupDto.getPassword());
-    SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
-    userServiceImpl.signupUser(signupDtoWithEncodedPassword);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  /**
-   * 로그인
-   */
-  @PostMapping("/login")
-  @Operation(summary = "로그인", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
-  public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
-    TokenDto tokenDto = authService.login(loginDto);
-
-    HttpCookie httpCookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
-        .maxAge(COOKIE_EXPIRATION)
-        .httpOnly(true)
-        .secure(true)
-        .build();
-
-    return ResponseEntity.ok()
-        .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
-        .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
-        .build();
-  }
-
-  @Operation(summary = "토큰 검증", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
-  @PostMapping("/validate")
-  public ResponseEntity validate(@RequestHeader("Authorization") String requestAccessToken) {
-    if (!authService.validate(requestAccessToken)) {
-      return ResponseEntity.status(HttpStatus.OK).build();
-    } else {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    /**
+     * 회원가입
+     */
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입", description = "상세 기능 : 회원가입폼에 입력된 정보로 회원가입을 진행합니다.")
+    public ResponseEntity<Void> signup(@RequestBody @Valid SignupDto signupDto) {
+        String encodedPassword = encoder.encode(signupDto.getPassword());
+        SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
+        authService.signupUser(signupDtoWithEncodedPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-  }
 
-  @PostMapping("/reissue")
-  @Operation(summary = "토큰 재발급 API", description = "상세 기능 : AccessToken이 만료되었을 때 재발급해주는 API입니다.")
-  public ResponseEntity reissue(
-      @CookieValue(name = "refresh-token") String refreshToken,
-      @RequestHeader(name = "Authorization") String accessToken) {
+    /**
+     * 로그인
+     */
+    @PostMapping("/login")
+    @Operation(summary = "로그인", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
+    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
+        TokenDto tokenDto = authService.login(loginDto);
 
-    TokenDto reissuedTokenDto = authService.reissue(accessToken, refreshToken);
-    if (reissuedTokenDto != null) {
-      ResponseCookie responseCookie = ResponseCookie.from("refresh-token",
-              reissuedTokenDto.getRefreshToken())
-          .maxAge(COOKIE_EXPIRATION)
-          .httpOnly(true)
-          .secure(true)
-          .build();
-      return ResponseEntity.status(HttpStatus.OK)
-          .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-          .header(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedTokenDto.getAccessToken())
-          .build();
-    } else {
-      ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
-          .maxAge(0)
-          .path("/")
-          .build();
-      return ResponseEntity
-          .status(HttpStatus.UNAUTHORIZED)
-          .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-          .build();
+        HttpCookie httpCookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
+            .maxAge(COOKIE_EXPIRATION)
+            .httpOnly(true)
+            .secure(true)
+            .build();
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
+            .build();
     }
-  }
 
-  @PostMapping("/logout")
-  @Operation(summary = "로그아웃", description = "상세 기능 : 로그인한 유저를 로그아웃을합니다.")
-  public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
-    authService.logout(accessToken);
-    ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
-        .maxAge(0)
-        .path("/")
-        .build();
-    return ResponseEntity.status(HttpStatus.OK)
-        .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-        .build();
-  }
+    /**
+     * 로그아웃
+     */
+    @PostMapping("/logout")
+    @Operation(summary = "로그아웃", description = "상세 기능 : 로그인한 유저를 로그아웃을합니다.")
+    public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
+        authService.logout(accessToken);
+        ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
+            .maxAge(0)
+            .path("/")
+            .build();
+        return ResponseEntity.status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+            .build();
+    }
+
+    /**
+     * 토큰 재발급 description : FE가 Autentication jwt토큰의 payload를 확인하고 만료시간이 임박해있으면 이 API 를 이용하여 토큰을 재발급 받는다.
+     */
+    @PostMapping("/reissue")
+    @Operation(summary = "토큰 재발급 API", description = "상세 기능 : AccessToken 이 만료되었을 때 재발급해주는 API 입니다.")
+    public ResponseEntity reissue(
+        @CookieValue(name = "refresh-token") String refreshToken,
+        @RequestHeader(name = "Authorization") String accessToken) {
+
+        TokenDto reissuedTokenDto = authService.reissue(accessToken, refreshToken);
+        if (reissuedTokenDto != null) {
+            ResponseCookie responseCookie = ResponseCookie.from("refresh-token",
+                    reissuedTokenDto.getRefreshToken())
+                .maxAge(COOKIE_EXPIRATION)
+                .httpOnly(true)
+                .secure(true)
+                .build();
+            return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedTokenDto.getAccessToken())
+                .build();
+        } else {
+            ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
+                .maxAge(0)
+                .path("/")
+                .build();
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .build();
+        }
+    }
 }
