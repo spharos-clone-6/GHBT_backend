@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "회원가입/회원탈퇴/로그인/로그아웃/jwt 재발급")
+@Tag(name = "회원가입/로그인/로그아웃/jwt 재발급")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
