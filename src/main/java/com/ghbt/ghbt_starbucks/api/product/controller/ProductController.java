@@ -71,16 +71,22 @@ public class ProductController {
         return iProductService.getList(pageable);
     }
 
-    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
-    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
-        PageRequest pageRequest = PageRequest.of(0, 20);
-        return iProductRepository.findByNameContains(keyWord, pageRequest);
-    }
+//    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
+//    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
+//        PageRequest pageRequest = PageRequest.of(0, 20);
+//        return iProductRepository.findByNameContains(keyWord, pageRequest);
+//    }
+//
+//    @GetMapping("/searching/{keyWord}")
+//    public ResponseEntity searchingCategoryList(@PathVariable String keyWord) {
+//        List<List<ProductAndCategory>> searchingList = iProductService.searchingCategoryList(keyWord);
+//        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
+//    }
 
-    @GetMapping("/searching/{keyWord}")
-    public ResponseEntity searchingCategoryList(@PathVariable String keyWord) {
-        List<List<ProductAndCategory>> searchingList = iProductService.searchingCategoryList(keyWord);
-        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
+    @GetMapping("/searching/{name}")
+    public ResponseEntity searchingCategoryList(@PathVariable String name) {
+        Page<List<Product>> searching = iProductService.searchingCategoryList(name);
+        return ResponseEntity.status(HttpStatus.OK).body(searching);
     }
 
     @PutMapping("/{product_id}") // 상품 업데이트

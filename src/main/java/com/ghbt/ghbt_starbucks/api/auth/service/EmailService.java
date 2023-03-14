@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.auth.service;
 
 import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseAuthCode;
+import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 import javax.mail.MessagingException;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender emailSender;
+    private final RedisService redisService;
+    private final long EXPIRED_AUTH_MILLISECONDS = 1000 * 60 * 3; //3분
 
     public ResponseAuthCode sendStarbucksAuthEmail(String clientEmail, String adminEmail) {
         StarBucksAuthEmail starBucksAuthEmail = StarBucksAuthEmail
@@ -28,7 +31,14 @@ public class EmailService {
             .from(adminEmail)
             .build();
         String authCode = starBucksAuthEmail.sendEmail();
+        redisService.setValuesWithTimeout("EMAIL(" + clientEmail + ")", authCode, EXPIRED_AUTH_MILLISECONDS);
+
         return new ResponseAuthCode(authCode);
+    }
+
+    public boolean isValidateAuthCode(String clientEmail, String authCode) {
+        String findAuthCode = redisService.getValues("EMAIL(" + clientEmail + ")");
+        return (findAuthCode != null && findAuthCode.equals(authCode));
     }
 
     @Builder
@@ -65,7 +75,7 @@ public class EmailService {
 
         public void createAuthCode() {
             Random random = new Random();
-            this.authCode = String.valueOf(random.nextInt(888888) + 111111);
+            this.authCode = String.valueOf(random.nextInt(888888) + 111111); //111111 ~ 999999 생성.
             log.info("[인증번호] : " + this.authCode);
         }
     }
