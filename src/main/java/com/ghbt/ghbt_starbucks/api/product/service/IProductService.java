@@ -5,7 +5,6 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
-import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,7 +26,7 @@ public interface IProductService {
 
     Product updateProduct(Long ProductId, RequestProduct requestProduct);
 
-    List<List<ProductAndCategory>> searchingCategoryList(String name);
+    Page<List<Product>> searchingCategoryList(String name);
 
     void deleteProduct(Long ProductId);
 }

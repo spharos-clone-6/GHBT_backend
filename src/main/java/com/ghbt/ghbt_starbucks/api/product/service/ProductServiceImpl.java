@@ -11,7 +11,6 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product_and_category.repository.IProductAndCategoryRepository;
-import java.util.ArrayList;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 @Data
@@ -78,22 +76,21 @@ public class ProductServiceImpl implements IProductService {
         return productList;
     }
 
-    @Override
-    public List<List<ProductAndCategory>> searchingCategoryList(String keyWord) {
-
-        List<List<ProductAndCategory>> resultList = new ArrayList<>();
-        List<Product> productList = iProductRepository.findByNameContains(keyWord);
-        if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-        }
-
-        for (Product product : productList) {
-            System.out.println(iProductAndCategoryRepository.findByProductId(product));
-            List<ProductAndCategory> productAndCategoryList = iProductAndCategoryRepository.findByProductId(product);
-            resultList.add(productAndCategoryList);
-        }
-        return resultList;
-    }
+//    @Override
+//    public List<List<ProductAndCategory>> searchingCategoryList(String keyWord) {
+//
+//        List<List<ProductAndCategory>> resultList = new ArrayList<>();
+//        List<Product> productList = iProductRepository.findByNameContains(keyWord);
+//        if (productList.isEmpty()) {
+//            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+//        }
+//
+//        for (Product product : productList) {
+//            List<ProductAndCategory> productAndCategoryList = iProductAndCategoryRepository.findByProductId(product);
+//            resultList.add(productAndCategoryList);
+//        }
+//        return resultList;
+//    }
 
 
     @Override
@@ -121,6 +118,12 @@ public class ProductServiceImpl implements IProductService {
             requestProduct.getIsBest());
         iProductRepository.save(product);
         return product;
+    }
+
+    @Override
+    public Page<List<Product>> searchingCategoryList(String name) {
+        Page<List<Product>> searching = iProductRepository.findByNameContains(name,Pageable.ofSize(5));
+        return searching;
     }
 
     @Override
