@@ -5,6 +5,7 @@ import com.ghbt.ghbt_starbucks.api.event.dto.ResponseEvent;
 import com.ghbt.ghbt_starbucks.api.event.model.Event;
 import com.ghbt.ghbt_starbucks.api.event.repository.IEventRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
+import java.util.List;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,5 +50,10 @@ public class EventServiceImpl implements IEventService {
             .descriptionUrl(event.getDescriptionUrl())
             .id(event.getId()).name(event.getName())
             .thumbnailUrl(event.getThumbnailUrl()).build();
+    }
+
+    @Override
+    public List<ResponseEvent> getEventAll() {
+        return null;
     }
 }
