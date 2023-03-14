@@ -1,13 +1,22 @@
 package com.ghbt.ghbt_starbucks.api.product.Projection;
 
 public interface IProductSearch {
+
     Long getId();
+
     String getName();
+
     Integer getPrice();
+
     String getDescription();
-    String getThumbnail_url();
+
+    String getThumbnailUrl();
+
     Integer getStock();
-    Integer getLike_count();
-    Boolean getIs_best();
-    Boolean getIs_new();
+
+    Integer getLikeCount();
+
+    Boolean getIsBest();
+
+    Boolean getIsNew();
 }
