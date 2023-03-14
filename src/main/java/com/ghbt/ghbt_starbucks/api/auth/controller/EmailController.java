@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.auth.controller;
 
+import com.ghbt.ghbt_starbucks.api.auth.dto.RequestAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.dto.RequestEmail;
 import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.service.EmailService;
@@ -30,5 +31,16 @@ public class EmailController {
 
         return ResponseEntity.status(HttpStatus.OK)
             .body(responseAuthCode);
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
+        if (emailService.isValidateAuthCode(requestAuthCode.getEmail(), requestAuthCode.getAuthCode())) {
+            return ResponseEntity.status(HttpStatus.OK)
+                .build();
+        } else {
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .build();
+        }
     }
 }
