@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
+import javax.persistence.TypedQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,10 +21,11 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT id AS id, name AS name, price AS price, description AS description, stock AS stock, is_best AS is_best,like_count AS like_count,thumbnail_url AS thumbnail_url, is_new AS is_new FROM product where name LIKE %:search%", nativeQuery = true)
     List<IProductSearch> findProduct(@Param("search") String search);
 
-    Page<Product> findByNameContains(String keyWord, Pageable pageable);
+//    Page<Product> findByNameContains(String keyWord, Pageable pageable);
 
-    List<Product> findByNameContains(String keyWord);
+//    List<Product> findByNameContains(String keyWord);
 
 
-
+    @Query(value = "SELECT p,c FROM Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where p.name like %:search%")
+    Page<List<Product>> findByNameContains(@Param("search") String search, Pageable pageable);
 }
