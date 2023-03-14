@@ -38,9 +38,9 @@ public class EventController {
         return iEventService.getEventByName(name);
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping()
     @Operation(summary = "이벤트 리스트 전체 검색", description = "이벤트 리스트 전체 검색합니다.")
-    public List<ResponseEvent> getEventAll(){
+    public List<ResponseEvent> getEventAll() {
         return iEventService.getEventAll();
     }
 }
