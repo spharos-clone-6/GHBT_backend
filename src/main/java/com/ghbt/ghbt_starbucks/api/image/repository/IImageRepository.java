@@ -4,7 +4,7 @@ import com.ghbt.ghbt_starbucks.api.image.model.Image;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ImageRepository extends JpaRepository<Image, Long> {
+public interface IImageRepository extends JpaRepository<Image, Long> {
 
-    List<Image> findByProductId(Long productId);
+    List<Image> findALLByProductId(Long productId);
 }
