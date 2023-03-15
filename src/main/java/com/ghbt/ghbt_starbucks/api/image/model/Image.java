@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,13 +23,6 @@ public class Image {
     private Long productId;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
     private String url;
-    @Column(nullable = false)
-    private String altTag;
 
-    @Column(nullable = false)
-    private Integer type;
 }
