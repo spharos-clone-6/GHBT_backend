@@ -19,8 +19,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Product productId;
+    @Column(nullable = false)
+    private Long productId;
 
     @Column(nullable = false)
     private String name;
