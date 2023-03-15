@@ -55,7 +55,7 @@ public class ProductController {
 
     @GetMapping("/search-category") // 카테고리별 상품 조회
     public ResponseEntity findAllProductType(@Param("search") String search) {
-        List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(search);
+        List<Product> searchProduct = iProductService.getProductForCategory(search);
         return ResponseEntity.status(HttpStatus.OK)
             .body(searchProduct);
     }
