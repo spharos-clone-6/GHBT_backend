@@ -40,7 +40,7 @@ public class ImageController {
     }
 
     @GetMapping("/{productId}")
-    @Operation(summary = "이미지 productId로 호출", description = " productId(long) url(String) 입력해주세요.")
+    @Operation(summary = "이미지 productId로 호출", description = " productId(long) 입력해주세요.")
     public ResponseEntity<Result> getAllImageByProductId(@PathVariable Long productId) {
         List<ResponseImage> responseImageList = iImageService.getImageAll(productId);
 
