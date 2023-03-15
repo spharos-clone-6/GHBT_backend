@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,8 +28,10 @@ public class CartController {
 
     @PostMapping()
     @Operation(summary = "장바구니 담기", description = " productid(long) 수량(integer) 입력해주세요 !!로그인 유저만 가능")
-    public void addCart(@RequestBody RequestCart requestCart, @LoginUser User loginUser) {
+    public ResponseEntity<Void> addCart(@RequestBody RequestCart requestCart, @LoginUser User loginUser) {
         iCartService.addCart(requestCart, loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
     }
 
     @GetMapping("/my_cart")

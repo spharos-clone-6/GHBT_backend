@@ -22,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CartServiceImpl implements ICartService{
+public class CartServiceImpl implements ICartService {
 
 
     private final ICartRepository iCartRepository;
@@ -30,17 +30,17 @@ public class CartServiceImpl implements ICartService{
     private final IProductRepository iProductRepository;
 
     @Override
-    public void addCart(RequestCart requestCart,User loginUser) {
+    public void addCart(RequestCart requestCart, User loginUser) {
 
         //삭제된 cart_list 인지 확인
-        Cart iscart = iCartRepository.findByUserIdAndProductId(loginUser.getId(),requestCart.getProductId());
+        Cart iscart = iCartRepository.findByUserIdAndProductId(loginUser.getId(), requestCart.getProductId());
 
         //있는경우
-        if(iscart != null) {
+        if (iscart != null) {
             //소프트 딜리트 되어있는 경우
-            if(iscart.isDeleted()) {
+            if (iscart.isDeleted()) {
                 Cart preCart = iCartRepository.findById(iscart.getId())
-                        .orElseThrow(() -> new ServiceException("등록되어있는 장바구니가 없습니다..", HttpStatus.NO_CONTENT));
+                    .orElseThrow(() -> new ServiceException("등록되어있는 장바구니가 없습니다..", HttpStatus.NO_CONTENT));
                 preCart.setDeleted(false);
                 preCart.setQuantity(requestCart.getQuantity());
                 iCartRepository.save(preCart);
@@ -51,38 +51,40 @@ public class CartServiceImpl implements ICartService{
             iCartRepository.save(iscart);
             return;
         }
-        Product product = iProductRepository.findById(requestCart.getProductId()).orElseThrow(() -> new ServiceException("등록되어있는 물품이 없습니다.", HttpStatus.NO_CONTENT));
-        User user = iUserRepository.findById(loginUser.getId()).orElseThrow(() -> new ServiceException("유저 입력이 잘못되었습니다.", HttpStatus.NO_CONTENT));
+        Product product = iProductRepository.findById(requestCart.getProductId())
+            .orElseThrow(() -> new ServiceException("등록되어있는 물품이 없습니다.", HttpStatus.NO_CONTENT));
+        User user = iUserRepository.findById(loginUser.getId())
+            .orElseThrow(() -> new ServiceException("유저 입력이 잘못되었습니다.", HttpStatus.NO_CONTENT));
         //장바구니에 등록되어 있는지 확인
         Cart cart = Cart.builder()
-                .product(product)
-                .user(user)
-                .quantity(requestCart.getQuantity())
-                .build();
+            .product(product)
+            .user(user)
+            .quantity(requestCart.getQuantity())
+            .build();
         iCartRepository.save(cart);
     }
 
     @Override
     public ResponseCart getCart(Long cartId) {
         Cart cart = iCartRepository.findById(cartId)
-                .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
 
         return ResponseCart.builder()
-                .product(cart.getProduct())
-                .quantity(cart.getQuantity())
-                .user(cart.getUser())
-                .build();
+            .product(cart.getProduct())
+            .quantity(cart.getQuantity())
+            .user(cart.getUser())
+            .build();
 
     }
 
     @Override
     public List<ResponseCart> getAllCartByUserId(Long userId) {
         ModelMapper modelMapper = new ModelMapper();
-        List<Cart> carts= iCartRepository.findAllByUser_IdAndDeleted(userId,false);
+        List<Cart> carts = iCartRepository.findAllByUser_IdAndDeleted(userId, false);
 
         List<ResponseCart> responseCartList = new ArrayList<>();
         carts.forEach(cart -> {
-            ResponseCart responseCart = modelMapper.map(cart,ResponseCart.class);
+            ResponseCart responseCart = modelMapper.map(cart, ResponseCart.class);
             responseCartList.add(responseCart);
         });
         return responseCartList;
@@ -97,14 +99,14 @@ public class CartServiceImpl implements ICartService{
     @Override
     public ResponseCart updateCart(Long cartId, Integer quantity) {
         Cart nowCart = iCartRepository.findById(cartId)
-                .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
         nowCart.setQuantity(quantity);
         Cart updatedCart = iCartRepository.save(nowCart);
         return ResponseCart.builder()
-                .user(updatedCart.getUser())
-                .quantity(updatedCart.getQuantity())
-                .product(updatedCart.getProduct())
-                .build();
+            .user(updatedCart.getUser())
+            .quantity(updatedCart.getQuantity())
+            .product(updatedCart.getProduct())
+            .build();
     }
 
 
