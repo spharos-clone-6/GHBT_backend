@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.api.user_and_coupon.dto;
+package com.ghbt.ghbt_starbucks.api.user_has_coupon.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestUserAndCoupon {
+public class RequestUserHasCoupon {
 
-    private String couponUniqueNumber;
+    private String pinNumber;
 
 }

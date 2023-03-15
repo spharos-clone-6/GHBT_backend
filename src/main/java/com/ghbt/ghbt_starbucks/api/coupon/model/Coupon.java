@@ -1,4 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.coupon.model;
+
+import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
 import lombok.*;
 import javax.persistence.*;
 
@@ -7,7 +9,8 @@ import javax.persistence.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Coupon {
+public class Coupon extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +22,9 @@ public class Coupon {
     private Integer discountPrice;
 
     @Column(name = "coupon_type", nullable = false, length = 255)
-    private Integer couponType;
+    private CouponType couponType;
+
+    @Column(name = "pin_number", nullable = false, length = 255)
+    private String pinNumber;
 
 }
