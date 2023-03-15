@@ -8,7 +8,7 @@ public interface IImageService {
 
     void addImage(RequestImage requestImage);
 
-    List<ResponseImage> getImageAll();
+    List<ResponseImage> getImageAll(Long productId);
 
 
 }

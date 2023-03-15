@@ -12,7 +12,7 @@ public class ImageServiceImpl implements IImageService {
     }
 
     @Override
-    public List<ResponseImage> getImageAll() {
+    public List<ResponseImage> getImageAll(Long productId) {
         return null;
     }
 }
