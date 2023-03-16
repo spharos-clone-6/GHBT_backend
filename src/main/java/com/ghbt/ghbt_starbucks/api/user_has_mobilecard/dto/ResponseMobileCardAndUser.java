@@ -27,7 +27,7 @@ public class ResponseMobileCardAndUser {
             .nickName(userHasMobileCard.getCardName())
             .userName(userHasMobileCard.getUser().getName())
             .cardName(userHasMobileCard.getMobileCard().getName())
-            .price(userHasMobileCard.getMobileCard().getPrice())
+            .price(userHasMobileCard.getPrice())
             .cardNumber(userHasMobileCard.getMobileCard().getCardNumber())
             .thumbnailUrl(userHasMobileCard.getMobileCard().getThumbnailUrl())
             .build();

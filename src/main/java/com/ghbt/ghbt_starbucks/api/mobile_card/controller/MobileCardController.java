@@ -1,8 +1,8 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.controller;
+package com.ghbt.ghbt_starbucks.api.mobile_card.controller;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.ResponseMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobilecard.service.IMobileCardService;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.service.IMobileCardService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,8 +49,8 @@ public class MobileCardController {
 
     @Data
     @AllArgsConstructor
-    static class Result<T> {
+    static class Result {
 
-        private T shippingAddress;
+        private Object mobileCard;
     }
 }

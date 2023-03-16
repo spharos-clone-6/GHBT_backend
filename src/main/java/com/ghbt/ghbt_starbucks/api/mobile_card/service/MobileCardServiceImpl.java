@@ -1,14 +1,15 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.service;
+package com.ghbt.ghbt_starbucks.api.mobile_card.service;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.ResponseMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
-import com.ghbt.ghbt_starbucks.api.mobilecard.repository.MobileCardRepository;
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.repository.MobileCardRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class MobileCardServiceImpl implements IMobileCardService {
     public List<ResponseMobileCard> getAllMobileCard() {
         List<MobileCard> mobileCards = mobileCardRepository.findAll();
         if (mobileCards.isEmpty()) {
-            throw new ServiceException("조회할 모바일카드가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus());
         }
         return mobileCards.stream()
             .map(ResponseMobileCard::from)
@@ -33,7 +34,7 @@ public class MobileCardServiceImpl implements IMobileCardService {
     @Override
     public ResponseMobileCard getOneMobileCard(Long mobileCardId) {
         MobileCard findMobileCard = mobileCardRepository.findById(mobileCardId)
-            .orElseThrow(() -> new ServiceException("존재하지 않는 모바일카드 입니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus()));
 
         return ResponseMobileCard.from(findMobileCard);
     }
