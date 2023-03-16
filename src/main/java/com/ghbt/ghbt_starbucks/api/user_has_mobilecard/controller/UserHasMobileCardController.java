@@ -2,8 +2,8 @@ package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.controller;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model.UserHasMobileCard;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service.UserHasMobileCardServiceImpl;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.ResponseMobileCardAndUser;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service.IUserHasMobileCardService;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,19 +23,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserHasMobileCardController {
 
-    private final UserHasMobileCardServiceImpl userHasMobileCardService;
+    private final IUserHasMobileCardService userHasMobileCardServiceImpl;
 
     @GetMapping
     public ResponseEntity<Result> userMobileCards(@LoginUser User loginUser) {
-        List<UserHasMobileCard> userMobileCards = userHasMobileCardService.getUserMobileCards(loginUser.getId());
+        List<ResponseMobileCardAndUser> userMobileCards = userHasMobileCardServiceImpl.getUserMobileCards(
+            loginUser.getId());
         return ResponseEntity.status(HttpStatus.OK)
             .body(new Result(userMobileCards));
     }
 
     @GetMapping("/{mobileCardId}")
-    public ResponseEntity<UserHasMobileCard> userMobileCard(@LoginUser User loginUser,
+    public ResponseEntity<ResponseMobileCardAndUser> userMobileCard(@LoginUser User loginUser,
         @PathVariable Long mobileCardId) {
-        UserHasMobileCard userMobileCard = userHasMobileCardService.getUserMobileCard(loginUser.getId(), mobileCardId);
+        ResponseMobileCardAndUser userMobileCard = userHasMobileCardServiceImpl.getUserMobileCard(loginUser.getId(), mobileCardId);
         return ResponseEntity.status(HttpStatus.OK)
             .body(userMobileCard);
     }
@@ -43,7 +44,7 @@ public class UserHasMobileCardController {
     @PostMapping
     public ResponseEntity<?> enrollMobileCard(@LoginUser User loginUser,
         @RequestBody RequestMobileCard requestMobileCard) {
-        userHasMobileCardService.saveUserMobileCard(loginUser, requestMobileCard);
+        userHasMobileCardServiceImpl.saveUserMobileCard(loginUser, requestMobileCard);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.mobilecard.service;
 
+import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
 import com.ghbt.ghbt_starbucks.api.mobilecard.dto.ResponseMobileCard;
 import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
 import com.ghbt.ghbt_starbucks.api.mobilecard.repository.MobileCardRepository;
@@ -21,6 +22,9 @@ public class MobileCardServiceImpl implements IMobileCardService {
     @Override
     public List<ResponseMobileCard> getAllMobileCard() {
         List<MobileCard> mobileCards = mobileCardRepository.findAll();
+        if (mobileCards.isEmpty()) {
+            throw new ServiceException("조회할 모바일카드가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return mobileCards.stream()
             .map(ResponseMobileCard::from)
             .collect(Collectors.toList());
@@ -32,5 +36,13 @@ public class MobileCardServiceImpl implements IMobileCardService {
             .orElseThrow(() -> new ServiceException("존재하지 않는 모바일카드 입니다.", HttpStatus.NO_CONTENT));
 
         return ResponseMobileCard.from(findMobileCard);
+    }
+
+    @Override
+    @Transactional
+    public Long enrollMobileCard(RequestMobileCardToEnroll requestMobileCardToEnroll) {
+        MobileCard mobileCard = MobileCard.toEntity(requestMobileCardToEnroll);
+        MobileCard savedMobileCard = mobileCardRepository.save(mobileCard);
+        return savedMobileCard.getId();
     }
 }
