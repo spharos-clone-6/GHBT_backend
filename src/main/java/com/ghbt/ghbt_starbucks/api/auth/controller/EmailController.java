@@ -4,8 +4,6 @@ import com.ghbt.ghbt_starbucks.api.auth.dto.RequestAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.dto.RequestEmail;
 import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.service.EmailService;
-import java.io.UnsupportedEncodingException;
-import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,7 +32,7 @@ public class EmailController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
+    public ResponseEntity<?> validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
         if (emailService.isValidateAuthCode(requestAuthCode.getEmail(), requestAuthCode.getAuthCode())) {
             return ResponseEntity.status(HttpStatus.OK)
                 .build();
