@@ -2,6 +2,7 @@ package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model;
 
 import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestChargeMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,12 +39,21 @@ public class UserHasMobileCard {
     @JoinColumn(name = "mobile_card_id")
     private MobileCard mobileCard;
 
-    public static UserHasMobileCard toEntity(User loginUser, RequestMobileCard requestMobileCard,
+    @Column(name = "price")
+    private Long price;
+
+    public static UserHasMobileCard enrollMobileCard(User loginUser, RequestMobileCard requestMobileCard,
         MobileCard findMobileCard) {
         return UserHasMobileCard.builder()
             .cardName(requestMobileCard.getCardName())
             .user(loginUser)
             .mobileCard(findMobileCard)
+            .price(findMobileCard.getPrice())
             .build();
+    }
+
+    public UserHasMobileCard chargeCash(RequestChargeMobileCard requestChargeMobileCard) {
+        this.price += requestChargeMobileCard.getCash();
+        return this;
     }
 }
