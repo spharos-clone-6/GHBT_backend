@@ -29,7 +29,7 @@ public interface IProductService {
 
     List<List<Product>> searchingCategoryList(String name);
 
-    List<IMenubar> menubarList(List<Product> products);
+    List<IMenubar> menubarList(String name);
 
     void deleteProduct(Long ProductId);
 }

@@ -130,10 +130,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IMenubar> menubarList(List<Product> products) {
-        List<IMenubar> test = iProductRepository.findByMenubarList(products);
-        log.info(test.toString());
-        return test;
+    public List<IMenubar> menubarList(String name) {
+        List<IMenubar> menubar = iProductRepository.findByMenubarList(name);
+        return menubar;
     }
 
     @Override

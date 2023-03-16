@@ -46,8 +46,6 @@ public class ProductController {
 
     @GetMapping("/{productId}") // 단건 조회
     public ResponseProduct getProduct(@PathVariable Long productId) {
-        ResponseProduct test = iProductService.getProduct(productId);
-
         return iProductService.getProduct(productId);
     }
 
@@ -57,30 +55,26 @@ public class ProductController {
     }
 
     @GetMapping("/search-category") // 카테고리별 상품 조회
-    public ResponseEntity findAllProductType(@Param("search") String search) {
-        List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(search);
+    public ResponseEntity findAllProductType(@Param("name") String name) {
+        List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(name);
         return ResponseEntity.status(HttpStatus.OK)
             .body(searchProduct);
     }
 
-//    @GetMapping("/search/{search}") // 검색어로 상품 검색
-//    public ResponseEntity findProduct(@PathVariable String search) {
-//        List<IProductSearch> searchProduct = iProductService.getSearchProduct(search);
-//
-//        List<IMenubar> menubar = iProductService.menubarList(searchProduct);
-//        return new ResponseEntity<>(menubar, HttpStatus.OK);
-//    }
+    @GetMapping("/search/{name}") // 검색어로 상품 검색
+    public ResponseEntity findProduct(@PathVariable String name) {
+        List<IProductSearch> searchProduct = iProductService.getSearchProduct(name);
+        return new ResponseEntity<>(searchProduct, HttpStatus.OK);
+    }
 
     @GetMapping // 전체 상품 조회 페이지
     public Page<Product> productPaging(final Pageable pageable) {
         return iProductService.getList(pageable);
     }
 
-    @GetMapping("/asd") // 전체상품의 대분류 카테고리 갯수
-    public List<IMenubar> prod() {
-        List<Product> test = iProductRepository.findAll();
-
-        return iProductService.menubarList(test);
+    @GetMapping("/search/type/{name}") // 검색 상품의 대분류 카테고리 갯수
+    public List<IMenubar> prod(@PathVariable("name") String name) {
+        return iProductService.menubarList(name);
     }
 //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
 //    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
