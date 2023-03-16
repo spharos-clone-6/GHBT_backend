@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.dto;
+package com.ghbt.ghbt_starbucks.api.mobile_card.dto;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
 import lombok.Builder;
 import lombok.Data;
 

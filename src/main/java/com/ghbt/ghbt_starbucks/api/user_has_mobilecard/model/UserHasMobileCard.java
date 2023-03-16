@@ -1,6 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
 import javax.persistence.Column;

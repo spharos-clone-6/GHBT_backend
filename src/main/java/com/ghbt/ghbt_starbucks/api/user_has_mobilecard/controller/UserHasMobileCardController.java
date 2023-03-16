@@ -36,7 +36,8 @@ public class UserHasMobileCardController {
     @GetMapping("/{mobileCardId}")
     public ResponseEntity<ResponseMobileCardAndUser> userMobileCard(@LoginUser User loginUser,
         @PathVariable Long mobileCardId) {
-        ResponseMobileCardAndUser userMobileCard = userHasMobileCardServiceImpl.getUserMobileCard(loginUser.getId(), mobileCardId);
+        ResponseMobileCardAndUser userMobileCard = userHasMobileCardServiceImpl.getUserMobileCard(loginUser.getId(),
+            mobileCardId);
         return ResponseEntity.status(HttpStatus.OK)
             .body(userMobileCard);
     }
@@ -50,8 +51,8 @@ public class UserHasMobileCardController {
 
     @Data
     @AllArgsConstructor
-    static class Result<T> {
+    static class Result {
 
-        private T mobileCard;
+        private Object mobileCard;
     }
 }
