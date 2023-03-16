@@ -71,8 +71,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IProductListByCategory> getProductForCategory(String search) {
-        List<IProductListByCategory> productList = iProductRepository.findAllProductType(search);
+    public List<Product> getProductForCategory(String search) {
+        List<Product> productList = iProductRepository.findAllProductType(search);
         if (productList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }

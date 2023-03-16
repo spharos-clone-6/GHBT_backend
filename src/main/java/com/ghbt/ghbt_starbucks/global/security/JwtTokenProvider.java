@@ -38,7 +38,7 @@ public class JwtTokenProvider implements InitializingBean {
     private final String secretKey;
     private static Key signingKey;
 
-    private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 1 * 1 * 60 * 1000L;        //2시간
+    private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 12 * 60 * 60 * 1000L;        //2시간
     private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 7 * 24 * 60 * 60 * 1000L;  //7일
 
     public JwtTokenProvider(UserDetailsServiceImpl userDetailsService,
