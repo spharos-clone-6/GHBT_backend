@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.product.service;
 
+import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
@@ -26,7 +27,9 @@ public interface IProductService {
 
     Product updateProduct(Long ProductId, RequestProduct requestProduct);
 
-    Page<List<Product>> searchingCategoryList(String name);
+    List<List<Product>> searchingCategoryList(String name);
+
+    List<IMenubar> menubarList(List<Product> products);
 
     void deleteProduct(Long ProductId);
 }

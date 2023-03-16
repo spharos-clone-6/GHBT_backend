@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.product.controller;
 
+import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
@@ -9,6 +10,8 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
 import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.awt.Menu;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,10 +34,9 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService iProductService;
-
     private final IProductRepository iProductRepository;
 
-    @PostMapping
+    @PostMapping // 상품 추가
     public ResponseEntity addProduct(@RequestBody List<RequestProduct> requestProductList) {
         for (RequestProduct requestProduct : requestProductList) {
             iProductService.addProduct(requestProduct);
@@ -42,8 +44,9 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(requestProductList);
     }
 
-    @GetMapping("/{productId}") // 상품 추가
+    @GetMapping("/{productId}") // 단건 조회
     public ResponseProduct getProduct(@PathVariable Long productId) {
+        ResponseProduct test = iProductService.getProduct(productId);
 
         return iProductService.getProduct(productId);
     }
@@ -60,18 +63,25 @@ public class ProductController {
             .body(searchProduct);
     }
 
-    @GetMapping("/search/{search}") // 검색어로 상품 검색
-    public ResponseEntity findProduct(@PathVariable String search) {
-        List<IProductSearch> searchProduct = iProductService.getSearchProduct(search);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(searchProduct);
-    }
+//    @GetMapping("/search/{search}") // 검색어로 상품 검색
+//    public ResponseEntity findProduct(@PathVariable String search) {
+//        List<IProductSearch> searchProduct = iProductService.getSearchProduct(search);
+//
+//        List<IMenubar> menubar = iProductService.menubarList(searchProduct);
+//        return new ResponseEntity<>(menubar, HttpStatus.OK);
+//    }
 
     @GetMapping // 전체 상품 조회 페이지
     public Page<Product> productPaging(final Pageable pageable) {
         return iProductService.getList(pageable);
     }
 
+    @GetMapping("/asd") // 전체상품의 대분류 카테고리 갯수
+    public List<IMenubar> prod() {
+        List<Product> test = iProductRepository.findAll();
+
+        return iProductService.menubarList(test);
+    }
 //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
 //    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
 //        PageRequest pageRequest = PageRequest.of(0, 20);
@@ -84,11 +94,12 @@ public class ProductController {
 //        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
 //    }
 
-    @GetMapping("/searching/{name}")
-    public ResponseEntity searchingCategoryList(@PathVariable String name) {
-        Page<List<Product>> searching = iProductService.searchingCategoryList(name);
-        return ResponseEntity.status(HttpStatus.OK).body(searching);
-    }
+//    @GetMapping("/searching/{name}") // 검색어로 상품 조회(상품+카테고리)
+//    public ResponseEntity searchingCategoryList(@PathVariable String name) {
+//        List<List<Product>> searching = iProductService.searchingCategoryList(name);
+//        List<IMenubar> menubar = iProductRepository.findByMenubarList(searching);
+//        return ResponseEntity.status(HttpStatus.OK).body(menubar);
+//    }
 
     @PutMapping("/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
