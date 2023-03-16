@@ -4,7 +4,6 @@ import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
 import com.ghbt.ghbt_starbucks.api.mobilecard.dto.ResponseMobileCard;
 import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
 import com.ghbt.ghbt_starbucks.api.mobilecard.repository.MobileCardRepository;
-import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +39,7 @@ public class MobileCardServiceImpl implements IMobileCardService {
     }
 
     @Override
+    @Transactional
     public Long enrollMobileCard(RequestMobileCardToEnroll requestMobileCardToEnroll) {
         MobileCard mobileCard = MobileCard.toEntity(requestMobileCardToEnroll);
         MobileCard savedMobileCard = mobileCardRepository.save(mobileCard);

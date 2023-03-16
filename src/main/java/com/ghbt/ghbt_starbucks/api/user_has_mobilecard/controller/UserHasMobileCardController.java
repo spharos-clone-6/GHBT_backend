@@ -2,9 +2,8 @@ package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.controller;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model.UserHasMobileCard;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.ResponseMobileCardAndUser;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service.IUserHasMobileCardService;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service.UserHasMobileCardServiceImpl;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,16 +27,16 @@ public class UserHasMobileCardController {
 
     @GetMapping
     public ResponseEntity<Result> userMobileCards(@LoginUser User loginUser) {
-        List<UserHasMobileCard> userMobileCards = userHasMobileCardServiceImpl.getUserMobileCards(loginUser.getId());
+        List<ResponseMobileCardAndUser> userMobileCards = userHasMobileCardServiceImpl.getUserMobileCards(
+            loginUser.getId());
         return ResponseEntity.status(HttpStatus.OK)
             .body(new Result(userMobileCards));
     }
 
     @GetMapping("/{mobileCardId}")
-    public ResponseEntity<UserHasMobileCard> userMobileCard(@LoginUser User loginUser,
+    public ResponseEntity<ResponseMobileCardAndUser> userMobileCard(@LoginUser User loginUser,
         @PathVariable Long mobileCardId) {
-        UserHasMobileCard userMobileCard = userHasMobileCardServiceImpl.getUserMobileCard(loginUser.getId(),
-            mobileCardId);
+        ResponseMobileCardAndUser userMobileCard = userHasMobileCardServiceImpl.getUserMobileCard(loginUser.getId(), mobileCardId);
         return ResponseEntity.status(HttpStatus.OK)
             .body(userMobileCard);
     }

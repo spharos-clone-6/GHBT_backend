@@ -4,10 +4,12 @@ import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
 import com.ghbt.ghbt_starbucks.api.mobilecard.repository.MobileCardRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.ResponseMobileCardAndUser;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model.UserHasMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.repository.UserHasMobileCardRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,20 +24,23 @@ public class UserHasMobileCardServiceImpl implements IUserHasMobileCardService {
     private final MobileCardRepository mobileCardRepository;
 
     @Override
-    public List<UserHasMobileCard> getUserMobileCards(Long userId) {
+    public List<ResponseMobileCardAndUser> getUserMobileCards(Long userId) {
         List<UserHasMobileCard> userHasMobileCards = userHasMobileCardRepository.findUserHasMobileCardsByUserId(userId);
         if (userHasMobileCards.isEmpty()) {
             throw new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT);
         }
-        return userHasMobileCards;
+        return userHasMobileCards.stream()
+            .map(ResponseMobileCardAndUser::from)
+            .collect(Collectors.toList());
+
     }
 
     @Override
-    public UserHasMobileCard getUserMobileCard(Long userId, Long mobileCardId) {
+    public ResponseMobileCardAndUser getUserMobileCard(Long userId, Long mobileCardId) {
         UserHasMobileCard userHasMobileCard = userHasMobileCardRepository.findUserHasMobileCardByUserIdAndMobileCardId(
                 userId, mobileCardId)
             .orElseThrow(() -> new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT));
-        return userHasMobileCard;
+        return ResponseMobileCardAndUser.from(userHasMobileCard);
     }
 
     @Transactional
