@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.repository;
+package com.ghbt.ghbt_starbucks.api.mobile_card.repository;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

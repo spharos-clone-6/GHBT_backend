@@ -1,8 +1,7 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.service;
+package com.ghbt.ghbt_starbucks.api.mobile_card.service;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.ResponseMobileCard;
-import com.ghbt.ghbt_starbucks.api.user.model.User;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
 import java.util.List;
 
 public interface IMobileCardService {

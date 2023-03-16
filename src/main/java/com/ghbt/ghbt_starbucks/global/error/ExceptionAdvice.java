@@ -16,9 +16,8 @@ public class ExceptionAdvice {
 //  }
 
     @ExceptionHandler(ServiceException.class)
-    public ResponseEntity serviceException(ServiceException e) {
-        log.error(
-            "[ Service Exception ]" + " " + e.getHttpStatus().toString() + " : " + e.getMessage());
+    public ResponseEntity<?> serviceException(ServiceException e) {
+        log.error("[ Service Exception ]" + " " + e.getHttpStatus().toString() + " : " + e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 }
