@@ -2,6 +2,7 @@ package com.ghbt.ghbt_starbucks.api.product.service;
 
 import com.ghbt.ghbt_starbucks.api.category.model.Category;
 import com.ghbt.ghbt_starbucks.api.category.repository.ICategoryRepository;
+import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
@@ -13,6 +14,7 @@ import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product_and_category.repository.IProductAndCategoryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import java.util.List;
 @Service
 @Data
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository iProductRepository;
@@ -121,9 +124,22 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Page<List<Product>> searchingCategoryList(String name) {
-        Page<List<Product>> searching = iProductRepository.findByNameContains(name,Pageable.ofSize(5));
+    public List<List<Product>> searchingCategoryList(String name) {
+        List<List<Product>> searching = iProductRepository.findByNameContains(name);
         return searching;
+    }
+
+    @Override
+    public List<IMenubar> menubarList(String name) {
+        List<IMenubar> menubar = iProductRepository.findByMenubarList(name);
+        return menubar;
+    }
+
+    @Override
+    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
+        List<IProductSearch> products = iProductRepository.findCategoryList(categories,season,litter);
+        System.out.println(products);
+        return products;
     }
 
     @Override
