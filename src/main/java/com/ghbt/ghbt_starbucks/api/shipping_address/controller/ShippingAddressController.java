@@ -40,7 +40,7 @@ public class ShippingAddressController {
     //배송지 저장하기.
     @PostMapping
     @Operation(summary = "배송지 저장", description = "상세 기능 : 배송지폼에 입력된 정보를 저장합니다.")
-    public ResponseEntity saveShippingAddress(@RequestBody @Valid RequestShippingAddress requestShippingAddress,
+    public ResponseEntity<?> saveShippingAddress(@RequestBody @Valid RequestShippingAddress requestShippingAddress,
         @LoginUser User loginUser) {
 
         iShippingAddressService.saveShippingAddress(loginUser, requestShippingAddress);
@@ -61,13 +61,13 @@ public class ShippingAddressController {
     @Operation(summary = "유저 배송지 전체 조회", description = "상세 기능 : 유저 아이디를 이용하여, 배송지 전체를 조회합니다.")
     public ResponseEntity<Result> getAllShippingAddress(@LoginUser User loginUser) {
         List<ResponseShippingAddress> allUserShippingAddress = iShippingAddressService.getAllShippingAddress(loginUser);
-        return ResponseEntity.status(HttpStatus.OK).body(new Result<>(allUserShippingAddress));
+        return ResponseEntity.status(HttpStatus.OK).body(new Result(allUserShippingAddress));
     }
 
     //배송지 수정하기.
     @PatchMapping("/{shipping_address_id}")
     @Operation(summary = "배송지 수정", description = "상세 기능 : 수정 배송지 폼을 이용하여 기존의 배송지를 업데이트합니다.")
-    public ResponseEntity updateShippingAddress(@PathVariable("shipping_address_id") Long shippingAddressId,
+    public ResponseEntity<?> updateShippingAddress(@PathVariable("shipping_address_id") Long shippingAddressId,
         @RequestBody @Valid RequestShippingAddress requestShippingAddress) {
         iShippingAddressService.updateShippingAddress(shippingAddressId, requestShippingAddress);
 
@@ -77,7 +77,7 @@ public class ShippingAddressController {
     //배송지 삭제.
     @DeleteMapping("/{shipping_address_id}")
     @Operation(summary = "배송지 삭제", description = "상세 기능 : 배송지 아이디를 이용하여 배송지를 삭제합니다.")
-    public ResponseEntity deleteShippingAddress(@PathVariable("shipping_address_id") Long shippingAddressId) {
+    public ResponseEntity<?> deleteShippingAddress(@PathVariable("shipping_address_id") Long shippingAddressId) {
         iShippingAddressService.deleteShippingAddress(shippingAddressId);
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -85,8 +85,8 @@ public class ShippingAddressController {
 
     @Data
     @AllArgsConstructor
-    static class Result<T> {
+    static class Result {
 
-        private T shippingAddress;
+        private Object shippingAddress;
     }
 }

@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.shipping_address.model;
 
+import com.ghbt.ghbt_starbucks.api.shipping_address.dto.RequestShippingAddress;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,58 +25,56 @@ import lombok.NoArgsConstructor;
 @Entity
 public class ShippingAddress extends BaseTimeEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-  @Column(name = "receiver")
-  private String receiver;
+    @Column(name = "receiver")
+    private String receiver;
 
-  @Column(name = "zip_code")
-  private String zipCode;
+    @Column(name = "zip_code")
+    private String zipCode;
 
-  @Column(name = "address_nickname")
-  private String addressNickname;
+    @Column(name = "address_nickname")
+    private String addressNickname;
 
-  @Column(name = "detail_address")
-  private String detailAddress;
+    @Column(name = "detail_address")
+    private String detailAddress;
 
-  @Column(name = "base_address")
-  private String baseAddress;
+    @Column(name = "base_address")
+    private String baseAddress;
 
-  @Column(name = "phone_number_1")
-  private String phoneNumber1;
+    @Column(name = "phone_number_1")
+    private String phoneNumber1;
 
-  @Column(name = "phone_number_2")
-  private String phoneNumber2;
+    @Column(name = "phone_number_2")
+    private String phoneNumber2;
 
-  @Column(name = "notice")
-  private String notice;
+    @Column(name = "notice")
+    private String notice;
 
-  @Column(name = "is_default")
-  private Boolean isDefault;
+    @Column(name = "is_default")
+    private Boolean isDefault;
 
-  //==편의메서드==//
-  public void update(String receiver, String addressNickname, String baseAddress,
-      String detailAddress, String zipCode,
-      String phoneNumber1, String phoneNumber2, String notice, Boolean isDefault) {
+    //==편의메서드==//
+    public void update(RequestShippingAddress requestUpdateShippingAddress) {
 
-    this.receiver = receiver;
-    this.addressNickname = addressNickname;
-    this.baseAddress = baseAddress;
-    this.detailAddress = detailAddress;
-    this.zipCode = zipCode;
-    this.phoneNumber1 = phoneNumber1;
-    this.phoneNumber2 = phoneNumber2;
-    this.notice = notice;
-    this.isDefault = isDefault;
-  }
+        this.receiver = requestUpdateShippingAddress.getReceiver();
+        this.addressNickname = requestUpdateShippingAddress.getAddressNickname();
+        this.baseAddress = requestUpdateShippingAddress.getBaseAddress();
+        this.detailAddress = requestUpdateShippingAddress.getDetailAddress();
+        this.zipCode = requestUpdateShippingAddress.getZipCode();
+        this.phoneNumber1 = requestUpdateShippingAddress.getPhoneNumber1();
+        this.phoneNumber2 = requestUpdateShippingAddress.getPhoneNumber2();
+        this.notice = requestUpdateShippingAddress.getNotice();
+        this.isDefault = requestUpdateShippingAddress.getIsDefault();
+    }
 
-  public void changeIsDefault() {
-    this.isDefault = false;
-  }
+    public void changeIsDefault() {
+        this.isDefault = false;
+    }
 }
