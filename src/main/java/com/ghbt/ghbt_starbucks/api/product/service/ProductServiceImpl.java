@@ -136,8 +136,8 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IProductSearch> productFilter(String[] categories) {
-        List<IProductSearch> products = iProductRepository.findCategoryList(categories);
+    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
+        List<IProductSearch> products = iProductRepository.findCategoryList(categories,season,litter);
         System.out.println(products);
         return products;
     }

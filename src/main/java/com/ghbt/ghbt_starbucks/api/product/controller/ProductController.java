@@ -64,22 +64,22 @@ public class ProductController {
     }
 
     @GetMapping // 전체 상품 조회 페이지
-    public Page<Product> productPaging (final Pageable pageable) {
+    public Page<Product> productPaging(final Pageable pageable) {
         return iProductService.getList(pageable);
     }
 
     @GetMapping("/search/type/{name}") // 검색 상품의 대분류 카테고리 갯수
-    public List<IMenubar> typeCounting (@PathVariable("name") String name) {
+    public List<IMenubar> typeCounting(@PathVariable("name") String name) {
         return iProductService.menubarList(name);
     }
 
     @GetMapping("/search/filter") // 카테고리 필터링
-    public List<IProductSearch> productFiltering (@Param("categories")String[] categories){
-        log.info(categories.toString());
-        return iProductService.productFilter(categories);
+    public List<IProductSearch> productFiltering(
+        @Param("categories") String[] categories,
+        @Param("size") String[] litter,
+        @Param("season") String[] season) {
+        return iProductService.productFilter(categories, litter, season);
     }
-
-
 
 //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
 //    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
