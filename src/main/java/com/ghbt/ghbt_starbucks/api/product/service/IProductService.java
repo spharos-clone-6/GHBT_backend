@@ -19,7 +19,7 @@ public interface IProductService {
 
     List<ResponseProduct> getAllProduct();
 
-    List<Product> getProductForCategory(String search);
+    List<IProductListByCategory> getProductForCategory(String search);
 
     List<IProductSearch> getSearchProduct(String search);
 

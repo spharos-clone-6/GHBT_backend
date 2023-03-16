@@ -16,7 +16,7 @@ import org.springframework.security.core.parameters.P;
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select p AS thumbnail_url from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where c.name = :search")
-    List<Product> findAllProductType(@Param("search") String search);
+    List<IProductListByCategory> findAllProductType(@Param("search") String search);
 
     //상품만 검색되는 쿼리
     @Query(value = "select p from Product p where p.name like %:search%")
