@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.product.service;
 
+import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
@@ -18,7 +19,7 @@ public interface IProductService {
 
     List<ResponseProduct> getAllProduct();
 
-    List<IProductListByCategory> getProductForCategory(String search);
+    List<Product> getProductForCategory(String search);
 
     List<IProductSearch> getSearchProduct(String search);
 
@@ -26,7 +27,11 @@ public interface IProductService {
 
     Product updateProduct(Long ProductId, RequestProduct requestProduct);
 
-    Page<List<Product>> searchingCategoryList(String name);
+    List<List<Product>> searchingCategoryList(String name);
+
+    List<IMenubar> menubarList(String name);
+
+    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter);
 
     void deleteProduct(Long ProductId);
 }

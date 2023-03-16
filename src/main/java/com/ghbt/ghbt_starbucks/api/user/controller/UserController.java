@@ -3,6 +3,7 @@ package com.ghbt.ghbt_starbucks.api.user.controller;
 import com.ghbt.ghbt_starbucks.api.user.dto.ResponseUserDto;
 import com.ghbt.ghbt_starbucks.api.user.dto.UpdateUserDto;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import com.ghbt.ghbt_starbucks.api.user.service.IUserService;
 import com.ghbt.ghbt_starbucks.api.user.service.UserServiceImpl;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "basicAuth")
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final IUserService userServiceImpl;
 
     //회원 조회
     @GetMapping
     @Operation(summary = "유저 조회", description = "상세 기능 : 로그인한 유저의 상세 정보를 출력합니다.")
     public ResponseEntity<ResponseUserDto> getUser(@LoginUser User loginUser) {
-        User findUser = userService.getUser(loginUser.getId());
+        User findUser = userServiceImpl.getUser(loginUser.getId());
         return ResponseEntity.status(HttpStatus.OK)
             .body(ResponseUserDto.from(findUser));
     }
@@ -41,7 +42,7 @@ public class UserController {
     @PatchMapping
     @Operation(summary = "닉네임 수정", description = "상세 기능 : 닉네임 수정 폼의 정보로 로그인한 유저의 닉네임을 변경합니다.")
     public ResponseEntity updateNickName(@LoginUser User loginUser, @RequestBody UpdateUserDto updateUserDto) {
-        userService.updateUser(loginUser.getId(), updateUserDto);
+        userServiceImpl.updateUser(loginUser.getId(), updateUserDto);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
