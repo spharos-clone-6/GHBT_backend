@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import org.springframework.security.core.parameters.P;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
     //검색 네이티브 쿼리
@@ -25,8 +26,8 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     //특정 단어가 포함되는 검색어 검색
     @Query(value = "select p,c from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where p.name like %:search%")
     List<List<Product>> findByNameContains(@Param("search") String search);
-
-//    @Query(value = "select p ")
+    @Query(value = "select p from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where c.name in (:categories)")
+    List<IProductSearch> findCategoryList(@Param("categories") String[] categories);
 
 //    Page<Product> findByNameContains(String keyWord, Pageable pageable);
 

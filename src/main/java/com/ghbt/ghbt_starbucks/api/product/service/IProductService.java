@@ -31,6 +31,8 @@ public interface IProductService {
 
     List<IMenubar> menubarList(String name);
 
+    List<IProductSearch> productFilter(String[] categories);
+
     void deleteProduct(Long ProductId);
 }
 

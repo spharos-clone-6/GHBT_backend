@@ -136,6 +136,13 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
+    public List<IProductSearch> productFilter(String[] categories) {
+        List<IProductSearch> products = iProductRepository.findCategoryList(categories);
+        System.out.println(products);
+        return products;
+    }
+
+    @Override
     public void deleteProduct(Long ProductId) {
         iProductRepository.deleteById(ProductId);
     }

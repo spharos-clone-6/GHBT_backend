@@ -8,14 +8,10 @@ import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
-import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.awt.Menu;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -68,14 +64,23 @@ public class ProductController {
     }
 
     @GetMapping // 전체 상품 조회 페이지
-    public Page<Product> productPaging(final Pageable pageable) {
+    public Page<Product> productPaging (final Pageable pageable) {
         return iProductService.getList(pageable);
     }
 
     @GetMapping("/search/type/{name}") // 검색 상품의 대분류 카테고리 갯수
-    public List<IMenubar> prod(@PathVariable("name") String name) {
+    public List<IMenubar> typeCounting (@PathVariable("name") String name) {
         return iProductService.menubarList(name);
     }
+
+    @GetMapping("/search/filter") // 카테고리 필터링
+    public List<IProductSearch> productFiltering (@Param("categories")String[] categories){
+        log.info(categories.toString());
+        return iProductService.productFilter(categories);
+    }
+
+
+
 //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
 //    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
 //        PageRequest pageRequest = PageRequest.of(0, 20);
