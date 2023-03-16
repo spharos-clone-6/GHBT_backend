@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class GhbtStarbucksApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GhbtStarbucksApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GhbtStarbucksApplication.class, args);
+    }
 
 }
