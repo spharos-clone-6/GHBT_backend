@@ -33,7 +33,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     private static final String AUTHORITIES_KEY = "role";
     private static final String EMAIL_KEY = "email";
-    private static final String URL = "http://localhost:8080";
+    private static final String URL = "http://localhost:3000";
 
     private final String secretKey;
     private static Key signingKey;
