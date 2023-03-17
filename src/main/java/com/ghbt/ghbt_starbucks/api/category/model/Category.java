@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @AllArgsConstructor
 @NoArgsConstructor
 
