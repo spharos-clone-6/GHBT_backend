@@ -6,6 +6,8 @@ import com.ghbt.ghbt_starbucks.global.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.global.security.dto.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +43,12 @@ public class AuthController {
      */
     @PostMapping("/signup")
     @Operation(summary = "회원가입", description = "상세 기능 : 회원가입폼에 입력된 정보로 회원가입을 진행합니다.")
-    public ResponseEntity<Void> signup(@RequestBody @Valid SignupDto signupDto) {
+    public ResponseEntity<?> signup(@RequestBody @Valid SignupDto signupDto) {
         String encodedPassword = encoder.encode(signupDto.getPassword());
         SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
         authService.signupUser(signupDtoWithEncodedPassword);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
@@ -53,17 +56,19 @@ public class AuthController {
      */
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+
         TokenDto tokenDto = authService.login(loginDto);
 
-        HttpCookie httpCookie = ResponseCookie.from("refresh-token", tokenDto.getRefreshToken())
-            .maxAge(COOKIE_EXPIRATION)
-            .httpOnly(true)
-            .secure(true)
-            .build();
+        Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
+        cookie.setDomain("localhost");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+        response.addCookie(cookie);
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, httpCookie.toString())
+        return ResponseEntity.status(HttpStatus.OK)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
             .build();
     }
