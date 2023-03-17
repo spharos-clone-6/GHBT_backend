@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -34,5 +35,6 @@ public class Cart extends BaseTimeEntity {
     private Integer quantity;
 
     @Column(name = "deleted")
-    private boolean deleted = Boolean.FALSE;
+    @ColumnDefault("false")
+    private Boolean deleted;
 }
