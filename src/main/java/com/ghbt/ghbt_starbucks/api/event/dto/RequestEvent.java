@@ -14,4 +14,6 @@ public class RequestEvent {
     private String description;
     private String thumbnailUrl;
     private String descriptionUrl;
+
+    private String tag;
 }

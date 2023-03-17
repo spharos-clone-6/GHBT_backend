@@ -1,8 +1,9 @@
 package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.model.MobileCard;
-import com.ghbt.ghbt_starbucks.api.mobilecard.repository.MobileCardRepository;
+import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.mobile_card.repository.MobileCardRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestChargeMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.ResponseMobileCardAndUser;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model.UserHasMobileCard;
@@ -25,20 +26,18 @@ public class UserHasMobileCardServiceImpl implements IUserHasMobileCardService {
 
     @Override
     public List<ResponseMobileCardAndUser> getUserMobileCards(Long userId) {
-        List<UserHasMobileCard> userHasMobileCards = userHasMobileCardRepository.findUserHasMobileCardsByUserId(userId);
+        List<UserHasMobileCard> userHasMobileCards = userHasMobileCardRepository.findByUserId(userId);
         if (userHasMobileCards.isEmpty()) {
             throw new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT);
         }
         return userHasMobileCards.stream()
             .map(ResponseMobileCardAndUser::from)
             .collect(Collectors.toList());
-
     }
 
     @Override
     public ResponseMobileCardAndUser getUserMobileCard(Long userId, Long mobileCardId) {
-        UserHasMobileCard userHasMobileCard = userHasMobileCardRepository.findUserHasMobileCardByUserIdAndMobileCardId(
-                userId, mobileCardId)
+        UserHasMobileCard userHasMobileCard = userHasMobileCardRepository.findByUserIdAndMobileCardId(userId, mobileCardId)
             .orElseThrow(() -> new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT));
         return ResponseMobileCardAndUser.from(userHasMobileCard);
     }
@@ -50,7 +49,16 @@ public class UserHasMobileCardServiceImpl implements IUserHasMobileCardService {
                 requestMobileCard.getCardNumber())
             .orElseThrow(() -> new ServiceException("잘못된 상품권 등록 번호입니다.", HttpStatus.NO_CONTENT));
 
-        UserHasMobileCard userHasMobileCard = UserHasMobileCard.toEntity(loginUser, requestMobileCard, findMobileCard);
+        UserHasMobileCard userHasMobileCard = UserHasMobileCard.enrollMobileCard(loginUser, requestMobileCard, findMobileCard);
         return userHasMobileCardRepository.save(userHasMobileCard).getId();
+    }
+
+    @Transactional
+    @Override
+    public ResponseMobileCardAndUser chargeInMobileCard(Long userId, Long mobileCardId, RequestChargeMobileCard requestChargeMobileCard) {
+        UserHasMobileCard findUserHasMobileCard = userHasMobileCardRepository.findByUserIdAndMobileCardId(userId, mobileCardId)
+            .orElseThrow(() -> new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NOT_FOUND));
+        UserHasMobileCard chargedUserHasMobileCard = findUserHasMobileCard.chargeCash(requestChargeMobileCard);
+        return ResponseMobileCardAndUser.from(chargedUserHasMobileCard);
     }
 }

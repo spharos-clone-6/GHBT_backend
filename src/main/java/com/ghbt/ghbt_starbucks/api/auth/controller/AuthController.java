@@ -16,6 +16,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -26,13 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
 
-    private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60l;
+    private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60L;
 
     /**
      * 회원가입
@@ -71,7 +73,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     @Operation(summary = "로그아웃", description = "상세 기능 : 로그인한 유저를 로그아웃을합니다.")
-    public ResponseEntity logout(@RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String accessToken) {
         authService.logout(accessToken);
         ResponseCookie responseCookie = ResponseCookie.from("refresh-token", "")
             .maxAge(0)
@@ -83,18 +85,17 @@ public class AuthController {
     }
 
     /**
-     * 토큰 재발급 description : FE가 Autentication jwt토큰의 payload를 확인하고 만료시간이 임박해있으면 이 API 를 이용하여 토큰을 재발급 받는다.
+     * 토큰 재발급
      */
     @PostMapping("/reissue")
     @Operation(summary = "토큰 재발급 API", description = "상세 기능 : AccessToken 이 만료되었을 때 재발급해주는 API 입니다.")
-    public ResponseEntity reissue(
+    public ResponseEntity<?> reissue(
         @CookieValue(name = "refresh-token") String refreshToken,
         @RequestHeader(name = "Authorization") String accessToken) {
 
         TokenDto reissuedTokenDto = authService.reissue(accessToken, refreshToken);
         if (reissuedTokenDto != null) {
-            ResponseCookie responseCookie = ResponseCookie.from("refresh-token",
-                    reissuedTokenDto.getRefreshToken())
+            ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
                 .maxAge(COOKIE_EXPIRATION)
                 .httpOnly(true)
                 .secure(true)

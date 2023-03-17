@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.mobilecard.model;
+package com.ghbt.ghbt_starbucks.api.mobile_card.model;
 
-import com.ghbt.ghbt_starbucks.api.mobilecard.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -10,9 +10,8 @@ import org.springframework.data.repository.query.Param;
 public interface UserHasMobileCardRepository extends JpaRepository<UserHasMobileCard, Long> {
 
     @Query("select uhc from UserHasMobileCard uhc join fetch uhc.user u join fetch uhc.mobileCard m where u.id=:userId")
-    List<UserHasMobileCard> findUserHasMobileCardsByUserId(@Param("userId") Long userId);
+    List<UserHasMobileCard> findByUserId(@Param("userId") Long userId);
 
     @Query("select uhc from UserHasMobileCard uhc join fetch uhc.user u join fetch uhc.mobileCard m where u.id=:userId and m.id=:mobileCardId")
-    Optional<UserHasMobileCard> findUserHasMobileCardByUserIdAndMobileCardId(@Param("userId") Long userId,
-        @Param("mobileCardId") Long mobileCardId);
+    Optional<UserHasMobileCard> findByUserIdAndMobileCardId(@Param("userId") Long userId, @Param("mobileCardId") Long mobileCardId);
 }
