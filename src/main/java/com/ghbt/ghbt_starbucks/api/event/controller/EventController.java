@@ -34,8 +34,8 @@ public class EventController {
 
     @GetMapping("/name/{name}")
     @Operation(summary = "이벤트 이름으로 검색", description = "파라미터에 name 입력해주세요.")
-    public ResponseEvent getEventByName(@PathVariable String name) {
-        return iEventService.getEventByName(name);
+    public ResponseEvent getEventByTag(@PathVariable String name) {
+        return iEventService.getEventByTag(name);
     }
 
     @GetMapping()

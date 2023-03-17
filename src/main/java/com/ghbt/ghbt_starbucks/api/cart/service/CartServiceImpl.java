@@ -38,7 +38,7 @@ public class CartServiceImpl implements ICartService {
         //있는경우
         if (iscart != null) {
             //소프트 딜리트 되어있는 경우
-            if (iscart.isDeleted()) {
+            if (iscart.getDeleted()) {
                 Cart preCart = iCartRepository.findById(iscart.getId())
                     .orElseThrow(() -> new ServiceException("등록되어있는 장바구니가 없습니다..", HttpStatus.NO_CONTENT));
                 preCart.setDeleted(false);
@@ -74,7 +74,6 @@ public class CartServiceImpl implements ICartService {
             .quantity(cart.getQuantity())
             .user(cart.getUser())
             .build();
-
     }
 
     @Override
@@ -89,13 +88,10 @@ public class CartServiceImpl implements ICartService {
         });
         return responseCartList;
     }
-
     @Override
     public void deleteCart(Long id) {
-
         iCartRepository.deleteById(id);
     }
-
     @Override
     public ResponseCart updateCart(Long cartId, Integer quantity) {
         Cart nowCart = iCartRepository.findById(cartId)
@@ -108,6 +104,4 @@ public class CartServiceImpl implements ICartService {
             .product(updatedCart.getProduct())
             .build();
     }
-
-
 }

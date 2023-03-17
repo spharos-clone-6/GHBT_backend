@@ -26,6 +26,7 @@ public class EventServiceImpl implements IEventService {
             .description(requestEvent.getDescription())
             .descriptionUrl(requestEvent.getDescriptionUrl())
             .thumbnailUrl(requestEvent.getThumbnailUrl())
+            .tag(requestEvent.getTag())
             .name(requestEvent.getName()).build();
         iEventRepository.save(event);
     }
@@ -40,17 +41,19 @@ public class EventServiceImpl implements IEventService {
             .descriptionUrl(event.getDescriptionUrl())
             .id(event.getId())
             .name(event.getName())
+            .tag(event.getTag())
             .thumbnailUrl(event.getThumbnailUrl()).build();
     }
 
     @Override
-    public ResponseEvent getEventByName(String name) {
-        Event event = iEventRepository.findByName(name);
+    public ResponseEvent getEventByTag(String tag) {
+        Event event = iEventRepository.findByTag(tag);
 
         return ResponseEvent.builder()
             .description(event.getDescription())
             .descriptionUrl(event.getDescriptionUrl())
             .id(event.getId()).name(event.getName())
+            .tag(event.getTag())
             .thumbnailUrl(event.getThumbnailUrl()).build();
     }
 
@@ -61,7 +64,7 @@ public class EventServiceImpl implements IEventService {
 
         List<ResponseEvent> responseEvents = new ArrayList<>();
         events.forEach(event -> {
-            ResponseEvent responseEvent = modelMapper.map(event,ResponseEvent.class);
+            ResponseEvent responseEvent = modelMapper.map(event, ResponseEvent.class);
             responseEvents.add(responseEvent);
         });
         return responseEvents;

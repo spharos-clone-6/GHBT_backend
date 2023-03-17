@@ -11,7 +11,7 @@ public interface IEventService {
 
     ResponseEvent getEventById(Long id);
 
-    ResponseEvent getEventByName(String name);
+    ResponseEvent getEventByTag(String tag);
 
     List<ResponseEvent> getEventAll();
 
