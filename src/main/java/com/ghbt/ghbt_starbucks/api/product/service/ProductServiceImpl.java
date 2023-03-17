@@ -7,6 +7,8 @@ import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
+import com.ghbt.ghbt_starbucks.api.product_and_category.model.SearchCategory;
+import com.ghbt.ghbt_starbucks.api.product_and_category.repository.ISearchCategoryRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
@@ -31,25 +33,36 @@ public class ProductServiceImpl implements IProductService {
     private final IProductRepository iProductRepository;
     private final IProductAndCategoryRepository iProductAndCategoryRepository;
     private final ICategoryRepository iCategoryRepository;
+    private final ISearchCategoryRepository iSearchCategoryRepository;
 
 
-    @Override
+    @Override // 카테고리 테이블 바꾸기
     public void addProduct(RequestProduct requestProduct) {
-        Product product = Product.builder().name(requestProduct.getName()).description(requestProduct.getDescription())
+        Product product = Product.builder()
+            .name(requestProduct.getName()).description(requestProduct.getDescription())
             .price(requestProduct.getPrice()).thumbnailUrl(requestProduct.getThumbnailUrl())
-            .stock(requestProduct.getStock()).build();
+            .stock(requestProduct.getStock())
+            .build();
+
         Product savedProduct = iProductRepository.save(product);
         for (String name : requestProduct.getCategoryList()) {
-            Category findCategory = iCategoryRepository.findByName(name);
-            ProductAndCategory productAndCategory = ProductAndCategory.builder().productId(savedProduct)
-                .categoryId(findCategory).build();
-            iProductAndCategoryRepository.save(productAndCategory);
+            if (!name.isEmpty()) {
+                Category findCategory = iCategoryRepository.findByName(name);
+                ProductAndCategory productAndCategory = ProductAndCategory.builder().productId(savedProduct)
+                    .categoryId(findCategory).build();
+                iProductAndCategoryRepository.save(productAndCategory);
+            }
         }
-        ResponseProduct.builder().id(savedProduct.getId()).name(savedProduct.getName()).price(savedProduct.getPrice())
-            .description(savedProduct.getDescription()).thumbnailUrl(savedProduct.getThumbnailUrl())
-            .stock(savedProduct.getStock()).likeCount(savedProduct.getLikeCount()).isBest(savedProduct.getIsBest())
+        SearchCategory searchCategory = SearchCategory.builder()
+            .productId(savedProduct)
+            .bigType(requestProduct.getCategoryList().get(0))
+            .subType(requestProduct.getCategoryList().get(1))
+            .season(requestProduct.getCategoryList().get(2))
+            .volume(requestProduct.getCategoryList().get(3))
             .build();
+        iSearchCategoryRepository.save(searchCategory);
     }
+
 
     @Override
     public ResponseProduct getProduct(Long id) {
@@ -136,11 +149,39 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
-        List<IProductSearch> products = iProductRepository.findCategoryList(categories,season,litter);
-        System.out.println(products);
-        return products;
+    public List<IProductSearch> categoryFilter(String[] categories) {
+        List<IProductSearch> categoryList = iProductRepository.findCategoryFilter(categories);
+        if (categoryList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return categoryList;
     }
+
+    @Override
+    public List<IProductSearch> seasonFilter(String[] season) {
+        List<IProductSearch> seasonList = iProductRepository.findSeasonFilter(season);
+        if (seasonList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+
+        return seasonList;
+    }
+
+    @Override
+    public List<IProductSearch> volumeFilter(String[] volume) {
+        List<IProductSearch> volumeList = iProductRepository.findVolumeFilter(volume);
+        if (volumeList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return volumeList;
+    }
+
+//    @Override // and 조건
+//    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
+//        List<IProductSearch> products = iProductRepository.findCategoryList(categories, season, litter);
+//
+//        return products;
+//    }
 
     @Override
     public void deleteProduct(Long ProductId) {

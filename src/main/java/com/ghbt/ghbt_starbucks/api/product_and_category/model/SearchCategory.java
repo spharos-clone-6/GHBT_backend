@@ -1,20 +1,24 @@
 package com.ghbt.ghbt_starbucks.api.product_and_category.model;
 
-import com.ghbt.ghbt_starbucks.api.category.model.Category;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductAndCategory {
+public class SearchCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +28,10 @@ public class ProductAndCategory {
     @JoinColumn(name = "PRODUCT_ID")
     private Product productId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID")
-    private Category categoryId;
+    private String bigType;
+    private String subType;
+    private String season;
+    private String volume;
+
 
 }
-

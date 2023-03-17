@@ -15,7 +15,7 @@ import org.springframework.security.core.parameters.P;
 
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    @Query(value = "select p AS thumbnail_url from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where c.name = :search")
+    @Query(value = "select p from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c on c.id = pac.categoryId.id where c.name = :search")
     List<IProductListByCategory> findAllProductType(@Param("search") String search);
 
     //상품만 검색되는 쿼리
@@ -30,10 +30,19 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p,c from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where p.name like %:search%")
     List<List<Product>> findByNameContains(@Param("search") String search);
 
-    @Query(value = "select p from Product p left join ProductAndCategory pac on p.id = pac.productId.id left join pac.categoryId c where c.name in :categories or c.name in :season or c.name in :litter")
-    List<IProductSearch> findCategoryList(@Param("categories") String[] categories,
-        @Param("litter") String[] litter,
-        @Param("season") String[] season);
+    @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.subType in :categories")
+    List<IProductSearch> findCategoryFilter(@Param("categories") String[] categories);
+
+    @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.season in :season")
+    List<IProductSearch> findSeasonFilter(@Param("season") String[] season);
+
+    @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.volume in :volume")
+    List<IProductSearch> findVolumeFilter(@Param("volume") String[] volume);
+
+//    @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.subType in :categories and s.season in :season and s.volume in :litter")
+//    List<IProductSearch> findCategoryList(@Param("categories") String[] categories,
+//        @Param("litter") String[] litter,
+//        @Param("season") String[] season);
 
 //    Page<Product> findByNameContains(String keyWord, Pageable pageable);
 

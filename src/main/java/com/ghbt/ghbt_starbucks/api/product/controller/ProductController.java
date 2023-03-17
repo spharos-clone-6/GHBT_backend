@@ -73,12 +73,26 @@ public class ProductController {
         return iProductService.menubarList(name);
     }
 
-    @GetMapping("/search/filter") // 카테고리 필터링
-    public List<IProductSearch> productFiltering(
-        @Param("categories") String[] categories,
-        @Param("size") String[] litter,
-        @Param("season") String[] season) {
-        return iProductService.productFilter(categories, litter, season);
+//    @GetMapping("/search/filter") // 카테고리 필터링
+//    public List<IProductSearch> productFiltering(
+//        @Param("categories") String[] categories,
+//        @Param("size") String[] litter,
+//        @Param("season") String[] season) {
+//        return iProductService.productFilter(categories, litter, season);}
+
+    @GetMapping("/search/filter/c")
+    public List<IProductSearch> categoryFiltering(@Param("category") String[] category) {
+        return iProductService.categoryFilter(category);
+    }
+
+    @GetMapping("/search/filter/s")
+    public List<IProductSearch> seasonFiltering(@Param("season") String[] season) {
+        return iProductService.seasonFilter(season);
+    }
+
+    @GetMapping("/search/filter/v")
+    public List<IProductSearch> volumeFiltering(@Param("volume") String[] volume) {
+        return iProductService.volumeFilter(volume);
     }
 
 //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
