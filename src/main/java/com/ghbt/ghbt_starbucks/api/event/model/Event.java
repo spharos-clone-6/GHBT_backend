@@ -17,15 +17,18 @@ public class Event extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name",nullable = false, length = 255)
+    @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    @Column(name = "description",nullable = false, length = 255)
+    @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @Column(name = "thumbnail_url",nullable = false, length = 255)
+    @Column(name = "thumbnail_url", nullable = false, length = 255)
     private String thumbnailUrl;
 
-    @Column(name = "description_url",nullable = false, length = 255)
+    @Column(name = "description_url", nullable = false, length = 255)
     private String descriptionUrl;
+
+    @Column(name = "tag")
+    private String tag;
 }
