@@ -31,7 +31,12 @@ public interface IProductService {
 
     List<IMenubar> menubarList(String name);
 
-    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter);
+    //    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter); and 조건
+    List<IProductSearch> categoryFilter(String[] categories);
+
+    List<IProductSearch> seasonFilter(String[] season);
+
+    List<IProductSearch> volumeFilter(String[] volume);
 
     void deleteProduct(Long ProductId);
 }
