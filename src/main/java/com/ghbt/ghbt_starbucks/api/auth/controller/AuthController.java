@@ -62,7 +62,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
             .header(HttpHeaders.SET_COOKIE, "refresh-token=" + tokenDto.getRefreshToken()
-                + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
+                + "; domain= localhost; path=/; httpOnly;")
             .build();
     }
 
