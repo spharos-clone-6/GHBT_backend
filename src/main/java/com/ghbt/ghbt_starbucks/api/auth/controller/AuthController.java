@@ -63,7 +63,6 @@ public class AuthController {
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
             .header(HttpHeaders.SET_COOKIE, "refresh-token=" + tokenDto.getRefreshToken()
                 + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
-            .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://localhost:3000")
             .build();
     }
 
