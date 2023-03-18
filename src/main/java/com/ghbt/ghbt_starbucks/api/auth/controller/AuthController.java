@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -60,15 +59,9 @@ public class AuthController {
 
         TokenDto tokenDto = authService.login(loginDto);
 
-        Cookie cookie = new Cookie("refresh-token", tokenDto.getRefreshToken());
-        cookie.setDomain("localhost");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60);
-        response.addCookie(cookie);
-
         return ResponseEntity.status(HttpStatus.OK)
+            .header(HttpHeaders.SET_COOKIE, "refresh-token=" + tokenDto.getRefreshToken()
+                + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
             .build();
     }
