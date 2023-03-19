@@ -11,6 +11,9 @@ public enum ErrorCode {
     NOT_FOUND_SHIPPING_ADDRESSES("등록된 배송지가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     SHIPPING_ADDRESS_DB_INVALID("배송지 기본 설정 로직에 이상이 생겼습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    NOT_FOUND_STARBUCKS_CARDS("해당 유저의 스타벅스 카드가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
+    WRONG_STARBUCKS_CARD_NUMBERS("유효하지 않는 등록번호입니다.", HttpStatus.NOT_FOUND),
+
     NOT_FOUND_CART("등록된 장바구니가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
 
     NOT_FOUND_PRODUCT("등록된 물품이 존재하지 않습니다.", HttpStatus.NOT_FOUND),
