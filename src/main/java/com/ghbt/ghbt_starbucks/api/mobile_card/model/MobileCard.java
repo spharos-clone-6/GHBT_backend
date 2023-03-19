@@ -1,8 +1,10 @@
 package com.ghbt.ghbt_starbucks.api.mobile_card.model;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestEnrollMobileCard;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,11 +24,12 @@ public class MobileCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "card_name")
+    private String cardName;
 
-    @Column(name = "price")
-    private Long price;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "card_type")
+    private CardType cardType;
 
     @Column(name = "card_number")
     private String cardNumber;
@@ -38,13 +41,13 @@ public class MobileCard {
     private String thumbnailUrl;
 
 
-    public static MobileCard toEntity(RequestMobileCardToEnroll requestMobileCardToEnroll) {
+    public static MobileCard toEntity(RequestEnrollMobileCard requestEnrollMobileCard, CardType cardType) {
         return MobileCard.builder()
-            .cardNumber(requestMobileCardToEnroll.getCardNumber())
-            .name(requestMobileCardToEnroll.getName())
-            .price(requestMobileCardToEnroll.getPrice())
-            .thumbnailUrl(requestMobileCardToEnroll.getThumbnailUrl())
-            .pinNumber(requestMobileCardToEnroll.getPinNumber())
+            .cardNumber(requestEnrollMobileCard.getCardNumber())
+            .pinNumber(requestEnrollMobileCard.getPinNumber())
+            .cardType(cardType)
+            .cardName(requestEnrollMobileCard.getCardName())
+            .thumbnailUrl(requestEnrollMobileCard.getThumbnailUrl())
             .build();
     }
 }

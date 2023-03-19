@@ -1,6 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.mobile_card.controller;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestMobileCardToEnroll;
+import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestEnrollMobileCard;
 import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
 import com.ghbt.ghbt_starbucks.api.mobile_card.service.IMobileCardService;
 import java.util.List;
@@ -41,8 +41,8 @@ public class MobileCardController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveMobileCardByAdmin(@RequestBody RequestMobileCardToEnroll requestMobileCardToEnroll) {
-        mobileCardServiceImpl.enrollMobileCard(requestMobileCardToEnroll);
+    public ResponseEntity<?> saveMobileCardByAdmin(@RequestBody RequestEnrollMobileCard requestEnrollMobileCard) {
+        mobileCardServiceImpl.enrollMobileCard(requestEnrollMobileCard);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
