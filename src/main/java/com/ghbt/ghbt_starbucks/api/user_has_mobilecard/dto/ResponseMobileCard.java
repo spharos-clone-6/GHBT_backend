@@ -10,25 +10,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseMobileCardAndUser {
+public class ResponseMobileCard {
 
     private Long id;
-    private String nickName;
-    private String userName;
-
-    private String cardName;
     private Long price;
-    private String cardNumber;
+    private String cardName;
+    private String cardNickName;
     private String thumbnailUrl;
 
-    public static ResponseMobileCardAndUser from(UserHasMobileCard userHasMobileCard) {
-        return ResponseMobileCardAndUser.builder()
+    public static ResponseMobileCard from(UserHasMobileCard userHasMobileCard) {
+        return ResponseMobileCard.builder()
             .id(userHasMobileCard.getId())
-            .nickName(userHasMobileCard.getCardName())
-            .userName(userHasMobileCard.getUser().getName())
-            .cardName(userHasMobileCard.getMobileCard().getName())
             .price(userHasMobileCard.getPrice())
-            .cardNumber(userHasMobileCard.getMobileCard().getCardNumber())
+            .cardName(userHasMobileCard.getMobileCard().getCardName())
+            .cardNickName(userHasMobileCard.getCardNickName())
             .thumbnailUrl(userHasMobileCard.getMobileCard().getThumbnailUrl())
             .build();
     }

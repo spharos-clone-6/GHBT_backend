@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestMobileCardToEnroll {
+public class RequestEnrollMobileCard {
 
-    private String name;
-    private String type;
-    private String cardNumber;
-    private String pinNumber;
+    private String cardName;
     private String thumbnailUrl;
-    private Long price;
 
+    private String cardNumber; //16자리 필수
+    private String pinNumber;  //8자리
 }

@@ -9,15 +9,15 @@ import lombok.Data;
 public class ResponseMobileCard {
 
     private Long id;
-    private String name;
+    private String cardName;
     private Long price;
     private String thumbnailUrl;
 
     public static ResponseMobileCard from(MobileCard mobileCard) {
         return ResponseMobileCard.builder()
             .id(mobileCard.getId())
-            .name(mobileCard.getName())
-            .price(mobileCard.getPrice())
+            .cardName(mobileCard.getCardName())
+            .price(mobileCard.getCardType().getPrice())
             .thumbnailUrl(mobileCard.getThumbnailUrl())
             .build();
     }

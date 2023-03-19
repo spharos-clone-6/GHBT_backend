@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestMobileCard {
 
-    private String cardName;
+    private String cardNickName;
     private String cardNumber;
     private String pinNumber;
 }
