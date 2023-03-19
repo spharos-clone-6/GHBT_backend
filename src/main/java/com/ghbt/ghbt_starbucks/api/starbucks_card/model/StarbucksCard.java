@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.mobile_card.model;
+package com.ghbt.ghbt_starbucks.api.starbucks_card.model;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestEnrollMobileCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.dto.RequestEnrollStarbucksCard;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class MobileCard {
+public class StarbucksCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,13 +41,13 @@ public class MobileCard {
     private String thumbnailUrl;
 
 
-    public static MobileCard toEntity(RequestEnrollMobileCard requestEnrollMobileCard, CardType cardType) {
-        return MobileCard.builder()
-            .cardNumber(requestEnrollMobileCard.getCardNumber())
-            .pinNumber(requestEnrollMobileCard.getPinNumber())
+    public static StarbucksCard toEntity(RequestEnrollStarbucksCard requestEnrollStarbucksCard, CardType cardType) {
+        return StarbucksCard.builder()
+            .cardNumber(requestEnrollStarbucksCard.getCardNumber())
+            .pinNumber(requestEnrollStarbucksCard.getPinNumber())
             .cardType(cardType)
-            .cardName(requestEnrollMobileCard.getCardName())
-            .thumbnailUrl(requestEnrollMobileCard.getThumbnailUrl())
+            .cardName(requestEnrollStarbucksCard.getCardName())
+            .thumbnailUrl(requestEnrollStarbucksCard.getThumbnailUrl())
             .build();
     }
 }

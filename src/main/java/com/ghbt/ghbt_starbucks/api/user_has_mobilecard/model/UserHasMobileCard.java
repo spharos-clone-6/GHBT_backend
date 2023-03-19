@@ -1,6 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestChargeMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
@@ -37,18 +37,18 @@ public class UserHasMobileCard {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mobile_card_id")
-    private MobileCard mobileCard;
+    private StarbucksCard starbucksCard;
 
     @Column(name = "price")
     private Long price;
 
     public static UserHasMobileCard enrollMobileCard(User loginUser, RequestMobileCard requestMobileCard,
-        MobileCard findMobileCard) {
+        StarbucksCard findStarbucksCard) {
         return UserHasMobileCard.builder()
             .user(loginUser)
-            .mobileCard(findMobileCard)
+            .starbucksCard(findStarbucksCard)
             .cardNickName(requestMobileCard.getCardNickName())
-            .price(findMobileCard.getCardType().getPrice())
+            .price(findStarbucksCard.getCardType().getPrice())
             .build();
     }
 

@@ -1,12 +1,12 @@
-package com.ghbt.ghbt_starbucks.api.mobile_card.service;
+package com.ghbt.ghbt_starbucks.api.starbucks_card.service;
 
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestEnrollMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.model.CardType;
-import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.repository.MobileCardRepository;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.dto.RequestEnrollStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.model.CardType;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.repository.IStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.Arrays;
 import java.util.List;
@@ -19,38 +19,38 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class MobileCardServiceImpl implements IMobileCardService {
+public class StarbucksCardServiceImpl implements IStarbucksCardService {
 
-    private final MobileCardRepository mobileCardRepository;
+    private final IStarbucksCardRepository IStarbucksCardRepository;
 
     @Override
-    public List<ResponseMobileCard> getAllMobileCard() {
-        List<MobileCard> mobileCards = mobileCardRepository.findAll();
-        if (mobileCards.isEmpty()) {
+    public List<ResponseStarbucksCard> getAllMobileCard() {
+        List<StarbucksCard> starbucksCards = IStarbucksCardRepository.findAll();
+        if (starbucksCards.isEmpty()) {
             throw new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus());
         }
-        return mobileCards.stream()
-            .map(ResponseMobileCard::from)
+        return starbucksCards.stream()
+            .map(ResponseStarbucksCard::from)
             .collect(Collectors.toList());
     }
 
     @Override
-    public ResponseMobileCard getOneMobileCard(Long mobileCardId) {
-        MobileCard findMobileCard = mobileCardRepository.findById(mobileCardId)
+    public ResponseStarbucksCard getOneMobileCard(Long mobileCardId) {
+        StarbucksCard findStarbucksCard = IStarbucksCardRepository.findById(mobileCardId)
             .orElseThrow(
                 () -> new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus()));
 
-        return ResponseMobileCard.from(findMobileCard);
+        return ResponseStarbucksCard.from(findStarbucksCard);
     }
 
     @Override
     @Transactional
-    public Long enrollMobileCard(RequestEnrollMobileCard requestEnrollMobileCard) {
-        CardType cardType = encryptCardType(requestEnrollMobileCard.getCardNumber(),
-            requestEnrollMobileCard.getPinNumber());
-        MobileCard mobileCard = MobileCard.toEntity(requestEnrollMobileCard, cardType);
-        MobileCard savedMobileCard = mobileCardRepository.save(mobileCard);
-        return savedMobileCard.getId();
+    public Long enrollMobileCard(RequestEnrollStarbucksCard requestEnrollStarbucksCard) {
+        CardType cardType = encryptCardType(requestEnrollStarbucksCard.getCardNumber(),
+            requestEnrollStarbucksCard.getPinNumber());
+        StarbucksCard starbucksCard = StarbucksCard.toEntity(requestEnrollStarbucksCard, cardType);
+        StarbucksCard savedStarbucksCard = IStarbucksCardRepository.save(starbucksCard);
+        return savedStarbucksCard.getId();
     }
 
     private CardType encryptCardType(String cardNumber, String pinNumber) {

@@ -22,9 +22,9 @@ public class ResponseMobileCard {
         return ResponseMobileCard.builder()
             .id(userHasMobileCard.getId())
             .price(userHasMobileCard.getPrice())
-            .cardName(userHasMobileCard.getMobileCard().getCardName())
+            .cardName(userHasMobileCard.getStarbucksCard().getCardName())
             .cardNickName(userHasMobileCard.getCardNickName())
-            .thumbnailUrl(userHasMobileCard.getMobileCard().getThumbnailUrl())
+            .thumbnailUrl(userHasMobileCard.getStarbucksCard().getThumbnailUrl())
             .build();
     }
 }

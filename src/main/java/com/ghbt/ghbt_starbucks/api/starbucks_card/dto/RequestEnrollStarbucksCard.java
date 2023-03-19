@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.api.mobile_card.dto;
+package com.ghbt.ghbt_starbucks.api.starbucks_card.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestEnrollMobileCard {
+public class RequestEnrollStarbucksCard {
 
     private String cardName;
     private String thumbnailUrl;

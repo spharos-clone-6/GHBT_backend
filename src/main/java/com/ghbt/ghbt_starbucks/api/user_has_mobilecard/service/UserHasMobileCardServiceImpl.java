@@ -1,7 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.service;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.model.MobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.repository.MobileCardRepository;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.repository.IStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestChargeMobileCard;
 import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserHasMobileCardServiceImpl implements IUserHasMobileCardService {
 
     private final UserHasMobileCardRepository userHasMobileCardRepository;
-    private final MobileCardRepository mobileCardRepository;
+    private final IStarbucksCardRepository IStarbucksCardRepository;
 
     @Override
     public List<ResponseMobileCard> getUserMobileCards(Long userId) {
@@ -46,12 +46,12 @@ public class UserHasMobileCardServiceImpl implements IUserHasMobileCardService {
     @Transactional
     @Override
     public Long saveUserMobileCard(User loginUser, RequestMobileCard requestMobileCard) {
-        MobileCard findMobileCard = mobileCardRepository.findByPinNumberAndCardNumber(requestMobileCard.getPinNumber(),
+        StarbucksCard findStarbucksCard = IStarbucksCardRepository.findByPinNumberAndCardNumber(requestMobileCard.getPinNumber(),
                 requestMobileCard.getCardNumber())
             .orElseThrow(() -> new ServiceException("잘못된 상품권 등록 번호입니다.", HttpStatus.NO_CONTENT));
 
         UserHasMobileCard userHasMobileCard = UserHasMobileCard.enrollMobileCard(loginUser, requestMobileCard,
-            findMobileCard);
+            findStarbucksCard);
         return userHasMobileCardRepository.save(userHasMobileCard).getId();
     }
 

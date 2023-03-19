@@ -1,8 +1,8 @@
-package com.ghbt.ghbt_starbucks.api.mobile_card.controller;
+package com.ghbt.ghbt_starbucks.api.starbucks_card.controller;
 
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.RequestEnrollMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.dto.ResponseMobileCard;
-import com.ghbt.ghbt_starbucks.api.mobile_card.service.IMobileCardService;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.dto.RequestEnrollStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.starbucks_card.service.IStarbucksCardService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,32 +17,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 모바일 카드 구매를 위해 전체 조회를 할 수 있는 API 입니다. 1. 전체 조회 2. 단건 조회 3. 모바일 카드 등록(관리자)
+ * 스타벅스 카드 구매를 위해 전체 조회를 할 수 있는 API 입니다. 1. 전체 조회 2. 단건 조회 3. 모바일 카드 등록(관리자)
  */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/mobile-card")
-public class MobileCardController {
+public class StarbucksCardController {
 
-    private final IMobileCardService mobileCardServiceImpl;
+    private final IStarbucksCardService mobileCardServiceImpl;
 
     @GetMapping
     public ResponseEntity<Result> allMobileCard() {
-        List<ResponseMobileCard> mobileCards = mobileCardServiceImpl.getAllMobileCard();
+        List<ResponseStarbucksCard> mobileCards = mobileCardServiceImpl.getAllMobileCard();
         return ResponseEntity.status(HttpStatus.OK)
             .body(new Result(mobileCards));
     }
 
     @GetMapping("/{mobileCardId}")
-    public ResponseEntity<ResponseMobileCard> oneMobileCard(@PathVariable Long mobileCardId) {
-        ResponseMobileCard mobileCard = mobileCardServiceImpl.getOneMobileCard(mobileCardId);
+    public ResponseEntity<ResponseStarbucksCard> oneMobileCard(@PathVariable Long mobileCardId) {
+        ResponseStarbucksCard mobileCard = mobileCardServiceImpl.getOneMobileCard(mobileCardId);
         return ResponseEntity.status(HttpStatus.OK)
             .body(mobileCard);
     }
 
     @PostMapping
-    public ResponseEntity<?> saveMobileCardByAdmin(@RequestBody RequestEnrollMobileCard requestEnrollMobileCard) {
-        mobileCardServiceImpl.enrollMobileCard(requestEnrollMobileCard);
+    public ResponseEntity<?> saveMobileCardByAdmin(@RequestBody RequestEnrollStarbucksCard requestEnrollStarbucksCard) {
+        mobileCardServiceImpl.enrollMobileCard(requestEnrollStarbucksCard);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }

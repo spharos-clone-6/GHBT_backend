@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.api.mobile_card.model;
+package com.ghbt.ghbt_starbucks.api.starbucks_card.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
