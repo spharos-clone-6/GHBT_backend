@@ -8,6 +8,7 @@ import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.StarbucksCardPaymentDto;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model.UserHasStarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.repository.IUserHasStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
@@ -68,5 +69,19 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
             .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
         UserHasStarbucksCard chargedUserHasStarbucksCard = findUserHasStarbucksCard.chargeCash(requestChargeStarbucksCard);
         return ResponseStarbucksCard.from(chargedUserHasStarbucksCard);
+    }
+
+    public StarbucksCardPaymentDto paymentByStarbucksCard(Long userId, Long starbucksCardId, Long paymentPrice) {
+        UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
+                starbucksCardId)
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
+        return findUserHasStarbucksCard.payment(paymentPrice);
+    }
+
+    public StarbucksCardPaymentDto prePaymentByStarbucksCard(Long userId, Long starbucksCardId, Long paymentPrice) {
+        UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
+                starbucksCardId)
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
+        return findUserHasStarbucksCard.prePayment(paymentPrice);
     }
 }

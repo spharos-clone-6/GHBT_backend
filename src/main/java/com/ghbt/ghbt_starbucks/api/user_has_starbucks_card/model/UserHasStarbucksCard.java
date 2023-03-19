@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.StarbucksCardPaymentDto;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,5 +56,21 @@ public class UserHasStarbucksCard {
     public UserHasStarbucksCard chargeCash(RequestChargeStarbucksCard requestChargeStarbucksCard) {
         this.price += requestChargeStarbucksCard.getCash();
         return this;
+    }
+
+    public StarbucksCardPaymentDto prePayment(Long paymentPrice) {
+        if (this.price >= paymentPrice) {
+            this.price -= paymentPrice;
+            return new StarbucksCardPaymentDto(0L, this.price);
+        }
+        this.price = 0L;
+        return new StarbucksCardPaymentDto(paymentPrice - this.price, 0L);
+    }
+
+    public StarbucksCardPaymentDto payment(Long paymentPrice) {
+        if (this.price >= paymentPrice) {
+            return new StarbucksCardPaymentDto(0L, this.price - paymentPrice);
+        }
+        return new StarbucksCardPaymentDto(paymentPrice - this.price, 0L);
     }
 }
