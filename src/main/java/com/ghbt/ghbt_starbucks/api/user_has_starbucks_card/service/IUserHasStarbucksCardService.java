@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.service;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCard;
 import java.util.List;
 
 public interface IUserHasStarbucksCardService {
@@ -18,6 +18,6 @@ public interface IUserHasStarbucksCardService {
     Long saveUserStarbucksCard(User user, RequestStarbucksCard requestStarbucksCard);
 
     //모바일 카드 충전하기.
-    ResponseStarbucksCard chargeInStarbucksCard(Long userId, Long starbucksCardId,
+    ResponseStarbucksCard chargeStarbucksCard(Long userId, Long starbucksCardId,
         RequestChargeStarbucksCard requestChargeStarbucksCard);
 }

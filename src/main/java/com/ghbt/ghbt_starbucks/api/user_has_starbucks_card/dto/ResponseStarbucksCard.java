@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto;
 
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model.UserHasStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model.UserHasStarbucksCard;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

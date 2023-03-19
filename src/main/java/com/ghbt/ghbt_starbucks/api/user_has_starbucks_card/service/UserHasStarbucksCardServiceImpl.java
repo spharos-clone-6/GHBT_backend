@@ -1,13 +1,17 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.service;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service;
+
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
 import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.starbucks_card.repository.IStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.ResponseStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model.UserHasStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.repository.IUserHasStarbucksCardRepository;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.StarbucksCardPaymentDto;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model.UserHasStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.repository.IUserHasStarbucksCardRepository;
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +32,7 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
     public List<ResponseStarbucksCard> getUserStarbucksCards(Long userId) {
         List<UserHasStarbucksCard> userHasStarbucksCards = iUserHasStarbucksCardRepository.findByUserId(userId);
         if (userHasStarbucksCards.isEmpty()) {
-            throw new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus());
         }
         return userHasStarbucksCards.stream()
             .map(ResponseStarbucksCard::from)
@@ -39,7 +43,7 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
     public ResponseStarbucksCard getUserStarbucksCard(Long userId, Long starbucksCardId) {
         UserHasStarbucksCard userHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
                 starbucksCardId)
-            .orElseThrow(() -> new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
         return ResponseStarbucksCard.from(userHasStarbucksCard);
     }
 
@@ -48,7 +52,8 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
     public Long saveUserStarbucksCard(User loginUser, RequestStarbucksCard requestStarbucksCard) {
         StarbucksCard findStarbucksCard = iStarbucksCardRepository.findByPinNumberAndCardNumber(requestStarbucksCard.getPinNumber(),
                 requestStarbucksCard.getCardNumber())
-            .orElseThrow(() -> new ServiceException("잘못된 상품권 등록 번호입니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(
+                () -> new ServiceException(WRONG_STARBUCKS_CARD_NUMBERS.getMessage(), WRONG_STARBUCKS_CARD_NUMBERS.getHttpStatus()));
 
         UserHasStarbucksCard userHasStarbucksCard = UserHasStarbucksCard.enrollStarbucksCard(loginUser, requestStarbucksCard,
             findStarbucksCard);
@@ -57,12 +62,26 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
 
     @Transactional
     @Override
-    public ResponseStarbucksCard chargeInStarbucksCard(Long userId, Long starbucksCardId,
+    public ResponseStarbucksCard chargeStarbucksCard(Long userId, Long starbucksCardId,
         RequestChargeStarbucksCard requestChargeStarbucksCard) {
         UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
                 starbucksCardId)
-            .orElseThrow(() -> new ServiceException("등록된 모바일 상품권이 없습니다.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
         UserHasStarbucksCard chargedUserHasStarbucksCard = findUserHasStarbucksCard.chargeCash(requestChargeStarbucksCard);
         return ResponseStarbucksCard.from(chargedUserHasStarbucksCard);
+    }
+
+    public StarbucksCardPaymentDto paymentByStarbucksCard(Long userId, Long starbucksCardId, Long paymentPrice) {
+        UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
+                starbucksCardId)
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
+        return findUserHasStarbucksCard.payment(paymentPrice);
+    }
+
+    public StarbucksCardPaymentDto prePaymentByStarbucksCard(Long userId, Long starbucksCardId, Long paymentPrice) {
+        UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
+                starbucksCardId)
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus()));
+        return findUserHasStarbucksCard.prePayment(paymentPrice);
     }
 }

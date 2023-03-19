@@ -1,10 +1,10 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.controller;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.controller;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.ResponseStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.service.IUserHasStarbucksCardService;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service.IUserHasStarbucksCardService;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -57,7 +57,7 @@ public class UserHasStarbucksCardController {
         @LoginUser User loginUser,
         @PathVariable Long starbucksCardId,
         @RequestBody RequestChargeStarbucksCard requestChargeStarbucksCard) {
-        ResponseStarbucksCard responseStarbucksCard = userHasStarbucksServiceImpl.chargeInStarbucksCard(
+        ResponseStarbucksCard responseStarbucksCard = userHasStarbucksServiceImpl.chargeStarbucksCard(
             loginUser.getId(),
             starbucksCardId, requestChargeStarbucksCard);
         return ResponseEntity.status(HttpStatus.OK)
