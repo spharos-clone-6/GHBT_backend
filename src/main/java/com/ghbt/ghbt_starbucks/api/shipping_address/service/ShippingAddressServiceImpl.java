@@ -2,6 +2,7 @@ package com.ghbt.ghbt_starbucks.api.shipping_address.service;
 
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 import static java.lang.Boolean.*;
+import static java.util.Comparator.*;
 
 import com.ghbt.ghbt_starbucks.api.shipping_address.repository.IShippingAddressRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
@@ -9,6 +10,7 @@ import com.ghbt.ghbt_starbucks.api.shipping_address.dto.RequestShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.model.ShippingAddress;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +97,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
         log.info("[배송지 조회] 배송지 전체가 성공적으로 조회되었습니다.");
         return shippingAddresses.stream()
             .map(ResponseShippingAddress::from)
+            .sorted(comparing(ResponseShippingAddress::getIsDefault).reversed())
             .collect(Collectors.toList());
     }
 
