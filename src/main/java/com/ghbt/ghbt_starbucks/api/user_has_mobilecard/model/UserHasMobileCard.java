@@ -28,8 +28,8 @@ public class UserHasMobileCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "card_name")
-    private String cardName;
+    @Column(name = "card_nick_name")
+    private String cardNickName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -45,10 +45,10 @@ public class UserHasMobileCard {
     public static UserHasMobileCard enrollMobileCard(User loginUser, RequestMobileCard requestMobileCard,
         MobileCard findMobileCard) {
         return UserHasMobileCard.builder()
-            .cardName(requestMobileCard.getCardName())
             .user(loginUser)
             .mobileCard(findMobileCard)
-            .price(findMobileCard.getPrice())
+            .cardNickName(requestMobileCard.getCardNickName())
+            .price(findMobileCard.getCardType().getPrice())
             .build();
     }
 
