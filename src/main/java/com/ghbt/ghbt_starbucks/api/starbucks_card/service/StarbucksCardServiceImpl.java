@@ -24,7 +24,7 @@ public class StarbucksCardServiceImpl implements IStarbucksCardService {
     private final IStarbucksCardRepository IStarbucksCardRepository;
 
     @Override
-    public List<ResponseStarbucksCard> getAllMobileCard() {
+    public List<ResponseStarbucksCard> getAllStarbucksCard() {
         List<StarbucksCard> starbucksCards = IStarbucksCardRepository.findAll();
         if (starbucksCards.isEmpty()) {
             throw new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus());
@@ -35,8 +35,8 @@ public class StarbucksCardServiceImpl implements IStarbucksCardService {
     }
 
     @Override
-    public ResponseStarbucksCard getOneMobileCard(Long mobileCardId) {
-        StarbucksCard findStarbucksCard = IStarbucksCardRepository.findById(mobileCardId)
+    public ResponseStarbucksCard getOneStarbucksCard(Long starbucksCardId) {
+        StarbucksCard findStarbucksCard = IStarbucksCardRepository.findById(starbucksCardId)
             .orElseThrow(
                 () -> new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus()));
 
@@ -45,7 +45,7 @@ public class StarbucksCardServiceImpl implements IStarbucksCardService {
 
     @Override
     @Transactional
-    public Long enrollMobileCard(RequestEnrollStarbucksCard requestEnrollStarbucksCard) {
+    public Long enrollStarbucksCard(RequestEnrollStarbucksCard requestEnrollStarbucksCard) {
         CardType cardType = encryptCardType(requestEnrollStarbucksCard.getCardNumber(),
             requestEnrollStarbucksCard.getPinNumber());
         StarbucksCard starbucksCard = StarbucksCard.toEntity(requestEnrollStarbucksCard, cardType);

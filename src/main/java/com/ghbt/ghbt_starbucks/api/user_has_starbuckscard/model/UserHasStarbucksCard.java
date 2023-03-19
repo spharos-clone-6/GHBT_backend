@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.api.user_has_mobilecard.model;
+package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model;
 
 import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestChargeMobileCard;
-import com.ghbt.ghbt_starbucks.api.user_has_mobilecard.dto.RequestMobileCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class UserHasMobileCard {
+public class UserHasStarbucksCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,24 +36,24 @@ public class UserHasMobileCard {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mobile_card_id")
+    @JoinColumn(name = "starbucks_card_id")
     private StarbucksCard starbucksCard;
 
     @Column(name = "price")
     private Long price;
 
-    public static UserHasMobileCard enrollMobileCard(User loginUser, RequestMobileCard requestMobileCard,
+    public static UserHasStarbucksCard enrollStarbucksCard(User loginUser, RequestStarbucksCard requestStarbucksCard,
         StarbucksCard findStarbucksCard) {
-        return UserHasMobileCard.builder()
+        return UserHasStarbucksCard.builder()
             .user(loginUser)
             .starbucksCard(findStarbucksCard)
-            .cardNickName(requestMobileCard.getCardNickName())
+            .cardNickName(requestStarbucksCard.getCardNickName())
             .price(findStarbucksCard.getCardType().getPrice())
             .build();
     }
 
-    public UserHasMobileCard chargeCash(RequestChargeMobileCard requestChargeMobileCard) {
-        this.price += requestChargeMobileCard.getCash();
+    public UserHasStarbucksCard chargeCash(RequestChargeStarbucksCard requestChargeStarbucksCard) {
+        this.price += requestChargeStarbucksCard.getCash();
         return this;
     }
 }

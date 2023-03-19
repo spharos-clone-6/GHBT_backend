@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface IStarbucksCardService {
 
-    List<ResponseStarbucksCard> getAllMobileCard();
+    List<ResponseStarbucksCard> getAllStarbucksCard();
 
-    ResponseStarbucksCard getOneMobileCard(Long mobileCardId);
+    ResponseStarbucksCard getOneStarbucksCard(Long StarbucksCardId);
 
-    Long enrollMobileCard(RequestEnrollStarbucksCard requestEnrollStarbucksCard);
+    Long enrollStarbucksCard(RequestEnrollStarbucksCard requestEnrollStarbucksCard);
 }

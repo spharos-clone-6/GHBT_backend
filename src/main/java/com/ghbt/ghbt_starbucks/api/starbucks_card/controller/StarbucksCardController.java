@@ -21,28 +21,28 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/mobile-card")
+@RequestMapping("/api/starbucks-card")
 public class StarbucksCardController {
 
-    private final IStarbucksCardService mobileCardServiceImpl;
+    private final IStarbucksCardService StarbucksCardServiceImpl;
 
     @GetMapping
     public ResponseEntity<Result> allMobileCard() {
-        List<ResponseStarbucksCard> mobileCards = mobileCardServiceImpl.getAllMobileCard();
+        List<ResponseStarbucksCard> starbucksCards = StarbucksCardServiceImpl.getAllStarbucksCard();
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new Result(mobileCards));
+            .body(new Result(starbucksCards));
     }
 
-    @GetMapping("/{mobileCardId}")
-    public ResponseEntity<ResponseStarbucksCard> oneMobileCard(@PathVariable Long mobileCardId) {
-        ResponseStarbucksCard mobileCard = mobileCardServiceImpl.getOneMobileCard(mobileCardId);
+    @GetMapping("/{starbucksCardId}")
+    public ResponseEntity<ResponseStarbucksCard> oneMobileCard(@PathVariable Long starbucksCardId) {
+        ResponseStarbucksCard starbucksCard = StarbucksCardServiceImpl.getOneStarbucksCard(starbucksCardId);
         return ResponseEntity.status(HttpStatus.OK)
-            .body(mobileCard);
+            .body(starbucksCard);
     }
 
     @PostMapping
     public ResponseEntity<?> saveMobileCardByAdmin(@RequestBody RequestEnrollStarbucksCard requestEnrollStarbucksCard) {
-        mobileCardServiceImpl.enrollMobileCard(requestEnrollStarbucksCard);
+        StarbucksCardServiceImpl.enrollStarbucksCard(requestEnrollStarbucksCard);
         return ResponseEntity.status(HttpStatus.OK)
             .build();
     }
@@ -51,6 +51,6 @@ public class StarbucksCardController {
     @AllArgsConstructor
     static class Result {
 
-        private Object mobileCard;
+        private Object starbucksCards;
     }
 }

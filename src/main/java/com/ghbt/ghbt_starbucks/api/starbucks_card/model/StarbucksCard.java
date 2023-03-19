@@ -41,13 +41,13 @@ public class StarbucksCard {
     private String thumbnailUrl;
 
 
-    public static StarbucksCard toEntity(RequestEnrollStarbucksCard requestEnrollStarbucksCard, CardType cardType) {
+    public static StarbucksCard toEntity(RequestEnrollStarbucksCard request, CardType cardType) {
         return StarbucksCard.builder()
-            .cardNumber(requestEnrollStarbucksCard.getCardNumber())
-            .pinNumber(requestEnrollStarbucksCard.getPinNumber())
+            .cardNumber(request.getCardNumber())
+            .pinNumber(request.getPinNumber())
             .cardType(cardType)
-            .cardName(requestEnrollStarbucksCard.getCardName())
-            .thumbnailUrl(requestEnrollStarbucksCard.getThumbnailUrl())
+            .cardName(request.getCardName())
+            .thumbnailUrl(request.getThumbnailUrl())
             .build();
     }
 }
