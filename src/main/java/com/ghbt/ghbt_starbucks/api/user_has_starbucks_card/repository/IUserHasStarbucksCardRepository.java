@@ -1,6 +1,6 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.repository;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.repository;
 
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model.UserHasStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model.UserHasStarbucksCard;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

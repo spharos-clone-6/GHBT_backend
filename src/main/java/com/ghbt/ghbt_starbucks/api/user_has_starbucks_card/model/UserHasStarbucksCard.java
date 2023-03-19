@@ -1,9 +1,9 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model;
 
 import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

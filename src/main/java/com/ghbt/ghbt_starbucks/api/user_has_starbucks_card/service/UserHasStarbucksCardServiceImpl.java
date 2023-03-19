@@ -1,13 +1,13 @@
-package com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.service;
+package com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service;
 
 import com.ghbt.ghbt_starbucks.api.starbucks_card.model.StarbucksCard;
 import com.ghbt.ghbt_starbucks.api.starbucks_card.repository.IStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestChargeStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.RequestStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.dto.ResponseStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.model.UserHasStarbucksCard;
-import com.ghbt.ghbt_starbucks.api.user_has_starbuckscard.repository.IUserHasStarbucksCardRepository;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestChargeStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.RequestStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.model.UserHasStarbucksCard;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.repository.IUserHasStarbucksCardRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +57,7 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
 
     @Transactional
     @Override
-    public ResponseStarbucksCard chargeInStarbucksCard(Long userId, Long starbucksCardId,
+    public ResponseStarbucksCard chargeStarbucksCard(Long userId, Long starbucksCardId,
         RequestChargeStarbucksCard requestChargeStarbucksCard) {
         UserHasStarbucksCard findUserHasStarbucksCard = iUserHasStarbucksCardRepository.findByUserIdAndStarbucksCardId(userId,
                 starbucksCardId)
