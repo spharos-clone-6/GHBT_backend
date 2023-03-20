@@ -10,6 +10,7 @@ import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user.repository.IUserRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -53,12 +54,11 @@ public class CartServiceImpl implements ICartService {
         }
         Product product = iProductRepository.findById(requestCart.getProductId())
             .orElseThrow(() -> new ServiceException("등록되어있는 물품이 없습니다.", HttpStatus.NO_CONTENT));
-        User user = iUserRepository.findById(loginUser.getId())
-            .orElseThrow(() -> new ServiceException("유저 입력이 잘못되었습니다.", HttpStatus.NO_CONTENT));
+
         //장바구니에 등록되어 있는지 확인
         Cart cart = Cart.builder()
             .product(product)
-            .user(user)
+            .user(loginUser)
             .quantity(requestCart.getQuantity())
             .build();
         iCartRepository.save(cart);
@@ -76,22 +76,34 @@ public class CartServiceImpl implements ICartService {
             .build();
     }
 
+
     @Override
     public List<ResponseCart> getAllCartByUserId(Long userId) {
-        ModelMapper modelMapper = new ModelMapper();
-        List<Cart> carts = iCartRepository.findAllByUser_IdAndDeleted(userId, false);
+        List<Cart> carts = iCartRepository.findAllByUser_IdAndDeleted(userId);
 
-        List<ResponseCart> responseCartList = new ArrayList<>();
-        carts.forEach(cart -> {
-            ResponseCart responseCart = modelMapper.map(cart, ResponseCart.class);
-            responseCartList.add(responseCart);
-        });
-        return responseCartList;
+        return carts
+            .stream()
+            .map(ResponseCart::from)
+            .collect(Collectors.toList());
+
     }
+
+    @Override
+    public List<ResponseCart> getAllCartByUserIdAndIce(Long userId) {
+        List<Cart> carts = iCartRepository.findAllByUser_IdAndIceAndDeleted(userId);
+
+        return carts
+            .stream()
+            .map(ResponseCart::from)
+            .collect(Collectors.toList());
+
+    }
+
     @Override
     public void deleteCart(Long id) {
         iCartRepository.deleteById(id);
     }
+
     @Override
     public ResponseCart updateCart(Long cartId, Integer quantity) {
         Cart nowCart = iCartRepository.findById(cartId)

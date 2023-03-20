@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.cart.vo;
 
+import com.ghbt.ghbt_starbucks.api.cart.model.Cart;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import lombok.AllArgsConstructor;
@@ -16,5 +17,14 @@ public class ResponseCart {
     private Integer quantity;
     private User user;
     private Product product;
+    private Boolean deleted;
 
+    public static ResponseCart from(Cart cart) {
+        return ResponseCart.builder()
+            .deleted(cart.getDeleted())
+            .user(cart.getUser())
+            .product(cart.getProduct())
+            .quantity(cart.getQuantity())
+            .build();
+    }
 }

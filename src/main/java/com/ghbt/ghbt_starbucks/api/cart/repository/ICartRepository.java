@@ -9,7 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface ICartRepository extends JpaRepository<Cart, Long> {
 
-    List<Cart> findAllByUser_IdAndDeleted(Long userid, Boolean deleted);
+    @Query(value = "SELECT c FROM Cart c JOIN fetch c.user u  JOIN fetch c.product p LEFT JOIN SearchCategory sc on p.id = sc.productId.id Where sc.bigType != '케이크' and c.deleted = false and u.id = :userId")
+    List<Cart> findAllByUser_IdAndDeleted(@Param("userId") Long userId);
+
+    @Query(value = "SELECT c FROM Cart c JOIN fetch c.user u  JOIN fetch c.product p LEFT JOIN SearchCategory sc on p.id = sc.productId.id Where sc.bigType = '케이크' and c.deleted = false and u.id = :userId")
+    List<Cart> findAllByUser_IdAndIceAndDeleted(@Param("userId") Long userId);
 
     //and (:uid is null or u.id = :uid) and (:pid is null or p.id = :pid)
 
