@@ -84,14 +84,13 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IProductListByCategory> getProductForCategory(String search) {
-        List<IProductListByCategory> productList = iProductRepository.findAllProductType(search);
+    public Page<IProductListByCategory> getCategoryName(String search, Pageable pageable) {
+        Page<IProductListByCategory> productList = iProductRepository.findCategoryName(search, pageable);
         if (productList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return productList;
     }
-
 //    @Override
 //    public List<List<ProductAndCategory>> searchingCategoryList(String keyWord) {
 //
@@ -110,8 +109,8 @@ public class ProductServiceImpl implements IProductService {
 
 
     @Override
-    public List<IProductSearch> getSearchProduct(String search) {
-        List<IProductSearch> productList = iProductRepository.findProduct(search);
+    public Page<IProductSearch> getSearchProduct(String search, Pageable pageable) {
+        Page<IProductSearch> productList = iProductRepository.findProduct(search, pageable);
         if (productList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
@@ -137,20 +136,19 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<List<Product>> searchingCategoryList(String name) {
-        List<List<Product>> searching = iProductRepository.findByNameContains(name);
-        return searching;
-    }
-
-    @Override
-    public List<IMenubar> menubarList(String name) {
-        List<IMenubar> menubar = iProductRepository.findByMenubarList(name);
+    public Page<IMenubar> menubarList(String name, Pageable pageable) {
+        Page<IMenubar> menubar = iProductRepository.findByMenubarList(name, pageable);
         return menubar;
     }
 
     @Override
-    public List<IProductSearch> categoryFilter(String[] categories) {
-        List<IProductSearch> categoryList = iProductRepository.findCategoryFilter(categories);
+    public Page<IProductSearch> categoryFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductSearch> categoryList;
+        if (search.equals("-")) {
+            categoryList = iProductRepository.findCategoryFilter(filter, pageable);
+        } else {
+            categoryList = iProductRepository.findSearchCategoryFilter(filter, pageable, search);
+        }
         if (categoryList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
@@ -158,22 +156,31 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<IProductSearch> seasonFilter(String[] season) {
-        List<IProductSearch> seasonList = iProductRepository.findSeasonFilter(season);
-        if (seasonList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+    public Page<IProductSearch> volumeFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductSearch> volumeList;
+        if (search.equals("-")) {
+            volumeList = iProductRepository.findVolumeFilter(filter, pageable);
+        } else {
+            volumeList = iProductRepository.findSearchVolumeFilter(filter, pageable, search);
         }
-
-        return seasonList;
-    }
-
-    @Override
-    public List<IProductSearch> volumeFilter(String[] volume) {
-        List<IProductSearch> volumeList = iProductRepository.findVolumeFilter(volume);
         if (volumeList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return volumeList;
+    }
+
+    @Override
+    public Page<IProductSearch> seasonFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductSearch> seasonList;
+        if (search.equals("-")) {
+            seasonList = iProductRepository.findSeasonFilter(filter, pageable);
+        } else {
+            seasonList = iProductRepository.findSearchSeasonFilter(filter, pageable, search);
+        }
+        if (seasonList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return seasonList;
     }
 
 //    @Override // and 조건

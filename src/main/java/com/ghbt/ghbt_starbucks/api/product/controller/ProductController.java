@@ -51,15 +51,15 @@ public class ProductController {
     }
 
     @GetMapping("/search-category") // 카테고리별 상품 조회
-    public ResponseEntity findAllProductType(@Param("name") String name) {
-        List<IProductListByCategory> searchProduct = iProductService.getProductForCategory(name);
+    public ResponseEntity findAllProductType(@Param("name") String name, Pageable pageable) {
+        Page<IProductListByCategory> searchProduct = iProductService.getCategoryName(name, pageable);
         return ResponseEntity.status(HttpStatus.OK)
             .body(searchProduct);
     }
 
     @GetMapping("/search/{name}") // 검색어로 상품 검색
-    public ResponseEntity findProduct(@PathVariable String name) {
-        List<IProductSearch> searchProduct = iProductService.getSearchProduct(name);
+    public ResponseEntity findProduct(@PathVariable String name, Pageable pageable) {
+        Page<IProductSearch> searchProduct = iProductService.getSearchProduct(name, pageable);
         return new ResponseEntity<>(searchProduct, HttpStatus.OK);
     }
 
@@ -69,50 +69,42 @@ public class ProductController {
     }
 
     @GetMapping("/search/type/{name}") // 검색 상품의 대분류 카테고리 갯수
-    public List<IMenubar> typeCounting(@PathVariable("name") String name) {
-        return iProductService.menubarList(name);
+    public Page<IMenubar> typeCounting(@PathVariable("name") String name, Pageable pageable) {
+        return iProductService.menubarList(name, pageable);
     }
 
-//    @GetMapping("/search/filter") // 카테고리 필터링
+
+    @GetMapping("/search/{name}/c") // 중분류 카테고리 필터링
+    public Page<IProductSearch> categoryFiltering(@PathVariable String name, Pageable pageable
+        , @Param("category") String[] filter) {
+        return iProductService.categoryFilter(filter, name, pageable);
+    }
+
+    @GetMapping("/search/{name}/v") // 중분류 카테고리 필터링
+    public Page<IProductSearch> volumeFiltering(@PathVariable String name, Pageable pageable
+        , @Param("filter") String[] filter) {
+        return iProductService.volumeFilter(filter, name, pageable);
+    }
+
+    @GetMapping("/search/{name}/s") // 중분류 카테고리 필터링
+    public Page<IProductSearch> seasonFiltering(@PathVariable String name, Pageable pageable
+        , @Param("filter") String[] filter) {
+        return iProductService.seasonFilter(filter, name, pageable);
+    }
+
+    //    @GetMapping("/search/filter") // 카테고리 필터링
 //    public List<IProductSearch> productFiltering(
 //        @Param("categories") String[] categories,
 //        @Param("size") String[] litter,
 //        @Param("season") String[] season) {
 //        return iProductService.productFilter(categories, litter, season);}
 
-    @GetMapping("/search/filter/c")
-    public List<IProductSearch> categoryFiltering(@Param("category") String[] category) {
-        return iProductService.categoryFilter(category);
-    }
-
-    @GetMapping("/search/filter/s")
-    public List<IProductSearch> seasonFiltering(@Param("season") String[] season) {
-        return iProductService.seasonFilter(season);
-    }
-
-    @GetMapping("/search/filter/v")
-    public List<IProductSearch> volumeFiltering(@Param("volume") String[] volume) {
-        return iProductService.volumeFilter(volume);
-    }
-
-//    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
+    //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
 //    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
 //        PageRequest pageRequest = PageRequest.of(0, 20);
 //        return iProductRepository.findByNameContains(keyWord, pageRequest);
 //    }
 //
-//    @GetMapping("/searching/{keyWord}")
-//    public ResponseEntity searchingCategoryList(@PathVariable String keyWord) {
-//        List<List<ProductAndCategory>> searchingList = iProductService.searchingCategoryList(keyWord);
-//        return ResponseEntity.status(HttpStatus.OK).body(searchingList);
-//    }
-
-//    @GetMapping("/searching/{name}") // 검색어로 상품 조회(상품+카테고리)
-//    public ResponseEntity searchingCategoryList(@PathVariable String name) {
-//        List<List<Product>> searching = iProductService.searchingCategoryList(name);
-//        List<IMenubar> menubar = iProductRepository.findByMenubarList(searching);
-//        return ResponseEntity.status(HttpStatus.OK).body(menubar);
-//    }
 
     @PutMapping("/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
