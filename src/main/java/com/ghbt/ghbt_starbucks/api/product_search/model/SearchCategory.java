@@ -1,4 +1,4 @@
-package com.ghbt.ghbt_starbucks.api.product_search;
+package com.ghbt.ghbt_starbucks.api.product_search.model;
 
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import javax.persistence.Entity;
