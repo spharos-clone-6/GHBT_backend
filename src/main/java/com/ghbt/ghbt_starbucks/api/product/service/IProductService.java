@@ -19,24 +19,22 @@ public interface IProductService {
 
     List<ResponseProduct> getAllProduct();
 
-    List<IProductListByCategory> getProductForCategory(String search);
+    Page<IProductListByCategory> getCategoryName(String search, Pageable pageable);
 
-    List<IProductSearch> getSearchProduct(String search);
+    Page<IProductSearch> getSearchProduct(String search, Pageable pageable);
 
     Page<Product> getList(Pageable pageable);
 
     Product updateProduct(Long ProductId, RequestProduct requestProduct);
 
-    List<List<Product>> searchingCategoryList(String name);
-
-    List<IMenubar> menubarList(String name);
+    Page<IMenubar> menubarList(String name, Pageable pageable);
 
     //    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter); and 조건
-    List<IProductSearch> categoryFilter(String[] categories);
+    Page<IProductSearch> categoryFilter(String[] filter, String search, Pageable pageable);
 
-    List<IProductSearch> seasonFilter(String[] season);
+    Page<IProductSearch> seasonFilter(String[] filter, String search, Pageable pageable);
 
-    List<IProductSearch> volumeFilter(String[] volume);
+    Page<IProductSearch> volumeFilter(String[] filter, String search, Pageable pageable);
 
     void deleteProduct(Long ProductId);
 }
