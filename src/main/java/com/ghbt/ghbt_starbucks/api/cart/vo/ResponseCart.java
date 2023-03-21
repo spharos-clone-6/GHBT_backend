@@ -19,12 +19,15 @@ public class ResponseCart {
     private Product product;
     private Boolean deleted;
 
+    private Boolean checked;
+
     public static ResponseCart from(Cart cart) {
         return ResponseCart.builder()
             .deleted(cart.getDeleted())
             .user(cart.getUser())
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
+            .checked(cart.getChecked())
             .build();
     }
 }
