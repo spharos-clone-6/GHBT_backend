@@ -3,12 +3,13 @@ package com.ghbt.ghbt_starbucks.api.product.service;
 import com.ghbt.ghbt_starbucks.api.category.model.Category;
 import com.ghbt.ghbt_starbucks.api.category.repository.ICategoryRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
+import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product_and_category.model.ProductAndCategory;
-import com.ghbt.ghbt_starbucks.api.product_search.model.SearchCategory;
-import com.ghbt.ghbt_starbucks.api.product_search.repository.ISearchCategoryRepository;
+import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
+import com.ghbt.ghbt_starbucks.api.search_category.repository.ISearchCategoryRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
@@ -63,16 +64,13 @@ public class ProductServiceImpl implements IProductService {
         iSearchCategoryRepository.save(searchCategory);
     }
 
-
     @Override
-    public ResponseProduct getProduct(Long id) {
-        Product product = iProductRepository.findById(id)
-            .orElseThrow(() -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
-        return ResponseProduct.builder().id(product.getId()).name(product.getName()).price(product.getPrice())
-            .description(product.getDescription()).thumbnailUrl(product.getThumbnailUrl()).stock(product.getStock())
-            .isBest(product.getIsBest()).build();
+    public IProductDetail getOneProduct(Long id) {
+        IProductDetail productDetail = iProductRepository.findOneProduct(id);
 
+        return productDetail;
     }
+
 
     @Override
     public List<ResponseProduct> getAllProduct() {
@@ -129,8 +127,8 @@ public class ProductServiceImpl implements IProductService {
         Product product = iProductRepository.findById(requestProduct.getId())
             .orElseThrow(() -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
         product.updateProduct(requestProduct.getName(), requestProduct.getPrice(), requestProduct.getDescription(),
-            requestProduct.getStock(), requestProduct.getLikeCount(), requestProduct.getThumbnailUrl(),
-            requestProduct.getIsBest());
+            requestProduct.getStock(),
+            requestProduct.getLikeCount(), requestProduct.getThumbnailUrl(), requestProduct.getIsBest());
         iProductRepository.save(product);
         return product;
     }

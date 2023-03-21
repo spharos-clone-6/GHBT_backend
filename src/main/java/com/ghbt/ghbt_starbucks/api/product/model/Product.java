@@ -7,11 +7,9 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
 @Getter
-@Table(uniqueConstraints={@UniqueConstraint(columnNames={"name"})})
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicInsert

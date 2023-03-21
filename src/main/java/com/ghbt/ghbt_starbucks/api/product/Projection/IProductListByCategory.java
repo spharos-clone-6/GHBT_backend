@@ -10,4 +10,7 @@ public interface IProductListByCategory {
     Integer getPrice();
 
     String getThumbnailUrl();
+
+
+
 }
