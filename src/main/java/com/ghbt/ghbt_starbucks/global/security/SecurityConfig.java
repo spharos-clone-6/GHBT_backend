@@ -49,6 +49,9 @@ public class SecurityConfig {
             .csrf().disable()
             .httpBasic().disable()
             .formLogin().disable()
+            .cors()
+            .configurationSource(corsConfigurationSource())
+            .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
