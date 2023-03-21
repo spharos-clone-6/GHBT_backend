@@ -73,6 +73,7 @@ public class CartServiceImpl implements ICartService {
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
             .user(cart.getUser())
+            .checked(cart.getChecked())
             .build();
     }
 
@@ -114,6 +115,7 @@ public class CartServiceImpl implements ICartService {
             .user(updatedCart.getUser())
             .quantity(updatedCart.getQuantity())
             .product(updatedCart.getProduct())
+            .checked(updatedCart.getChecked())
             .build();
     }
 }

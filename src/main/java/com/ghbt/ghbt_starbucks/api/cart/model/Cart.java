@@ -34,6 +34,10 @@ public class Cart extends BaseTimeEntity {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @Column(name = "checked")
+    @ColumnDefault("false")
+    private Boolean checked;
+
     @Column(name = "deleted")
     @ColumnDefault("false")
     private Boolean deleted;
@@ -41,5 +45,7 @@ public class Cart extends BaseTimeEntity {
     @PrePersist
     public void perPersist() {
         this.deleted = this.deleted != null && this.deleted;
+        this.checked = this.checked != null && this.checked;
+
     }
 }
