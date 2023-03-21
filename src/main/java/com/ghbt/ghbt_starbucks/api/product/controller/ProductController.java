@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.product.controller;
 
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
+import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
@@ -8,6 +9,8 @@ import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
+import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
+import com.ghbt.ghbt_starbucks.api.search_category.repository.ISearchCategoryRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +34,10 @@ public class ProductController {
 
     private final IProductService iProductService;
     private final IProductRepository iProductRepository;
+    private final ISearchCategoryRepository iSearchCategoryRepository;
+
+
+
 
     @PostMapping // 상품 추가
     public ResponseEntity addProduct(@RequestBody List<RequestProduct> requestProductList) {
@@ -41,8 +48,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}") // 단건 조회
-    public ResponseProduct getProduct(@PathVariable Long productId) {
-        return iProductService.getProduct(productId);
+    public IProductDetail getProduct(@PathVariable Long productId) {
+        return iProductService.getOneProduct(productId);
     }
 
     @GetMapping("/not/page") // 전체 상품 출력
@@ -120,4 +127,9 @@ public class ProductController {
         iProductService.deleteProduct(ProductId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    //    @GetMapping("/test/{id}")
+//    public SearchCategory gwanghuSearch(@PathVariable("id") Long id) {
+//        return iSearchCategoryRepository.getProductDetail(id);
+//    }
 }

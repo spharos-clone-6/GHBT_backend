@@ -41,6 +41,13 @@ public class CartController {
         return iCartService.getAllCartByUserId(id);
     }
 
+    @GetMapping("/my_cart/ice")
+    @Operation(summary = "내가 담은 냉동 장바구니들 찾기", description = "로그인한 유저만 가능!!!")
+    public List<ResponseCart> responseIceCart(@LoginUser User loginUser) {
+        Long id = loginUser.getId();
+        return iCartService.getAllCartByUserIdAndIce(id);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "장바구니 상품 아이디값으로 검색", description = "장바구니 cart_id 입력해주세요")
     public ResponseCart getResponseCart(@PathVariable Long id) {

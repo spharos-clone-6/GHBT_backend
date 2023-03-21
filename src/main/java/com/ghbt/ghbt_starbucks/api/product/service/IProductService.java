@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.product.service;
 
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
+import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
@@ -15,7 +16,7 @@ public interface IProductService {
 
     void addProduct(RequestProduct requestProduct);
 
-    ResponseProduct getProduct(Long id);
+    IProductDetail getOneProduct(Long id);
 
     List<ResponseProduct> getAllProduct();
 

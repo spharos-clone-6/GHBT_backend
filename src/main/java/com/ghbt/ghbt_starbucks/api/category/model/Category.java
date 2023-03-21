@@ -5,11 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Getter
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"name"})})
 @AllArgsConstructor
 @NoArgsConstructor
 
