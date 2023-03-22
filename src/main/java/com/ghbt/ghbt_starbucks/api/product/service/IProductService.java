@@ -7,6 +7,7 @@ import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
 import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
+import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,13 +17,13 @@ public interface IProductService {
 
     void addProduct(RequestProduct requestProduct);
 
-    IProductDetail getOneProduct(Long id);
+    IProductDetail getOneProductId(Long id);
 
-    List<ResponseProduct> getAllProduct();
+    Page<IProductDetail> getAllProduct(Pageable pageable);
 
-    Page<IProductListByCategory> getCategoryName(String search, Pageable pageable);
+    Page<IProductDetail> getCategoryName(String filter, Pageable pageable);
 
-    Page<IProductSearch> getSearchProduct(String search, Pageable pageable);
+    Page<IProductDetail> getSearchProduct(String search, Pageable pageable);
 
     Page<Product> getList(Pageable pageable);
 
@@ -31,11 +32,11 @@ public interface IProductService {
     Page<IMenubar> menubarList(String name, Pageable pageable);
 
     //    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter); and 조건
-    Page<IProductSearch> categoryFilter(String[] filter, String search, Pageable pageable);
+    Page<IProductDetail> categoryFilter(String[] filter, String search, Pageable pageable);
 
-    Page<IProductSearch> seasonFilter(String[] filter, String search, Pageable pageable);
+    Page<IProductDetail> seasonFilter(String[] filter, String search, Pageable pageable);
 
-    Page<IProductSearch> volumeFilter(String[] filter, String search, Pageable pageable);
+    Page<IProductDetail> volumeFilter(String[] filter, String search, Pageable pageable);
 
     void deleteProduct(Long ProductId);
 }

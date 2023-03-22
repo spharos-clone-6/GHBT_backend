@@ -10,6 +10,16 @@ public interface IProductDetail {
 
     String getDescription();
 
+    String getThumbnailUrl();
+
+    Integer getStock();
+
+    Integer getLikeCount();
+
+    Boolean getIsBest();
+
+    Boolean getIsNew();
+
     String getBigType();
 
     String getSubType();
