@@ -33,10 +33,6 @@ import java.util.List;
 public class ProductController {
 
     private final IProductService iProductService;
-    private final IProductRepository iProductRepository;
-    private final ISearchCategoryRepository iSearchCategoryRepository;
-
-
 
 
     @PostMapping // 상품 추가
@@ -47,30 +43,24 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(requestProductList);
     }
 
-    @GetMapping("/{productId}") // 단건 조회
-    public IProductDetail getProduct(@PathVariable Long productId) {
-        return iProductService.getOneProduct(productId);
+    @GetMapping("/{id}") // 단건 조회
+    public IProductDetail getOneProduct(@PathVariable Long id) {
+        return iProductService.getOneProductId(id);
     }
 
-    @GetMapping("/not/page") // 전체 상품 출력
-    public List<ResponseProduct> getAllProduct() {
-        return iProductService.getAllProduct();
+    @GetMapping// 전체 상품 출력
+    public Page<IProductDetail> getAllProduct(Pageable pageable) {
+        return iProductService.getAllProduct(pageable);
     }
 
-    @GetMapping("/search-category") // 카테고리별 상품 조회
-    public ResponseEntity findAllProductType(@Param("name") String name, Pageable pageable) {
-        Page<IProductListByCategory> searchProduct = iProductService.getCategoryName(name, pageable);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(searchProduct);
-    }
 
     @GetMapping("/search/{name}") // 검색어로 상품 검색
     public ResponseEntity findProduct(@PathVariable String name, Pageable pageable) {
-        Page<IProductSearch> searchProduct = iProductService.getSearchProduct(name, pageable);
+        Page<IProductDetail> searchProduct = iProductService.getSearchProduct(name, pageable);
         return new ResponseEntity<>(searchProduct, HttpStatus.OK);
     }
 
-    @GetMapping // 전체 상품 조회 페이지
+    @GetMapping("/product")  // 전체 상품 조회 페이지
     public Page<Product> productPaging(final Pageable pageable) {
         return iProductService.getList(pageable);
     }
@@ -80,21 +70,27 @@ public class ProductController {
         return iProductService.menubarList(name, pageable);
     }
 
+    @GetMapping("/search/c") // 카테고리별 상품 조회
+    public ResponseEntity findAllProductType(@Param("filter") String filter, Pageable pageable) {
+        Page<IProductDetail> searchProduct = iProductService.getCategoryName(filter, pageable);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(searchProduct);
+    }
 
-    @GetMapping("/search/{name}/c") // 중분류 카테고리 필터링
-    public Page<IProductSearch> categoryFiltering(@PathVariable String name, Pageable pageable
+    @GetMapping("/search/{name}/c") // 중분류 필터링
+    public Page<IProductDetail> categoryFiltering(@PathVariable String name, Pageable pageable
         , @Param("category") String[] filter) {
         return iProductService.categoryFilter(filter, name, pageable);
     }
 
-    @GetMapping("/search/{name}/v") // 중분류 카테고리 필터링
-    public Page<IProductSearch> volumeFiltering(@PathVariable String name, Pageable pageable
+    @GetMapping("/search/{name}/v") // 용량 필터링
+    public Page<IProductDetail> volumeFiltering(@PathVariable String name, Pageable pageable
         , @Param("filter") String[] filter) {
         return iProductService.volumeFilter(filter, name, pageable);
     }
 
-    @GetMapping("/search/{name}/s") // 중분류 카테고리 필터링
-    public Page<IProductSearch> seasonFiltering(@PathVariable String name, Pageable pageable
+    @GetMapping("/search/{name}/s") // 시즌 필터링
+    public Page<IProductDetail> seasonFiltering(@PathVariable String name, Pageable pageable
         , @Param("filter") String[] filter) {
         return iProductService.seasonFilter(filter, name, pageable);
     }
@@ -127,9 +123,4 @@ public class ProductController {
         iProductService.deleteProduct(ProductId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
-    //    @GetMapping("/test/{id}")
-//    public SearchCategory gwanghuSearch(@PathVariable("id") Long id) {
-//        return iSearchCategoryRepository.getProductDetail(id);
-//    }
 }

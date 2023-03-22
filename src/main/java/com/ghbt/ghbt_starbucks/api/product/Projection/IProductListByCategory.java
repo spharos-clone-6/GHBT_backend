@@ -12,5 +12,4 @@ public interface IProductListByCategory {
     String getThumbnailUrl();
 
 
-
 }

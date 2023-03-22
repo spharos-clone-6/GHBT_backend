@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.product.dto;
 
 
+import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Data
 @Builder
@@ -26,17 +28,6 @@ public class ResponseProduct {
     private Boolean isBest;
     private Boolean isNew;
 
-    public static List<ResponseProduct> mapper(List<Product> products) {
-        List<ResponseProduct> responseProducts = new ArrayList<>();
 
-        for (Product product : products) {
-            responseProducts.add(ResponseProduct.builder()
-                .id(product.getId()).name(product.getName())
-                .price(product.getPrice()).description(product.getDescription())
-                .thumbnailUrl(product.getThumbnailUrl()).likeCount(product.getLikeCount())
-                .isBest(product.getIsBest()).stock(product.getStock()).build());
-        }
-        return responseProducts;
-    }
 }
 
