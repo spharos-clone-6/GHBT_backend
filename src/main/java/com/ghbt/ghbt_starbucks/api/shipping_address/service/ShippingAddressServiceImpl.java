@@ -30,8 +30,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
     @Transactional
     public Long saveShippingAddress(User loginUser, RequestShippingAddress requestShippingAddress) {
 
-        List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAllByUserId(
-            loginUser.getId());
+        List<ShippingAddress> allShippingAddress = iShippingAddressRepository.findAllByUserId(loginUser.getId());
 
         if (allShippingAddress.isEmpty()) {
             log.info("[배송지 저장] 최초의 배송지는 (기본)배송지로 저장됩니다.");
@@ -89,11 +88,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
 
     @Override
     public List<ResponseShippingAddress> getAllShippingAddress(User loginUser) {
-        List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAllByUserId(
-            loginUser.getId());
-        if (shippingAddresses.isEmpty()) {
-            throw new ServiceException(NOT_FOUND_SHIPPING_ADDRESSES.getMessage(), NOT_FOUND_SHIPPING_ADDRESSES.getHttpStatus());
-        }
+        List<ShippingAddress> shippingAddresses = iShippingAddressRepository.findAllByUserId(loginUser.getId());
         log.info("[배송지 조회] 배송지 전체가 성공적으로 조회되었습니다.");
         return shippingAddresses.stream()
             .map(ResponseShippingAddress::from)
@@ -104,7 +99,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
     @Override
     @Transactional
     public void deleteShippingAddress(Long shippingAddressId) {
-        log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
         iShippingAddressRepository.deleteById(shippingAddressId);
+        log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
     }
 }
