@@ -1,6 +1,10 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.repository.IPurchaseRepository;
+import com.ghbt.ghbt_starbucks.api.shipping_address.service.IShippingAddressService;
+import com.ghbt.ghbt_starbucks.api.user_has_coupon.service.IUserHasCouponService;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service.IUserHasStarbucksCardService;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
@@ -20,6 +24,12 @@ import java.util.UUID;
 public class PurchaseServiceImpl implements IPurchaseService {
 
     private final IPurchaseRepository iPurchaseRepository;
+
+    private final IUserHasCouponService iUserHasCouponService;
+
+    private final IUserHasStarbucksCardService iUserHasStarbucksCardService;
+
+    private final IShippingAddressService iShippingAddressService;
 
     @Override
     @Transactional
@@ -79,5 +89,17 @@ public class PurchaseServiceImpl implements IPurchaseService {
             () -> new ServiceException("요청하신 주문은 존재하지 않습니다", HttpStatus.NO_CONTENT));
         purchase.setShippingAddress(requestPurchase.getShippingAddress());
         return purchase.getId();
+    }
+
+    @Override
+    public ResponseBill getBill(User user) {
+        iUserHasCouponService.getALLCouponByUserId(user);
+        iUserHasStarbucksCardService.getUserStarbucksCards(user.getId());
+        iShippingAddressService.getAllShippingAddress(user);
+        return ResponseBill.builder()
+            .userHasCouponList(iUserHasCouponService.getALLCouponByUserId(user))
+            .userStarbucksCardList(iUserHasStarbucksCardService.getUserStarbucksCards(user.getId()))
+            .userShippingAddressList(iShippingAddressService.getAllShippingAddress(user))
+            .build();
     }
 }

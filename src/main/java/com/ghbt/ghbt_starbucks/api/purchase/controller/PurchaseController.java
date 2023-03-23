@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.service.IPurchaseService;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
@@ -59,5 +60,10 @@ public class PurchaseController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(summary = "청구서 출력", description = "유저정보로 배송지, 쿠폰, 카드를 출력")
+    @GetMapping("/bill")
+    public ResponseBill addBill(@LoginUser User user) {
+        return iPurchaseService.getBill(user);
+    }
 }
 
