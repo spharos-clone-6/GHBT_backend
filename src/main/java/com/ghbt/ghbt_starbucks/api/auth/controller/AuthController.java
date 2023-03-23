@@ -55,7 +55,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     @Operation(summary = "로그인", description = "상세 기능 : 로그인폼으로 회원을 인증합니다.")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody @Valid LoginDto loginDto) {
 
         TokenDto tokenDto = authService.login(loginDto);
 
@@ -91,13 +91,9 @@ public class AuthController {
 
         TokenDto reissuedTokenDto = authService.reissue(refreshToken);
         if (reissuedTokenDto != null) {
-            ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
-                .maxAge(COOKIE_EXPIRATION)
-                .httpOnly(true)
-                .secure(true)
-                .build();
             return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .header(HttpHeaders.SET_COOKIE, "refresh-token=" + reissuedTokenDto.getRefreshToken()
+                    + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedTokenDto.getAccessToken())
                 .build();
         } else {
@@ -107,6 +103,8 @@ public class AuthController {
                 .build();
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .header(HttpHeaders.SET_COOKIE, "refresh-token=" + ""
+                    + "; domain= localhost; Max-Age=0; path=/; SameSite=None; Secure; httpOnly;")
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .build();
         }
