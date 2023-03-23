@@ -70,6 +70,7 @@ public class CartServiceImpl implements ICartService {
             .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
 
         return ResponseCart.builder()
+            .id(cart.getId())
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
             .user(cart.getUser())
@@ -112,6 +113,7 @@ public class CartServiceImpl implements ICartService {
         nowCart.setQuantity(quantity);
         Cart updatedCart = iCartRepository.save(nowCart);
         return ResponseCart.builder()
+            .id(updatedCart.getId())
             .user(updatedCart.getUser())
             .quantity(updatedCart.getQuantity())
             .product(updatedCart.getProduct())
