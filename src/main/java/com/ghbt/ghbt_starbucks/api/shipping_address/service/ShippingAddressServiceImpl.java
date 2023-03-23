@@ -99,7 +99,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
     @Override
     @Transactional
     public void deleteShippingAddress(Long shippingAddressId) {
-        log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
         iShippingAddressRepository.deleteById(shippingAddressId);
+        log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
     }
 }
