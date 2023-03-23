@@ -1,5 +1,8 @@
 package com.ghbt.ghbt_starbucks.global.security.exception;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
         AccessDeniedException accessDeniedException) throws IOException, ServletException {
         response.setCharacterEncoding("utf-8");
-        response.sendError(403, "권한이 없습니다.");
+        response.sendError(NO_AUTHORIZATION.getErrorCode(), NO_AUTHORIZATION.getMessage());
     }
 }

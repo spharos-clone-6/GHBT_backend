@@ -87,11 +87,9 @@ public class AuthController {
      */
     @PostMapping("/reissue")
     @Operation(summary = "토큰 재발급 API", description = "상세 기능 : AccessToken 이 만료되었을 때 재발급해주는 API 입니다.")
-    public ResponseEntity<?> reissue(
-        @CookieValue(name = "refresh-token") String refreshToken,
-        @RequestHeader(name = "Authorization") String accessToken) {
+    public ResponseEntity<?> reissue(@CookieValue(name = "refresh-token") String refreshToken) {
 
-        TokenDto reissuedTokenDto = authService.reissue(accessToken, refreshToken);
+        TokenDto reissuedTokenDto = authService.reissue(refreshToken);
         if (reissuedTokenDto != null) {
             ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissuedTokenDto.getRefreshToken())
                 .maxAge(COOKIE_EXPIRATION)
