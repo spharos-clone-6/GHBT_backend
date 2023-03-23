@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseCart {
 
+    private Long id;
     private Integer quantity;
     private User user;
     private Product product;
@@ -28,6 +29,7 @@ public class ResponseCart {
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
             .checked(cart.getChecked())
+            .id(cart.getId())
             .build();
     }
 }
