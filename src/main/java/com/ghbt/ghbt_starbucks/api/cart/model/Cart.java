@@ -48,4 +48,10 @@ public class Cart extends BaseTimeEntity {
         this.checked = this.checked != null && this.checked;
 
     }
+
+
+    public void updateQuantity(Integer quantity){
+        this.quantity = quantity;
+    }
+
 }
