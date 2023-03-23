@@ -54,7 +54,7 @@ public class AuthService {
     //로그아웃
     @Transactional
     public void logout(String requestAccessTokenInHeader) {
-        String requestAccessToken = resolveToken(requestAccessTokenInHeader);
+        String requestAccessToken = resolveAccessToken(requestAccessTokenInHeader);
         String principal = getPrincipal(requestAccessToken);
 
         String refreshTokenInRedis = redisService.getValues("RT(" + SERVER + "):" + principal);
@@ -83,19 +83,17 @@ public class AuthService {
 
     //토큰 재발급
     @Transactional
-    public TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {
-        String requestAccessToken = resolveToken(requestAccessTokenInHeader);
+    public TokenDto reissue(String requestRefreshToken) {
 
-        Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
-        String principal = getPrincipal(requestAccessToken);
+        Authentication authentication = jwtTokenProvider.getAuthentication(requestRefreshToken);
+        String principal = getPrincipal(requestRefreshToken);
 
         String refreshTokenInRedis = redisService.getValues("RT(" + SERVER + "):" + principal);
         if (refreshTokenInRedis == null) {
             return null;
         }
 
-        if (!jwtTokenProvider.validateRefreshToken(requestRefreshToken) || !refreshTokenInRedis.equals(
-            requestRefreshToken)) {
+        if (!jwtTokenProvider.validateRefreshToken(requestRefreshToken) || !refreshTokenInRedis.equals(requestRefreshToken)) {
             redisService.deleteValues("RT(" + SERVER + "):" + principal);
             return null;
         }
@@ -125,7 +123,7 @@ public class AuthService {
         return jwtTokenProvider.getAuthentication(requestAccessToken).getName();
     }
 
-    public String resolveToken(String requestAccessTokenInHeader) {
+    public String resolveAccessToken(String requestAccessTokenInHeader) {
         if (requestAccessTokenInHeader != null && requestAccessTokenInHeader.startsWith("Bearer ")) {
             return requestAccessTokenInHeader.substring(7);
         }
