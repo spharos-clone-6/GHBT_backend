@@ -109,7 +109,7 @@ public class ProductController {
 //    }
 //
 
-    @PutMapping("/{product_id}") // 상품 업데이트
+    @PutMapping("/n/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
         @PathVariable("product_id") Long productId,
         @RequestBody RequestProduct requestProduct) {
@@ -117,10 +117,58 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @DeleteMapping("/{product_id}") // 상품 삭제
+    @DeleteMapping("/n/{product_id}") // 상품 삭제
     public ResponseEntity deleteProduct(
         @PathVariable("product_id") Long ProductId) {
         iProductService.deleteProduct(ProductId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+    @GetMapping("/n")   // 전체 상품 출력
+    public List<IProductDetail> getAllProductn() {
+        return iProductService.getAllProductn();
+    }
+
+
+    @GetMapping("/n/search/{name}") // 검색어로 상품 검색
+    public ResponseEntity findProductn(@PathVariable String name) {
+        List<IProductDetail> searchProduct = iProductService.getSearchProductn(name);
+        return new ResponseEntity<>(searchProduct, HttpStatus.OK);
+    }
+
+    @GetMapping("/n/product")  // 전체 상품 조회 페이지
+    public List<Product> productPaging() {
+        return iProductService.getListn();
+    }
+
+    @GetMapping("/n/search/type/{name}") // 검색 상품의 대분류 카테고리 갯수
+    public List<IMenubar> typeCounting(@PathVariable("name") String name) {
+        return iProductService.menubarListn(name);
+    }
+
+    @GetMapping("/n/search/c") // 카테고리별 상품 조회
+    public ResponseEntity findAllProductType(@Param("filter") String filter) {
+        List<IProductDetail> searchProduct = iProductService.getCategoryNamen(filter);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(searchProduct);
+    }
+
+    @GetMapping("/n/search/{name}/c") // 중분류 필터링
+    public List<IProductDetail> categoryFiltering(@PathVariable String name
+        , @Param("category") String[] filter) {
+        return iProductService.categoryFiltern(filter, name);
+    }
+
+    @GetMapping("/n/search/{name}/v") // 용량 필터링
+    public List<IProductDetail> volumeFiltering(@PathVariable String name
+        , @Param("filter") String[] filter) {
+        return iProductService.volumeFiltern(filter, name);
+    }
+
+    @GetMapping("/n/search/{name}/s") // 시즌 필터링
+    public List<IProductDetail> seasonFiltering(@PathVariable String name
+        , @Param("filter") String[] filter) {
+        return iProductService.seasonFiltern(filter, name);
     }
 }

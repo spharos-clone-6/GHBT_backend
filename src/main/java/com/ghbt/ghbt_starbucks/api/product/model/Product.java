@@ -62,4 +62,3 @@ public class Product extends BaseTimeEntity {
         this.isBest = isBest;
     }
 }
-
