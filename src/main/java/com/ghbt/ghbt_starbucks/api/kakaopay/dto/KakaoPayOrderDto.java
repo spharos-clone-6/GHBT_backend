@@ -19,13 +19,13 @@ public class KakaoPayOrderDto {
     private String productCount;
     private String totalPrice;
 
-    public KakaoPayOrderDto(RequestPurchase requestPurchase, UUID orderId, Long userId) {
+    public static KakaoPayOrderDto toKakaoOrder(RequestPurchase requestPurchase, UUID orderId, Long userId) {
         return KakaoPayOrderDto.builder()
             .orderId(orderId.toString())
             .memberId(userId.toString())
             .productName(requestPurchase.getProductName())
-            .productCount(requestPurchase.getQuantity().toString())
-            .totalPrice(requestPurchase.getTotalPrice.toString())
+            .productCount(requestPurchase.getProductQuantity().toString())
+            .totalPrice(requestPurchase.getTotalPrice().toString())
             .build();
     }
 }

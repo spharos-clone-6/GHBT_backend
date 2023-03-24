@@ -1,5 +1,8 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
+import com.ghbt.ghbt_starbucks.api.cart.service.ICartService;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
+import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.repository.IPurchaseRepository;
 import com.ghbt.ghbt_starbucks.api.shipping_address.service.IShippingAddressService;
@@ -31,28 +34,41 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     private final IShippingAddressService iShippingAddressService;
 
+    private final ICartService iCartService;
+
+    private final KakaoPayService kakaoPayService;
+
     @Override
     @Transactional
     public Long addPurchase(RequestPurchase requestPurchase, User user) {
 
         UUID uuid = UUID.randomUUID();
+        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
+        kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
 
-        Purchase purchase = Purchase.builder()
-            .user(user)
-            .quantity(requestPurchase.getQuantity())
-            .purchaseGroup(requestPurchase.getPurchaseGroup())
-            .shippingStatus((requestPurchase.getShippingStatus()))
-            .shippingAddress(requestPurchase.getShippingAddress())
-            .productId(requestPurchase.getProductId())
-            .productName(requestPurchase.getProductName())
-            .price((requestPurchase.getPrice()))
-            .uuid(uuid.toString())
-            .build();
+//        Purchase purchase = Purchase.builder()
+//            .user(user)
+//            .quantity(requestPurchase.getQuantity())
+//            .shippingAddress(requestPurchase.getShippingAddress())
+//            .productId(requestPurchase.getProductId())
+//            .productName(requestPurchase.getProductName())
+//            .price((requestPurchase.getPrice()))
+//            .uuid(uuid.toString())
+//            .build();
 
-        Purchase savedPurchase = iPurchaseRepository.save(purchase);
-        return savedPurchase.getId();
+//        Purchase savedPurchase = iPurchaseRepository.save(purchase);
+//        return savedPurchase.getId();
+        return null;
 
     }
+
+//  장바구니를 통한 구매를 위해서 임시 제작 03-24
+//    @Override
+//    @Transactional
+//    public Long addPurchases(RequestPurchase requestPurchase, User user) {
+//        iCartService.getAllCartByUserId(user.getId());
+//        return null;
+//    }
 
     @Override
     public ResponsePurchase getPurchaseById(Long id) {
@@ -61,8 +77,6 @@ public class PurchaseServiceImpl implements IPurchaseService {
             () -> new ServiceException("요청하신 주문내역은 존재하지 않습니다", HttpStatus.NO_CONTENT));
         return ResponsePurchase.builder()
             .quantity(purchase.getQuantity())
-            .purchaseGroup(purchase.getPurchaseGroup())
-            .shippingStatus((purchase.getShippingStatus()))
             .shippingAddress(purchase.getShippingAddress())
             .productId(purchase.getProductId())
             .productName(purchase.getProductName())

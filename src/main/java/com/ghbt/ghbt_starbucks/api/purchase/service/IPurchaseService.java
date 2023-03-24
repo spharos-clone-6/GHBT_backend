@@ -10,6 +10,8 @@ public interface IPurchaseService {
 
     Long addPurchase(RequestPurchase requestPurchase, User user);
 
+//    Long addPurchases(RequestPurchase requestPurchase, User user);
+
     ResponsePurchase getPurchaseById(Long id);
 
     List<ResponsePurchase> getAllPurchaseByUserId(User user);

@@ -25,10 +25,10 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "purchase_group", nullable = false)
+    @Column(name = "purchase_group")
     private String purchaseGroup;
 
-    @Column(name = "shipping_status", nullable = false)
+    @Column(name = "shipping_status")
     private ShippingStatus shippingStatus;
 
     @Column(name = "shipping_address", nullable = false)

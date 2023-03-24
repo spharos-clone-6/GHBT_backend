@@ -12,17 +12,9 @@ import lombok.*;
 @Setter
 public class ResponsePurchase {
 
-    private Long id;
-
-    private User user;
+    private String shippingAddress;
 
     private Integer quantity;
-
-    private String purchaseGroup;
-
-    private ShippingStatus shippingStatus;
-
-    private String shippingAddress;
 
     private String productId;
 
@@ -34,11 +26,7 @@ public class ResponsePurchase {
 
     public static ResponsePurchase from(Purchase purchase) {
         return ResponsePurchase.builder()
-            .id(purchase.getId())
-            .user(purchase.getUser())
             .quantity(purchase.getQuantity())
-            .purchaseGroup(purchase.getPurchaseGroup())
-            .shippingStatus(purchase.getShippingStatus())
             .shippingAddress(purchase.getShippingAddress())
             .productId(purchase.getProductId())
             .productName(purchase.getProductName())
