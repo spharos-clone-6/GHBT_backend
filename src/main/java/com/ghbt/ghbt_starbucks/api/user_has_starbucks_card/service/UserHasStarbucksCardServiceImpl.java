@@ -31,9 +31,6 @@ public class UserHasStarbucksCardServiceImpl implements IUserHasStarbucksCardSer
     @Override
     public List<ResponseStarbucksCard> getUserStarbucksCards(Long userId) {
         List<UserHasStarbucksCard> userHasStarbucksCards = iUserHasStarbucksCardRepository.findByUserId(userId);
-        if (userHasStarbucksCards.isEmpty()) {
-            throw new ServiceException(NOT_FOUND_STARBUCKS_CARDS.getMessage(), NOT_FOUND_STARBUCKS_CARDS.getHttpStatus());
-        }
         return userHasStarbucksCards.stream()
             .map(ResponseStarbucksCard::from)
             .collect(Collectors.toList());

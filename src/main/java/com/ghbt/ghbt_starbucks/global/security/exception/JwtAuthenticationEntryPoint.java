@@ -1,5 +1,8 @@
 package com.ghbt.ghbt_starbucks.global.security.exception;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException authException) throws IOException, ServletException {
         response.setCharacterEncoding("utf-8");
-        response.sendError(401, "로그인이 필요합니다.");
+        response.sendError(NOT_LOGIN.getErrorCode(), NOT_LOGIN.getMessage());
     }
 }

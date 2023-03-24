@@ -1,14 +1,22 @@
 package com.ghbt.ghbt_starbucks.global.security.filter;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
+import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.JwtTokenProvider;
 import io.jsonwebtoken.IncorrectClaimException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,28 +31,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = resolveToken(request);
+        String accessToken = resolveAccessToken(request);
 
+        /**
+         * 로그인 상태 일때, AT 검사 및 유효성 검사
+         * SecurityContextHolder 에 인증정보를 넣어둔다.
+         */
         try {
             if (accessToken != null && jwtTokenProvider.validateAccessToken(accessToken)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("Authentication 을 SecurityContextHolder 에 저장하였습니다.");
             }
         } catch (IncorrectClaimException e) {
             SecurityContextHolder.clearContext();
-            log.debug("올바른 JWT 토큰이 아닙니다.");
-            response.sendError(401);
+            throw new ServiceException(INVALID_JWT.getMessage(), INVALID_JWT.getHttpStatus());
 
         } catch (UsernameNotFoundException e) {
             SecurityContextHolder.clearContext();
-            log.debug("유저를 찾을 수 없습니다.");
-            response.sendError(401);
+            throw new ServiceException(NOT_FOUND_USER.getMessage(), NOT_FOUND_USER.getHttpStatus());
         }
         filterChain.doFilter(request, response);
     }
 
-    private String resolveToken(HttpServletRequest request) {
+    private String resolveAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

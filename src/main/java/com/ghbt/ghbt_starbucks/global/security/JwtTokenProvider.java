@@ -72,6 +72,7 @@ public class JwtTokenProvider implements InitializingBean {
             .setHeaderParam("alg", "HS512")
             .setExpiration(new Date(now + REFRESH_TOKEN_VALIDATE_MILLISECONDS))
             .setSubject("refresh-token")
+            .claim(EMAIL_KEY, email)
             .signWith(signingKey, SignatureAlgorithm.HS512)
             .compact();
 
@@ -104,7 +105,6 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     //== 토큰 검증 ==//
-
     //Filter 에서 사용
     public boolean validateAccessToken(String accessToken) {
         try {

@@ -14,10 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseCart {
 
+    private Long id;
     private Integer quantity;
     private User user;
     private Product product;
     private Boolean deleted;
+
+    private Boolean checked;
 
     public static ResponseCart from(Cart cart) {
         return ResponseCart.builder()
@@ -25,6 +28,8 @@ public class ResponseCart {
             .user(cart.getUser())
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
+            .checked(cart.getChecked())
+            .id(cart.getId())
             .build();
     }
 }

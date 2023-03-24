@@ -49,14 +49,10 @@ public class SecurityConfig {
             .csrf().disable()
             .httpBasic().disable()
             .formLogin().disable()
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
             .and()
-            .exceptionHandling()
-            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-            .accessDeniedHandler(jwtAccessDeniedHandler)
-
+            .cors()
+            .configurationSource(corsConfigurationSource())
             .and()
             .authorizeRequests()
             .antMatchers("/api/user/**").authenticated() // ex) 마이페이지는 인증이 필요하다.
@@ -65,8 +61,13 @@ public class SecurityConfig {
             .antMatchers("/api/shipping-address/**").authenticated()
             .antMatchers("/admin/**").hasRole("ADMIN") //관리자페이지는 권한이 필요하다.
             .anyRequest().permitAll()
-
             .and()
+            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
+            .and()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+
             .headers()
             .frameOptions().sameOrigin();
 
@@ -86,6 +87,7 @@ public class SecurityConfig {
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
+        configuration.addExposedHeader("Authorization");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

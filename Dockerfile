@@ -15,6 +15,8 @@ FROM openjdk:11
 
 COPY --from=TEMP_BUILD_IMAGE build/libs/*.jar ghbt_app.jar
 
+COPY src src
+
 EXPOSE 5000
 
 ENTRYPOINT ["java","-jar","/ghbt_app.jar"]

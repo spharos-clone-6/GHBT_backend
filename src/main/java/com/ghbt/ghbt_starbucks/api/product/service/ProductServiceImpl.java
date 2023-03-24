@@ -37,7 +37,7 @@ public class ProductServiceImpl implements IProductService {
     private final ISearchCategoryRepository iSearchCategoryRepository;
 
 
-    @Override // 카테고리 테이블 바꾸기
+    @Override // 상품 추가
     public void addProduct(RequestProduct requestProduct) {
         Product product = Product.builder()
             .name(requestProduct.getName()).description(requestProduct.getDescription())
@@ -64,65 +64,105 @@ public class ProductServiceImpl implements IProductService {
         iSearchCategoryRepository.save(searchCategory);
     }
 
-    @Override
-    public IProductDetail getOneProduct(Long id) {
-        IProductDetail productDetail = iProductRepository.findOneProduct(id);
+    @Override // 상품 단건 조회
+    public IProductDetail getOneProductId(Long id) {
+        IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
 
         return productDetail;
     }
 
 
-    @Override
-    public List<ResponseProduct> getAllProduct() {
-        List<Product> productList = iProductRepository.findAll();
+    @Override // no 페이징 전체 상품
+    public Page<IProductDetail> getAllProduct(Pageable pageable) {
+        Page<IProductDetail> productList = iSearchCategoryRepository.getAllProduct(pageable);
         if (productList.isEmpty()) {
             throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
         }
-        return ResponseProduct.mapper(productList);
-    }
-
-    @Override
-    public Page<IProductListByCategory> getCategoryName(String search, Pageable pageable) {
-        Page<IProductListByCategory> productList = iProductRepository.findCategoryName(search, pageable);
-        if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-        }
         return productList;
     }
-//    @Override
-//    public List<List<ProductAndCategory>> searchingCategoryList(String keyWord) {
-//
-//        List<List<ProductAndCategory>> resultList = new ArrayList<>();
-//        List<Product> productList = iProductRepository.findByNameContains(keyWord);
-//        if (productList.isEmpty()) {
-//            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-//        }
-//
-//        for (Product product : productList) {
-//            List<ProductAndCategory> productAndCategoryList = iProductAndCategoryRepository.findByProductId(product);
-//            resultList.add(productAndCategoryList);
-//        }
-//        return resultList;
-//    }
 
-
-    @Override
-    public Page<IProductSearch> getSearchProduct(String search, Pageable pageable) {
-        Page<IProductSearch> productList = iProductRepository.findProduct(search, pageable);
+    @Override // 상품명 검색
+    public Page<IProductDetail> getSearchProduct(String search, Pageable pageable) {
+        Page<IProductDetail> productList = iSearchCategoryRepository.getProductName(search, pageable);
         if (productList.isEmpty()) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
         return productList;
     }
 
-    @Override
+    @Override // 상품 전체 페이징
     public Page<Product> getList(Pageable pageable) {
         return iProductRepository.findAll(pageable);
 
 
     }
 
-    @Override
+    @Override // 메뉴바 출력
+    public Page<IMenubar> menubarList(String name, Pageable pageable) {
+        Page<IMenubar> menubar = iProductRepository.findByMenubarList(name, pageable);
+        return menubar;
+    }
+
+    @Override // 카테고리 필터링
+    public Page<IProductDetail> getCategoryName(String filter, Pageable pageable) {
+        Page<IProductDetail> productList = iSearchCategoryRepository.findCategoryName(filter, pageable);
+        if (productList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return productList;
+    }
+
+
+    @Override // 중분류 필터
+    public Page<IProductDetail> categoryFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductDetail> categoryList;
+        if (search.equals("-")) {
+            categoryList = iSearchCategoryRepository.findCategoryFilter(filter, pageable);
+        } else {
+            categoryList = iSearchCategoryRepository.findSearchCategoryFilter(filter, pageable, search);
+        }
+        if (categoryList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return categoryList;
+    }
+
+    @Override // 용량 필터
+    public Page<IProductDetail> volumeFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductDetail> volumeList;
+        if (search.equals("-")) {
+            volumeList = iSearchCategoryRepository.findVolumeFilter(filter, pageable);
+        } else {
+            volumeList = iSearchCategoryRepository.findSearchVolumeFilter(filter, pageable, search);
+        }
+        if (volumeList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return volumeList;
+    }
+
+    @Override // 시즌 필터
+    public Page<IProductDetail> seasonFilter(String[] filter, String search, Pageable pageable) {
+        Page<IProductDetail> seasonList;
+        if (search.equals("-")) {
+            seasonList = iSearchCategoryRepository.findSeasonFilter(filter, pageable);
+        } else {
+            seasonList = iSearchCategoryRepository.findSearchSeasonFilter(filter, pageable, search);
+        }
+        if (seasonList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return seasonList;
+    }
+
+//    @Override // 필터 and 조건
+//    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
+//        List<IProductSearch> products = iProductRepository.findCategoryList(categories, season, litter);
+//
+//        return products;
+//    }
+
+    @Override // 상품 업데이터
     public Product updateProduct(Long ProductId, RequestProduct requestProduct) {
         Product product = iProductRepository.findById(requestProduct.getId())
             .orElseThrow(() -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
@@ -133,62 +173,7 @@ public class ProductServiceImpl implements IProductService {
         return product;
     }
 
-    @Override
-    public Page<IMenubar> menubarList(String name, Pageable pageable) {
-        Page<IMenubar> menubar = iProductRepository.findByMenubarList(name, pageable);
-        return menubar;
-    }
-
-    @Override
-    public Page<IProductSearch> categoryFilter(String[] filter, String search, Pageable pageable) {
-        Page<IProductSearch> categoryList;
-        if (search.equals("-")) {
-            categoryList = iProductRepository.findCategoryFilter(filter, pageable);
-        } else {
-            categoryList = iProductRepository.findSearchCategoryFilter(filter, pageable, search);
-        }
-        if (categoryList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-        }
-        return categoryList;
-    }
-
-    @Override
-    public Page<IProductSearch> volumeFilter(String[] filter, String search, Pageable pageable) {
-        Page<IProductSearch> volumeList;
-        if (search.equals("-")) {
-            volumeList = iProductRepository.findVolumeFilter(filter, pageable);
-        } else {
-            volumeList = iProductRepository.findSearchVolumeFilter(filter, pageable, search);
-        }
-        if (volumeList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-        }
-        return volumeList;
-    }
-
-    @Override
-    public Page<IProductSearch> seasonFilter(String[] filter, String search, Pageable pageable) {
-        Page<IProductSearch> seasonList;
-        if (search.equals("-")) {
-            seasonList = iProductRepository.findSeasonFilter(filter, pageable);
-        } else {
-            seasonList = iProductRepository.findSearchSeasonFilter(filter, pageable, search);
-        }
-        if (seasonList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
-        }
-        return seasonList;
-    }
-
-//    @Override // and 조건
-//    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
-//        List<IProductSearch> products = iProductRepository.findCategoryList(categories, season, litter);
-//
-//        return products;
-//    }
-
-    @Override
+    @Override // 상품삭제
     public void deleteProduct(Long ProductId) {
         iProductRepository.deleteById(ProductId);
     }

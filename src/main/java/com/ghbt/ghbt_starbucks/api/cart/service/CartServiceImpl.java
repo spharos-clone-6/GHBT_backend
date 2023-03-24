@@ -70,9 +70,11 @@ public class CartServiceImpl implements ICartService {
             .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
 
         return ResponseCart.builder()
+            .id(cart.getId())
             .product(cart.getProduct())
             .quantity(cart.getQuantity())
             .user(cart.getUser())
+            .checked(cart.getChecked())
             .build();
     }
 
@@ -106,14 +108,19 @@ public class CartServiceImpl implements ICartService {
 
     @Override
     public ResponseCart updateCart(Long cartId, Integer quantity) {
-        Cart nowCart = iCartRepository.findById(cartId)
+        Cart nowCart = iCartRepository.findByCartId(cartId)
             .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
-        nowCart.setQuantity(quantity);
-        Cart updatedCart = iCartRepository.save(nowCart);
+
+        nowCart.updateQuantity(quantity);
+        iCartRepository.save(nowCart);
+
         return ResponseCart.builder()
-            .user(updatedCart.getUser())
-            .quantity(updatedCart.getQuantity())
-            .product(updatedCart.getProduct())
+            .user(nowCart.getUser())
+            .product(nowCart.getProduct())
+            .deleted(nowCart.getDeleted())
+            .quantity(nowCart.getQuantity())
+            .checked(nowCart.getChecked())
+            .id(nowCart.getId())
             .build();
     }
 }

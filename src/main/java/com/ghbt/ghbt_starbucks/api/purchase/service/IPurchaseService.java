@@ -1,9 +1,9 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-
 import java.util.List;
 
 public interface IPurchaseService {
@@ -16,7 +16,7 @@ public interface IPurchaseService {
 
     Long updatePurchase(RequestPurchase requestPurchase, Long id);
 
-
+    ResponseBill getBill(User user);
 }
 
 
