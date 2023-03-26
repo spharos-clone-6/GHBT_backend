@@ -57,7 +57,7 @@ public class KakaoPayService {
         );
 
         redisService.setValuesWithTimeout(
-            kakaoPayOrderDto.getMemberId(),
+            "PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")",
             kakaoPayOrderDto.getOrderId() + "," + kakaoReadyResponse.getTid() + "," + kakaoPayOrderDto.getTotalPrice(),
             5 * 60 * 1000
         );
@@ -73,7 +73,8 @@ public class KakaoPayService {
      * 결제 승인
      */
     public KakaoApproveResponse approveKakaopayment(String pgToken, User loginUser) {
-        String[] orderIdAndTIdAndTotalPrice = redisService.getValues(loginUser.getId().toString()).split(",");
+        String[] orderIdAndTIdAndTotalPrice = redisService.getValues("PAYMENT(" + loginUser.getId().toString() + ")")
+            .split(",");
         String orderId = orderIdAndTIdAndTotalPrice[0];
         String tId = orderIdAndTIdAndTotalPrice[1];
         String totalPrice = orderIdAndTIdAndTotalPrice[2];
