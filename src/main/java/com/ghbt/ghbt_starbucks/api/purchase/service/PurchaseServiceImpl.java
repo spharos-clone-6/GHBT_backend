@@ -1,7 +1,9 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
 import com.ghbt.ghbt_starbucks.api.cart.service.ICartService;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoApproveResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.repository.IPurchaseRepository;
@@ -13,18 +15,21 @@ import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class PurchaseServiceImpl implements IPurchaseService {
+public class PurchaseServiceImpl {
 
     private final IPurchaseRepository iPurchaseRepository;
 
@@ -38,39 +43,21 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     private final KakaoPayService kakaoPayService;
 
-    @Override
-    @Transactional
+    private final RedisService redisService;
+
+    private String pgToken;
+
+
     public Long addPurchase(RequestPurchase requestPurchase, User user) {
 
         UUID uuid = UUID.randomUUID();
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
         kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
-
-//        Purchase purchase = Purchase.builder()
-//            .user(user)
-//            .quantity(requestPurchase.getQuantity())
-//            .shippingAddress(requestPurchase.getShippingAddress())
-//            .productId(requestPurchase.getProductId())
-//            .productName(requestPurchase.getProductName())
-//            .price((requestPurchase.getPrice()))
-//            .uuid(uuid.toString())
-//            .build();
-
-//        Purchase savedPurchase = iPurchaseRepository.save(purchase);
-//        return savedPurchase.getId();
+        //exception 확인
         return null;
-
     }
 
-//  장바구니를 통한 구매를 위해서 임시 제작 03-24
-//    @Override
-//    @Transactional
-//    public Long addPurchases(RequestPurchase requestPurchase, User user) {
-//        iCartService.getAllCartByUserId(user.getId());
-//        return null;
-//    }
 
-    @Override
     public ResponsePurchase getPurchaseById(Long id) {
 
         Purchase purchase = iPurchaseRepository.findById(id).orElseThrow(
@@ -85,7 +72,6 @@ public class PurchaseServiceImpl implements IPurchaseService {
 
     }
 
-    @Override
     public List<ResponsePurchase> getAllPurchaseByUserId(User user) {
         List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(user.getId());
         if (purchaseList.isEmpty()) {
@@ -96,7 +82,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
             .collect(Collectors.toList());
     }
 
-    @Override
+
     @Transactional
     public Long updatePurchase(RequestPurchase requestPurchase, Long purchaseId) {
         Purchase purchase = iPurchaseRepository.findById(purchaseId).orElseThrow(
@@ -105,7 +91,7 @@ public class PurchaseServiceImpl implements IPurchaseService {
         return purchase.getId();
     }
 
-    @Override
+
     public ResponseBill getBill(User user) {
         iUserHasCouponService.getALLCouponByUserId(user);
         iUserHasStarbucksCardService.getUserStarbucksCards(user.getId());
@@ -116,4 +102,5 @@ public class PurchaseServiceImpl implements IPurchaseService {
             .userShippingAddressList(iShippingAddressService.getAllShippingAddress(user))
             .build();
     }
+
 }
