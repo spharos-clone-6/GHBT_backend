@@ -42,9 +42,13 @@ public class KakoPayController {
         return ResponseEntity.status(HttpStatus.OK)
             .body(pgToken);
     }
+
     @GetMapping("/kakaopay-approve")
-    public void approveKakaoPay(@RequestParam(value = "pgToken") String pgToken, @LoginUser User loginUser) {
-        kakaoPayService.approveKakaopayment(pgToken, loginUser);
+    public ResponseEntity<KakaoApproveResponse> approveKakaoPay(@RequestParam(value = "pgToken") String pgToken,
+        @LoginUser User loginUser) {
+        KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveKakaopayment(pgToken, loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(kakaoApproveResponse);
     }
 
     @GetMapping("/cancel")

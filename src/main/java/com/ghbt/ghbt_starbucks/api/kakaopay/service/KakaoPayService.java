@@ -56,8 +56,11 @@ public class KakaoPayService {
             KakaoReadyResponse.class
         );
 
-        redisService.setValuesWithTimeout(kakaoPayOrderDto.getMemberId(), kakaoPayOrderDto.getOrderId() + ","
-            + kakaoReadyResponse.getTid(), 5 * 60 * 1000);
+        redisService.setValuesWithTimeout(
+            kakaoPayOrderDto.getMemberId(),
+            kakaoPayOrderDto.getOrderId() + "," + kakaoReadyResponse.getTid() + "," + kakaoPayOrderDto.getTotalPrice(),
+            5 * 60 * 1000
+        );
         log.info("[ 결제 승인 번호     ]: " + kakaoReadyResponse.getTid());
         log.info("[ 결제 준비 일시     ]: " + kakaoReadyResponse.getCreated_at());
         log.info("[ PC 승인 URL      ]: " + kakaoReadyResponse.getNext_redirect_pc_url());
@@ -69,15 +72,12 @@ public class KakaoPayService {
     /**
      * 결제 승인
      */
-
     public KakaoApproveResponse approveKakaopayment(String pgToken, User loginUser) {
-        String[] orderIdAndTId = redisService.getValues(loginUser.getId().toString()).split(",");
-        String orderId = orderIdAndTId[0];
-        String tId = orderIdAndTId[1];
-        log.info("orderId" + orderId);
-        log.info("tId" + tId);
-        log.info("pgToke" + pgToken);
-        log.info("loginUser" + loginUser.toString());
+        String[] orderIdAndTIdAndTotalPrice = redisService.getValues(loginUser.getId().toString()).split(",");
+        String orderId = orderIdAndTIdAndTotalPrice[0];
+        String tId = orderIdAndTIdAndTotalPrice[1];
+        String totalPrice = orderIdAndTIdAndTotalPrice[2];
+
         // 카카오 요청
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
@@ -86,12 +86,17 @@ public class KakaoPayService {
         parameters.add("partner_user_id", loginUser.getId().toString());
         parameters.add("pg_token", pgToken);
 
-        return new RestTemplate().postForObject(
+        KakaoApproveResponse kakaoApproveResponse = new RestTemplate().postForObject(
             APPROVE_TO_POST.getUrl(),
             new HttpEntity<>(parameters, getHeaders()),
             KakaoApproveResponse.class
         );
-
+        if (kakaoApproveResponse.getAmount().getTotal() != Integer.parseInt(totalPrice)) {
+            throw new ServiceException("총 금액이 맞지 않습니다. 결제를 취소합니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            log.info("[ 결제 성공        ]: " + loginUser.getEmail() + "님이 " + totalPrice + " 원이 결제되었습니다.");
+        }
+        return kakaoApproveResponse;
     }
 
     /**

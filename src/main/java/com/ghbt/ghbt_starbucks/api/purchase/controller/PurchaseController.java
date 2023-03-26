@@ -32,9 +32,9 @@ public class PurchaseController {
     @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
         " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
     @PostMapping
-    public ResponseEntity<Object> addPurchase(@RequestBody RequestPurchase requestPurchase,
+    public ResponseEntity<Object> startPurchase(@RequestBody RequestPurchase requestPurchase,
         @LoginUser User loginUser) {
-        iPurchaseService.addPurchase(requestPurchase, loginUser);
+        iPurchaseService.findPurchaseType(requestPurchase, loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

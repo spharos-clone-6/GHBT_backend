@@ -19,6 +19,7 @@ import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Request;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,9 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PurchaseServiceImpl {
+
+    private final String KAKAO_PAY = "kakao-pay";
+    private final String STARBUCKS_CARD = "starbucks-card";
 
     private final IPurchaseRepository iPurchaseRepository;
 
@@ -43,20 +47,20 @@ public class PurchaseServiceImpl {
 
     private final KakaoPayService kakaoPayService;
 
-    private final RedisService redisService;
+    public void findPurchaseType(RequestPurchase requestPurchase, User user) {
+        if (requestPurchase.getPaymentType().equals(KAKAO_PAY)) {
+            startKakaoPay(requestPurchase, user);
+        } else if (requestPurchase.getPaymentType().equals(STARBUCKS_CARD)) {
+        } else {
+            throw new ServiceException("지원하지 않는 결제 방식입니다.", HttpStatus.BAD_REQUEST);
+        }
+    }
 
-    private String pgToken;
-
-
-    public Long addPurchase(RequestPurchase requestPurchase, User user) {
-
+    public void startKakaoPay(RequestPurchase requestPurchase, User user) {
         UUID uuid = UUID.randomUUID();
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
         kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
-        //exception 확인
-        return null;
     }
-
 
     public ResponsePurchase getPurchaseById(Long id) {
 
