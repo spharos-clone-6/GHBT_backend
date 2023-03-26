@@ -19,6 +19,8 @@ public interface IPurchaseService {
     Long updatePurchase(RequestPurchase requestPurchase, Long id);
 
     ResponseBill getBill(User user);
+
+    void approveKakaopayment();
 }
 
 

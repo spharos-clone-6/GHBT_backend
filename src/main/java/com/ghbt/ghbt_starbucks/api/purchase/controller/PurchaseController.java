@@ -4,6 +4,7 @@ import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.service.IPurchaseService;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
+import com.ghbt.ghbt_starbucks.api.purchase.service.PurchaseServiceImpl;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Objects;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +26,15 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PurchaseController {
 
-    private final IPurchaseService iPurchaseService;
+    private final PurchaseServiceImpl iPurchaseService;
 
     //상품 구매
     @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
         " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
     @PostMapping
-    public ResponseEntity<Object> addPurchase(@RequestBody RequestPurchase requestPurchase,
+    public ResponseEntity<Object> startPurchase(@RequestBody RequestPurchase requestPurchase,
         @LoginUser User loginUser) {
-        iPurchaseService.addPurchase(requestPurchase, loginUser);
+        iPurchaseService.findPurchaseType(requestPurchase, loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -65,5 +67,6 @@ public class PurchaseController {
     public ResponseBill addBill(@LoginUser User user) {
         return iPurchaseService.getBill(user);
     }
+
 }
 
