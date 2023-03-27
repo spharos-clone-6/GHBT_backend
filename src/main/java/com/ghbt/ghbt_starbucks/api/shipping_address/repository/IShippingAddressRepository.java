@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface IShippingAddressRepository extends JpaRepository<ShippingAddress, Long> {
 
     List<ShippingAddress> findAllByUserId(Long userId);
+
+    void deleteAllByUserId(Long userId);
 }

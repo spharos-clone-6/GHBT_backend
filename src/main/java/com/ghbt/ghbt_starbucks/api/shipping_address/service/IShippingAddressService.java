@@ -19,6 +19,8 @@ public interface IShippingAddressService {
     //배송지 삭제
     void deleteShippingAddress(Long ShippingAddressId);
 
+    void deleteAllShippingAddress(User loginUser);
+
     //배송지 수정
     Long updateShippingAddress(Long ShippingAddressId, RequestShippingAddress requestUpdateShippingAddress);
 }

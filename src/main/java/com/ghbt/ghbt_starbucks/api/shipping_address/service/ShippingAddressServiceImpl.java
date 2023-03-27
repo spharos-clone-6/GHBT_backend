@@ -102,4 +102,11 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
         iShippingAddressRepository.deleteById(shippingAddressId);
         log.info("[배송지 삭제] 배송지가 성공적으로 삭제되었습니다.");
     }
+
+    @Override
+    @Transactional
+    public void deleteAllShippingAddress(User loginUser) {
+        iShippingAddressRepository.deleteAllByUserId(loginUser.getId());
+        log.info("[배송지 삭제] 모든 배송지가 성공적으로 삭제되었습니다.");
+    }
 }
