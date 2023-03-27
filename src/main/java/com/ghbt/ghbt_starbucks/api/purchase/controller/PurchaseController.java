@@ -1,7 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
-import com.ghbt.ghbt_starbucks.api.purchase.service.IPurchaseService;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.service.PurchaseServiceImpl;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Objects;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +32,7 @@ public class PurchaseController {
     @PostMapping
     public ResponseEntity<Object> startPurchase(@RequestBody RequestPurchase requestPurchase,
         @LoginUser User loginUser) {
-        iPurchaseService.findPurchaseType(requestPurchase, loginUser);
+        iPurchaseService.startPayment(requestPurchase, loginUser);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

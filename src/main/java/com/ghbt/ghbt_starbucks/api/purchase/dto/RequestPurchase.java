@@ -10,7 +10,7 @@ public class RequestPurchase {
 
     private String shippingAddress;
     private String paymentType;
-    private String productId;
+    private Long productId;
     private String productName;
     private Integer productQuantity;
     private Integer productPrice;

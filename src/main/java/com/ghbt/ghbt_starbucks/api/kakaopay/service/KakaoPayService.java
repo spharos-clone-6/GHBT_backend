@@ -8,7 +8,6 @@ import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,11 +104,9 @@ public class KakaoPayService {
      */
     private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
-
         String auth = "KakaoAK " + adminKey;
         httpHeaders.set("Authorization", auth);
         httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-
         return httpHeaders;
     }
 
