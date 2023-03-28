@@ -83,7 +83,7 @@ public class ShippingAddressController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    //배송지 삭제.
+    //배송지 전체 삭제.
     @DeleteMapping()
     @Operation(summary = "모든 배송지 삭제", description = "상세 기능 : 모든 배송지를 삭제합니다.")
     public ResponseEntity<?> deleteShippingAddress(@LoginUser User loginUser) {
