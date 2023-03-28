@@ -33,6 +33,7 @@ public class EmailController {
 
     @PostMapping("/validate")
     public ResponseEntity<?> validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
+
         if (emailService.isValidateAuthCode(requestAuthCode.getEmail(), requestAuthCode.getAuthCode())) {
             return ResponseEntity.status(HttpStatus.OK)
                 .build();
