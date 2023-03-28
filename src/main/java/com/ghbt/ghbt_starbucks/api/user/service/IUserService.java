@@ -14,4 +14,6 @@ public interface IUserService {
 
     //유저 삭제
     void deleteUser(Long userId);
+
+    void checkShippingAddressAgreement(Long userId, boolean isCheck);
 }

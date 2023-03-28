@@ -5,6 +5,7 @@ import static java.lang.Boolean.*;
 import static java.util.Comparator.*;
 
 import com.ghbt.ghbt_starbucks.api.shipping_address.repository.IShippingAddressRepository;
+import com.ghbt.ghbt_starbucks.api.user.service.IUserService;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.RequestShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ShippingAddressServiceImpl implements IShippingAddressService {
 
     private final IShippingAddressRepository iShippingAddressRepository;
+    private final IUserService iUserServiceImpl;
 
     @Override
     @Transactional
@@ -34,6 +36,7 @@ public class ShippingAddressServiceImpl implements IShippingAddressService {
 
         if (allShippingAddress.isEmpty()) {
             log.info("[배송지 저장] 최초의 배송지는 (기본)배송지로 저장됩니다.");
+            iUserServiceImpl.checkShippingAddressAgreement(loginUser.getId(), true);
             requestShippingAddress.setIsDefault(true);
 
         } else if (requestShippingAddress.getIsDefault() == TRUE) {

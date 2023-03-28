@@ -48,6 +48,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "is_agree")
     private Boolean isAgree;
 
+    @Column(name = "shipping_address_agreement")
+    private Boolean shippingAddressAgreement;
+
     @Column(name = "star")
     private Integer star;
 
@@ -80,5 +83,9 @@ public class User extends BaseTimeEntity {
     public Long changeNickName(String nickName) {
         this.nickName = nickName;
         return getId();
+    }
+
+    public void changeShippingAddressAgreement(boolean isCheck) {
+        this.shippingAddressAgreement = isCheck;
     }
 }
