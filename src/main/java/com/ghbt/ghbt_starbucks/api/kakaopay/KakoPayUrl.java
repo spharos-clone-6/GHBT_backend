@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum KakoPayUrl {
     READY_TO_POST("https://kapi.kakao.com/v1/payment/ready"),
     APPROVE_TO_POST("https://kapi.kakao.com/v1/payment/approve"),
-    CANCEL("http://localhost:8080/api/payment/cancel"),
     APPROVAL("http://backend.grapefruit-honey-black-tea.shop/api/payment/success"),
+    CANCEL("http://localhost:8080/api/payment/cancel"),
     FAIL("http://localhost:8080/api/payment/fail"),
     ;
 
