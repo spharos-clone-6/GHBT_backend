@@ -1,22 +1,20 @@
 package com.ghbt.ghbt_starbucks.api.purchase.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestPurchase {
+public class RequestCarts {
 
-    private String shippingAddress;
-    private String paymentType;
+
     private Long productId;
     private String productName;
     private Integer productQuantity;
     private Long productPrice;
-    private Integer couponPrice;
-    private Long couponId;
-    private String cashReceipts;
-    private Long totalPrice;
 
 }

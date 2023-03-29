@@ -8,4 +8,6 @@ public interface IPurchaseRepository extends JpaRepository<Purchase, Long> {
 
     List<Purchase> findAllByUserId(Long userId);
 
+    List<Purchase> findAllByUuid(String uuid);
+
 }

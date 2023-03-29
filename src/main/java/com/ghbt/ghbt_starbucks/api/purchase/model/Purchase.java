@@ -25,23 +25,27 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "purchase_group")
-    private String purchaseGroup;
+//    @Column(name = "purchase_group")
+//    private String purchaseGroup;
 
-    @Column(name = "shipping_status")
-    private ShippingStatus shippingStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "process_status")
+    private ProcessStatus processStatus;
 
     @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;
 
     @Column(name = "product_id", nullable = false)
-    private String productId;
+    private Long productId;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Long price;
+
+    @Column(name = "total_price", nullable = false)
+    private Long totalPrice;
 
     @Column(name = "uuid")
     private String uuid;
