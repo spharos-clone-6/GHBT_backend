@@ -45,6 +45,17 @@ public class PurchaseServiceImpl {
     private final ISearchCategoryRepository iSearchCategoryRepository;
 
     public KakaoReadyResponse startPayment(RequestPurchases requestPurchases, User user) {
+        log.info("=======================================================");
+        log.info("결제 타입 " + requestPurchases.getPaymentType().toString());
+        log.info("쿠폰 아이디 " + requestPurchases.getCouponId().toString());
+        log.info("쿠폰 가격 " + requestPurchases.getCouponPrice().toString());
+        log.info("전체 가격 " + requestPurchases.getTotalPrice().toString());
+        log.info("현금 영수증 " + requestPurchases.getCashReceipts().toString());
+        log.info("배송지 " + requestPurchases.getShippingAddress().toString());
+        log.info("배송 가격 " + requestPurchases.getShippingPrice().toString());
+        log.info("구매목록 이름 (첫번째 항목) " + requestPurchases.getPurchaseList().get(0).getProductName());
+        log.info("=======================================================");
+
         if (requestPurchases.getPaymentType().equals(KAKAO_PAY)) {
             KakaoReadyResponse kakaoReadyResponse = kakaoApi(requestPurchases, user);
             return kakaoReadyResponse;

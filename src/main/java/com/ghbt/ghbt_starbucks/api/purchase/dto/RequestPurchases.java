@@ -14,6 +14,7 @@ public class RequestPurchases {
 
     //장바구니 다건구매시 적용할 RequestDTO
     private List<RequestCarts> purchaseList;
+    private Long shippingPrice;
     private String shippingAddress;
     private String paymentType;
     private Integer couponPrice;
