@@ -29,7 +29,7 @@ public class PurchaseController {
     private final PurchaseServiceImpl iPurchaseService;
 
     @Operation(summary = "구매하기(장바구니", description = "장바구니를 통한 구매")
-    @PostMapping("/cart")
+    @PostMapping
     public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchases requestPurchases,
         @LoginUser User loginUser) {
         iPurchaseService.startPayment(requestPurchases, loginUser);
