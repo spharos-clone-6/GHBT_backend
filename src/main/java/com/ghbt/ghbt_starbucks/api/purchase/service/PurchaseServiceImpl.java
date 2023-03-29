@@ -4,6 +4,8 @@ import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
+import com.ghbt.ghbt_starbucks.api.product.model.Product;
+import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestCarts;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
@@ -42,18 +44,14 @@ public class PurchaseServiceImpl {
     private final IUserHasStarbucksCardService iUserHasStarbucksCardService;
     private final IShippingAddressService iShippingAddressService;
     private final KakaoPayService kakaoPayService;
-    private final ISearchCategoryRepository iSearchCategoryRepository;
+    private final IProductRepository iProductRepository;
 
     public KakaoReadyResponse startPayment(RequestPurchases requestPurchases, User user) {
         log.info("=======================================================");
-        log.info("결제 타입 " + requestPurchases.getPaymentType().toString());
-        log.info("쿠폰 아이디 " + requestPurchases.getCouponId().toString());
-        log.info("쿠폰 가격 " + requestPurchases.getCouponPrice().toString());
-        log.info("전체 가격 " + requestPurchases.getTotalPrice().toString());
-        log.info("현금 영수증 " + requestPurchases.getCashReceipts().toString());
-        log.info("배송지 " + requestPurchases.getShippingAddress().toString());
-        log.info("배송 가격 " + requestPurchases.getShippingPrice().toString());
-        log.info("구매목록 이름 (첫번째 항목) " + requestPurchases.getPurchaseList().get(0).getProductName());
+        log.info("결제 타입 " + requestPurchases.getPaymentType());
+        log.info("쿠폰 아이디 " + requestPurchases.getCouponId());
+        log.info("쿠폰 가격 " + requestPurchases.getCouponPrice());
+        log.info("전체 가격 " + requestPurchases.getTotalPrice());
         log.info("=======================================================");
 
         if (requestPurchases.getPaymentType().equals(KAKAO_PAY)) {
@@ -73,10 +71,11 @@ public class PurchaseServiceImpl {
         List<RequestCarts> requestCarts = requestPurchases.getPurchaseList();
         UUID uuid = UUID.randomUUID();
         for (int i = 0; i < requestCarts.size(); i++) {
-            IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(
-                requestCarts.get(i).getProductId());
-            System.out.println("requestCarts = " + iSearchCategoryRepository.getOneProductId(requestCarts.get(i).getProductId()));
-            if (productDetail.getStock() < requestPurchases.getPurchaseList().get(i).getProductQuantity()) {
+            Product product = iProductRepository.findById(
+                requestCarts.get(i).getProductId()).get();
+            System.out.println(
+                "requestCarts = " + iProductRepository.findById(requestCarts.get(i).getProductId()));
+            if (product.getStock() < requestPurchases.getPurchaseList().get(i).getProductQuantity()) {
                 throw new ServiceException("재고가 부족합니다.", HttpStatus.BAD_REQUEST);
             }
             iPurchaseRepository.save(Purchase.toEntity(i, requestPurchases, user, uuid));
