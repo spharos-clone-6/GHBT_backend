@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.purchase.model;
 
-import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
 import java.util.UUID;
@@ -27,9 +28,6 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-//    @Column(name = "purchase_group")
-//    private String purchaseGroup;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "process_status")
     private ProcessStatus processStatus;
@@ -52,16 +50,18 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "uuid")
     private String uuid;
 
-    public static Purchase toEntity(int i, RequestPurchases requestPurchases, User user, UUID uuid) {
+    public static Purchase toEntity(ProductDetail productDetail, RequestPurchase requestPurchase, User user, UUID uuid) {
         return Purchase.builder()
             .uuid(uuid.toString())
-            .shippingAddress(requestPurchases.getShippingAddress())
+            .shippingAddress(requestPurchase.getShippingAddress())
             .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
-            .productId(requestPurchases.getPurchaseList().get(i).getProductId())
-            .productName(requestPurchases.getPurchaseList().get(i).getProductName())
-            .price(requestPurchases.getPurchaseList().get(i).getProductPrice())
-            .quantity(requestPurchases.getPurchaseList().get(i).getProductQuantity())
-            .totalPrice(requestPurchases.getTotalPrice())
+
+            .productId(productDetail.getProductId())
+            .productName(productDetail.getProductName())
+            .price(productDetail.getProductPrice())
+            .quantity(productDetail.getProductQuantity())
+
+            .totalPrice(requestPurchase.getTotalPrice())
             .user(user)
             .build();
     }

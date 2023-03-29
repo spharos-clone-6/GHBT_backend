@@ -29,13 +29,6 @@ public class KakoPayController {
 
     private final KakaoPayService kakaoPayService;
 
-    @PostMapping("/ready")
-    public ResponseEntity<?> readyKakaoPay(@RequestBody KakaoPayOrderDto kakaoPayOrderDto) {
-        KakaoReadyResponse kakaoReadyResponse = kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(kakaoReadyResponse);
-    }
-
     @GetMapping("/success")
     public ResponseEntity approveKakaoPay(@RequestParam("pg_token") String pgToken) {
         log.info("[ 결제 승인 번호     ]: " + pgToken);

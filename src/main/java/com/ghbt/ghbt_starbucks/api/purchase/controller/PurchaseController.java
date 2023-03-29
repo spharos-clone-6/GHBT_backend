@@ -2,7 +2,7 @@ package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
-import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.service.PurchaseServiceImpl;
@@ -29,9 +29,9 @@ public class PurchaseController {
 
     @Operation(summary = "구매하기(장바구니", description = "장바구니를 통한 구매")
     @PostMapping
-    public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchases requestPurchases,
+    public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchase requestPurchase,
         @LoginUser User loginUser) {
-        KakaoReadyResponse kakaoReadyResponse = iPurchaseService.startPayment(requestPurchases, loginUser);
+        KakaoReadyResponse kakaoReadyResponse = iPurchaseService.startPayment(requestPurchase, loginUser);
         return ResponseEntity.status(HttpStatus.OK)
             .body(kakaoReadyResponse);
     }
@@ -48,14 +48,6 @@ public class PurchaseController {
     public List<ResponsePurchase> getAllPurchase(@LoginUser User user) {
         return iPurchaseService.getAllPurchaseByUserId(user);
     }
-
-//    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody 안의 배송지와 parameter 주문번호를 Long 으로 입력해주세요")
-//    @PutMapping("/{purchaseId}")
-//    public ResponseEntity<Objects> updatePurchase(@PathVariable Long purchaseId,
-//        @RequestBody RequestPurchase requestPurchase) {
-//        iPurchaseService.updatePurchase(requestPurchase, purchaseId);
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
 
     @Operation(summary = "청구서 출력", description = "유저정보로 배송지, 쿠폰, 카드를 출력")
     @GetMapping("/bill")
