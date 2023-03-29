@@ -14,6 +14,7 @@ public class RequestPurchase {
     private String productName;
     private Integer productQuantity;
     private Long productPrice;
+    private Long shippingPrice;
     private Integer couponPrice;
     private Long couponId;
     private String cashReceipts;
