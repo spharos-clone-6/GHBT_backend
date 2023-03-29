@@ -1,6 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 
-import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,20 +19,20 @@ public class KakaoPayOrderDto {
     private String productCount;
     private String totalPrice;
 
-    public static KakaoPayOrderDto toKakaoOrder(RequestPurchases requestPurchases, UUID orderId, Long userId) {
+    public static KakaoPayOrderDto toKakaoOrder(RequestPurchase requestPurchase, UUID orderId, Long userId) {
 
         return KakaoPayOrderDto.builder()
             .orderId(orderId.toString())
             .memberId(userId.toString())
             .productName(
-                (requestPurchases.getPurchaseList().size() == 1) ? requestPurchases.getPurchaseList().get(0).getProductName() :
-                    requestPurchases.getPurchaseList().get(0).getProductName()
+                (requestPurchase.getPurchaseList().size() == 1) ? requestPurchase.getPurchaseList().get(0).getProductName() :
+                    requestPurchase.getPurchaseList().get(0).getProductName()
                         + " 외 "
-                        + (requestPurchases.getPurchaseList().size() - 1)
+                        + (requestPurchase.getPurchaseList().size() - 1)
                         + "건"
             )
-            .productCount(String.valueOf(requestPurchases.getPurchaseList().size() - 1))
-            .totalPrice(String.valueOf(requestPurchases.getTotalPrice()))
+            .productCount(String.valueOf(requestPurchase.getPurchaseList().size() - 1))
+            .totalPrice(String.valueOf(requestPurchase.getTotalPrice()))
             .build();
     }
 }
