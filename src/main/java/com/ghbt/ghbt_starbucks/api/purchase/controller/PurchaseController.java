@@ -1,5 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
@@ -36,6 +38,14 @@ public class PurchaseController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Operation(summary = "구매하기(장바구니", description = "장바구니를 통한 구매")
+    @PostMapping("/cart")
+    public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchases requestPurchases,
+        @LoginUser User loginUser) {
+        iPurchaseService.startPaymentFromCart(requestPurchases, loginUser);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")
 
     @Parameters({
@@ -66,5 +76,10 @@ public class PurchaseController {
         return iPurchaseService.getBill(user);
     }
 
+    @Operation(summary = "프로세스 업데이트", description = "결제 완료시 processStatus값 업데이트")
+    @PutMapping
+    public void updateProcess(@RequestBody RequestPayResult requestPayResult, @LoginUser User user) {
+        iPurchaseService.updateProcess(requestPayResult, user);
+    }
 }
 
