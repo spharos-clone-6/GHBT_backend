@@ -43,91 +43,35 @@ public class PurchaseServiceImpl {
     private final KakaoPayService kakaoPayService;
     private final ISearchCategoryRepository iSearchCategoryRepository;
 
-    public void startPayment(RequestPurchase requestPurchase, User user) {
-        if (requestPurchase.getPaymentType().equals(KAKAO_PAY)) {
-            kakaoApi(requestPurchase, user);
-        } else if (requestPurchase.getPaymentType().equals(STARBUCKS_CARD)) {
-            starbucksApi(requestPurchase, user);
-        } else {
-            throw new ServiceException("지원하지 않는 결제 방식입니다.", HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    public void startPaymentFromCart(RequestPurchases requestPurchases, User user) {
+    public void startPayment(RequestPurchases requestPurchases, User user) {
         if (requestPurchases.getPaymentType().equals(KAKAO_PAY)) {
-            kakaoApiFromCart(requestPurchases, user);
+            kakaoApi(requestPurchases, user);
         } else if (requestPurchases.getPaymentType().equals(STARBUCKS_CARD)) {
-            starbucksApiFromCart(requestPurchases, user);
+            starbucksApi(requestPurchases, user);
         } else {
             throw new ServiceException("지원하지 않는 결제 방식입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @Transactional
-    public void kakaoApi(RequestPurchase requestPurchase, User user) {
-        IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(requestPurchase.getProductId());
-        log.info(productDetail.getStock().toString());
-        if (productDetail.getStock() < requestPurchase.getProductQuantity()) {
-            throw new ServiceException("재고가 부족합니다.", HttpStatus.BAD_REQUEST);
-        }
-        UUID uuid = UUID.randomUUID();
-
-        //저장로직으로 한번 저장 / shipping을 process로 변경해서 결제 진행중으로 / 결제 완료 / 이후 배송
-        Purchase purchase = Purchase.builder()
-            .uuid(uuid.toString())
-            .shippingAddress(requestPurchase.getShippingAddress())
-            .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
-            .productId(requestPurchase.getProductId())
-            .productName(requestPurchase.getProductName())
-            .price(requestPurchase.getProductPrice())
-            .quantity(requestPurchase.getProductQuantity())
-            .totalPrice(requestPurchase.getTotalPrice())
-            .user(user)
-            .build();
-        iPurchaseRepository.save(purchase);
-
-        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
-        kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
-    }
-
-    @Transactional
-    public void kakaoApiFromCart(RequestPurchases requestPurchases, User user) {
+    public void kakaoApi(RequestPurchases requestPurchases, User user) {
 
         List<RequestCarts> requestCarts = requestPurchases.getPurchaseList();
         UUID uuid = UUID.randomUUID();
         for (int i = 0; i < requestCarts.size(); i++) {
             IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(
                 requestCarts.get(i).getProductId());
-            System.out.println(
-                "requestCarts = " + iSearchCategoryRepository.getOneProductId(requestCarts.get(i).getProductId()));
+            System.out.println("requestCarts = " + iSearchCategoryRepository.getOneProductId(requestCarts.get(i).getProductId()));
             if (productDetail.getStock() < requestPurchases.getPurchaseList().get(i).getProductQuantity()) {
                 throw new ServiceException("재고가 부족합니다.", HttpStatus.BAD_REQUEST);
             }
-
-            Purchase purchase = Purchase.builder()
-                .uuid(uuid.toString())
-                .shippingAddress(requestPurchases.getShippingAddress())
-                .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
-                .productId(requestPurchases.getPurchaseList().get(i).getProductId())
-                .productName(requestPurchases.getPurchaseList().get(i).getProductName())
-                .price(requestPurchases.getPurchaseList().get(i).getProductPrice())
-                .quantity(requestPurchases.getPurchaseList().get(i).getProductQuantity())
-                .totalPrice(requestPurchases.getTotalPrice())
-                .user(user)
-                .build();
-            iPurchaseRepository.save(purchase);
-
+            iPurchaseRepository.save(Purchase.toEntity(i, requestPurchases, user, uuid));
         }
-        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrderFromCart(requestPurchases, uuid,
-            user.getId());
+        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchases, uuid, user.getId());
         kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
     }
 
-    private void starbucksApi(RequestPurchase requestPurchase, User user) {
-        log.info("아직 지원하지 않는 서비스입니다.");
-    }
-
-    private void starbucksApiFromCart(RequestPurchases requestPurchases, User user) {
+    private void starbucksApi(RequestPurchases requestPurchase, User user) {
         log.info("아직 지원하지 않는 서비스입니다.");
     }
 
