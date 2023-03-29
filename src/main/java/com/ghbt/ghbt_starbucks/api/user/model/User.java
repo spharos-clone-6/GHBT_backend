@@ -33,9 +33,6 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name = "user_uuid")
-    private String userUUID;
-
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -69,6 +66,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "business_recipe")
     private String businessRecipe;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "ad_agreement")
+    private AdAgreement adAgreement;
+
     //==편의 메서드==//
     //최초 회원가입시 들어가는 정보
     public static User signinUser(SignupDto signupDto) {
@@ -76,6 +77,7 @@ public class User extends BaseTimeEntity {
             .email(signupDto.getEmail())
             .password(signupDto.getPassword())
             .role(Role.USER)
+            .adAgreement(AdAgreement.toEnumByKey(signupDto.getAdAgreement()))
             .build();
     }
 
