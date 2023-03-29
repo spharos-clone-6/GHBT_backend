@@ -1,9 +1,9 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchases;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
-import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.service.PurchaseServiceImpl;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +31,9 @@ public class PurchaseController {
     @PostMapping
     public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchases requestPurchases,
         @LoginUser User loginUser) {
-        iPurchaseService.startPayment(requestPurchases, loginUser);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        KakaoReadyResponse kakaoReadyResponse = iPurchaseService.startPayment(requestPurchases, loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(kakaoReadyResponse);
     }
 
     @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")

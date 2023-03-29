@@ -1,6 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestCarts;
@@ -43,18 +44,20 @@ public class PurchaseServiceImpl {
     private final KakaoPayService kakaoPayService;
     private final ISearchCategoryRepository iSearchCategoryRepository;
 
-    public void startPayment(RequestPurchases requestPurchases, User user) {
+    public KakaoReadyResponse startPayment(RequestPurchases requestPurchases, User user) {
         if (requestPurchases.getPaymentType().equals(KAKAO_PAY)) {
-            kakaoApi(requestPurchases, user);
+            KakaoReadyResponse kakaoReadyResponse = kakaoApi(requestPurchases, user);
+            return kakaoReadyResponse;
         } else if (requestPurchases.getPaymentType().equals(STARBUCKS_CARD)) {
             starbucksApi(requestPurchases, user);
+            return null;
         } else {
             throw new ServiceException("지원하지 않는 결제 방식입니다.", HttpStatus.BAD_REQUEST);
         }
     }
 
     @Transactional
-    public void kakaoApi(RequestPurchases requestPurchases, User user) {
+    public KakaoReadyResponse kakaoApi(RequestPurchases requestPurchases, User user) {
 
         List<RequestCarts> requestCarts = requestPurchases.getPurchaseList();
         UUID uuid = UUID.randomUUID();
@@ -68,7 +71,7 @@ public class PurchaseServiceImpl {
             iPurchaseRepository.save(Purchase.toEntity(i, requestPurchases, user, uuid));
         }
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchases, uuid, user.getId());
-        kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
+        return kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
     }
 
     private void starbucksApi(RequestPurchases requestPurchase, User user) {
