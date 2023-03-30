@@ -1,5 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -24,16 +25,26 @@ public class KakaoPayOrderDto {
         return KakaoPayOrderDto.builder()
             .orderId(orderId.toString())
             .memberId(userId.toString())
-            .productName(
-                (requestPurchase.getPurchaseList().size() == 1) ? requestPurchase.getPurchaseList().get(0).getProductName() :
-                    requestPurchase.getPurchaseList().get(0).getProductName()
-                        + " 외 "
-                        + (requestPurchase.getPurchaseList().size() - 1)
-                        + "건"
-            )
-            .productCount(String.valueOf(requestPurchase.getPurchaseList().size() - 1))
+            .productName(makeOrderName(requestPurchase))
+            .productCount(sumProductQuantity(requestPurchase))
             .totalPrice(String.valueOf(requestPurchase.getTotalPrice()))
             .build();
+    }
+
+    private static String makeOrderName(RequestPurchase requestPurchase) {
+        return (requestPurchase.getPurchaseList().size() == 1) ? requestPurchase.getPurchaseList().get(0).getProductName() :
+            requestPurchase.getPurchaseList().get(0).getProductName()
+                + " 외 "
+                + (requestPurchase.getPurchaseList().size() - 1)
+                + "건";
+    }
+
+    private static String sumProductQuantity(RequestPurchase requestPurchase) {
+        return String.valueOf(
+            requestPurchase.getPurchaseList().stream()
+                .map(ProductDetail::getProductQuantity)
+                .reduce(0, Integer::sum)
+        );
     }
 }
 
