@@ -38,8 +38,9 @@ public class KakoPayController {
     }
 
     @GetMapping("/kakaopay-approve")
-    public ResponseEntity<KakaoApproveResponse> approveKakaoPay(@RequestParam(value = "pgToken") String pgToken,
+    public ResponseEntity<KakaoApproveResponse> approveKakaoPay(@RequestParam(value = "pg_token") String pgToken,
         @LoginUser User loginUser) {
+        log.info(pgToken);
         KakaoApproveResponse kakaoApproveResponse = kakaoPayService.approveKakaopayment(pgToken, loginUser);
         return ResponseEntity.status(HttpStatus.OK)
             .body(kakaoApproveResponse);

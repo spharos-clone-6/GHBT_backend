@@ -19,4 +19,5 @@ public class KakaoApproveResponse {
     private String created_at;
     private String approved_at;
     private String payload;
+
 }
