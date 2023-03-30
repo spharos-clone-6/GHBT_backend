@@ -1,18 +1,24 @@
 package com.ghbt.ghbt_starbucks.api.purchase.service;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePayment;
 import com.ghbt.ghbt_starbucks.api.purchase.model.ProcessStatus;
+import com.ghbt.ghbt_starbucks.api.purchase.model.PurchaseType;
 import com.ghbt.ghbt_starbucks.api.purchase.repository.IPurchaseRepository;
 import com.ghbt.ghbt_starbucks.api.shipping_address.service.IShippingAddressService;
 import com.ghbt.ghbt_starbucks.api.user_has_coupon.service.IUserHasCouponService;
+import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCardReady;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service.IUserHasStarbucksCardService;
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchaseOld;
@@ -33,9 +39,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PurchaseServiceImpl {
 
-    private final String KAKAO_PAY = "kakao-pay";
-    private final String STARBUCKS_CARD = "starbucks-card";
-
     private final IPurchaseRepository iPurchaseRepository;
     private final IProductRepository iProductRepository;
 
@@ -46,24 +49,16 @@ public class PurchaseServiceImpl {
 
 
     /**
-     * 결제 진입점
+     * 결제 진입점(분기 : 카카오결제, 스타벅스카드 결제)
      */
-    public KakaoReadyResponse startPayment(RequestPurchase requestPurchase, User user) {
-        log.info("=================");
-        log.info("결제 타입 " + requestPurchase.getPaymentType());
-        log.info("상품 종류 " + requestPurchase.getPurchaseList().size() + "개");
-        log.info("쿠폰 가격 " + requestPurchase.getCouponPrice() + "원");
-        log.info("전체 가격 " + requestPurchase.getTotalPrice() + "원");
-        log.info("=================");
-
-        if (requestPurchase.getPaymentType().equals(KAKAO_PAY)) {
-            KakaoReadyResponse kakaoReadyResponse = kakaoApi(requestPurchase, user);
-            return kakaoReadyResponse;
-        } else if (requestPurchase.getPaymentType().equals(STARBUCKS_CARD)) {
-            starbucksApi(requestPurchase, user);
-            return null;
+    public ResponsePayment startPayment(RequestPurchase requestPurchase, User user) {
+        startPaymentLog(requestPurchase);
+        if (PurchaseType.isKakaoPay(requestPurchase)) {
+            return kakaoApi(requestPurchase, user);
+        } else if (PurchaseType.isStarbucksCard(requestPurchase)) {
+            return starbucksApi(requestPurchase, user);
         } else {
-            throw new ServiceException("지원하지 않는 결제 방식입니다.", HttpStatus.BAD_REQUEST);
+            throw new ServiceException(NOT_FOUND_PAYMENT_TYPE.getMessage(), NOT_FOUND_PAYMENT_TYPE.getHttpStatus());
         }
     }
 
@@ -71,14 +66,10 @@ public class PurchaseServiceImpl {
      * 카카오 결제
      */
     @Transactional
-    public KakaoReadyResponse kakaoApi(RequestPurchase requestPurchase, User user) {
-
+    public ResponseKakaoReady kakaoApi(RequestPurchase requestPurchase, User user) {
         UUID uuid = UUID.randomUUID();
-        if (requestPurchase.getPurchaseList().stream().anyMatch(p -> getStock(p) < p.getProductQuantity())) {
-            throw new ServiceException("재고가 부족합니다.", HttpStatus.BAD_REQUEST);
-        }
-        requestPurchase.getPurchaseList().stream()
-            .forEach(p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, user, uuid)));
+        checkStock(requestPurchase);
+        temporarySaveBill(requestPurchase, user, uuid);
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
         return kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
     }
@@ -86,9 +77,14 @@ public class PurchaseServiceImpl {
     /**
      * 스타벅스 결제
      */
-    private void starbucksApi(RequestPurchase requestPurchase, User user) {
+    private ResponseStarbucksCardReady starbucksApi(RequestPurchase requestPurchase, User user) {
+        UUID uuid = UUID.randomUUID();
+        checkStock(requestPurchase);
+        temporarySaveBill(requestPurchase, user, uuid);
 
         log.info("아직 지원하지 않는 서비스입니다.");
+
+        return null;
 
     }
 
@@ -96,10 +92,33 @@ public class PurchaseServiceImpl {
         try {
             return iProductRepository.findById(productDetail.getProductId()).get().getStock();
         } catch (Exception e) {
-            throw new ServiceException("상품이 존재하지 않습니다.", HttpStatus.NOT_FOUND);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
     }
 
+    private void checkStock(RequestPurchase requestPurchase) {
+        if (requestPurchase.getPurchaseList().stream().anyMatch(p -> getStock(p) < p.getProductQuantity())) {
+            throw new ServiceException(OUT_OF_STOCK.getMessage(), OUT_OF_STOCK.getHttpStatus());
+        }
+    }
+
+    private void temporarySaveBill(RequestPurchase requestPurchase, User user, UUID uuid) {
+        requestPurchase.getPurchaseList().stream()
+            .forEach(p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, user, uuid)));
+    }
+
+    private static void startPaymentLog(RequestPurchase requestPurchase) {
+        log.info("=================");
+        log.info("결제 타입 " + requestPurchase.getPaymentType());
+        log.info("상품 종류 " + requestPurchase.getPurchaseList().size() + "개");
+        log.info("쿠폰 가격 " + requestPurchase.getCouponPrice() + "원");
+        log.info("전체 가격 " + requestPurchase.getTotalPrice() + "원");
+        log.info("=================");
+    }
+
+    /**
+     * //================================ End Of Payment ================================//
+     */
     public ResponsePurchase getPurchaseById(Long id) {
         Purchase purchase = iPurchaseRepository.findById(id)
             .orElseThrow(() -> new ServiceException("요청하신 주문내역은 존재하지 않습니다", HttpStatus.NO_CONTENT));

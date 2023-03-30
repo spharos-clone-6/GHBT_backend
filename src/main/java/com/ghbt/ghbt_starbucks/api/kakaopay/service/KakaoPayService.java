@@ -3,7 +3,8 @@ package com.ghbt.ghbt_starbucks.api.kakaopay.service;
 import static com.ghbt.ghbt_starbucks.api.kakaopay.KakoPayUrl.*;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoApproveResponse;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoApproveResponseToFront;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
@@ -35,7 +36,7 @@ public class KakaoPayService {
     /**
      * 결제 준비
      */
-    public KakaoReadyResponse kakaoPayReady(KakaoPayOrderDto kakaoPayOrderDto) {
+    public ResponseKakaoReady kakaoPayReady(KakaoPayOrderDto kakaoPayOrderDto) {
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
@@ -49,23 +50,23 @@ public class KakaoPayService {
         parameters.add("cancel_url", CANCEL.getUrl());
         parameters.add("fail_url", FAIL.getUrl());
 
-        KakaoReadyResponse kakaoReadyResponse = new RestTemplate().postForObject(
+        ResponseKakaoReady responseKakaoReady = new RestTemplate().postForObject(
             READY_TO_POST.getUrl(),
             new HttpEntity<>(parameters, getHeaders()),
-            KakaoReadyResponse.class
+            ResponseKakaoReady.class
         );
 
         redisService.setValuesWithTimeout(
             "PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")",
-            kakaoPayOrderDto.getOrderId() + "," + kakaoReadyResponse.getTid() + "," + kakaoPayOrderDto.getTotalPrice(),
+            kakaoPayOrderDto.getOrderId() + "," + responseKakaoReady.getTid() + "," + kakaoPayOrderDto.getTotalPrice(),
             5 * 60 * 1000
         );
-        log.info("[ 결제 승인 번호     ]: " + kakaoReadyResponse.getTid());
-        log.info("[ 결제 준비 일시     ]: " + kakaoReadyResponse.getCreated_at());
-        log.info("[ PC 승인 URL      ]: " + kakaoReadyResponse.getNext_redirect_pc_url());
-        log.info("[ MOBILE 승인 URL  ]: " + kakaoReadyResponse.getNext_redirect_mobile_url());
+        log.info("[ 결제 승인 번호     ]: " + responseKakaoReady.getTid());
+        log.info("[ 결제 준비 일시     ]: " + responseKakaoReady.getCreated_at());
+        log.info("[ PC 승인 URL      ]: " + responseKakaoReady.getNext_redirect_pc_url());
+        log.info("[ MOBILE 승인 URL  ]: " + responseKakaoReady.getNext_redirect_mobile_url());
 
-        return kakaoReadyResponse;
+        return responseKakaoReady;
     }
 
     /**
@@ -110,4 +111,21 @@ public class KakaoPayService {
         return httpHeaders;
     }
 
+    public void toFront(String pgToken) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("pg_token", pgToken);
+
+        KakaoApproveResponseToFront kakaoApproveResponseToFront = new RestTemplate().postForObject(
+            "http://localhost:3000/paySuccess",
+            new HttpEntity<>(parameters, getHeadersToFront()),
+            KakaoApproveResponseToFront.class
+        );
+        log.info("프론트한테 pgToken 발사" + kakaoApproveResponseToFront.getPgToken());
+    }
+
+    private HttpHeaders getHeadersToFront() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        return httpHeaders;
+    }
 }
