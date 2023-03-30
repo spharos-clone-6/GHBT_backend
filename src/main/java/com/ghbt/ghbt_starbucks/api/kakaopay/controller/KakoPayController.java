@@ -46,7 +46,6 @@ public class KakoPayController {
 
     @GetMapping("/cancel")
     public void cancel() {
-
         throw new ServiceException(KAKAO_PAYMENT_CANCEL.getMessage(), KAKAO_PAYMENT_CANCEL.getHttpStatus());
     }
 
