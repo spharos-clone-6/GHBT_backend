@@ -9,6 +9,8 @@ import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -30,10 +32,9 @@ public class KakoPayController {
     private final KakaoPayService kakaoPayService;
 
     @GetMapping("/success")
-    public ResponseEntity approveKakaoPay(@RequestParam("pg_token") String pgToken) {
+    public void approveKakaoPay(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
         log.info("[ 결제 승인 번호     ]: " + pgToken);
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(pgToken);
+        response.sendRedirect("/kakaopay-approve");
     }
 
     @GetMapping("/kakaopay-approve")
