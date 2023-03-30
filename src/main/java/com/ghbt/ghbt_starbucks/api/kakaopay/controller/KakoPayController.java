@@ -34,7 +34,7 @@ public class KakoPayController {
     @GetMapping("/success")
     public void approveKakaoPay(@RequestParam("pg_token") String pgToken, HttpServletResponse response) throws IOException {
         log.info("[ 결제 승인 번호     ]: " + pgToken);
-        response.sendRedirect("/kakaopay-approve");
+        response.sendRedirect("/api/payment/kakaopay-approve");
     }
 
     @GetMapping("/kakaopay-approve")
