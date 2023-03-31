@@ -33,11 +33,23 @@ public class EmailController {
 
     @PostMapping("/validate")
     public ResponseEntity<?> validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
+
         if (emailService.isValidateAuthCode(requestAuthCode.getEmail(), requestAuthCode.getAuthCode())) {
             return ResponseEntity.status(HttpStatus.OK)
                 .build();
         } else {
             return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .build();
+        }
+    }
+
+    @PostMapping("/duplicate")
+    public ResponseEntity<?> duplicateEmailCode(@RequestBody RequestEmail requestEmail) {
+        if (emailService.isDuplicateEmail(requestEmail.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .build();
+        } else {
+            return ResponseEntity.status(HttpStatus.OK)
                 .build();
         }
     }

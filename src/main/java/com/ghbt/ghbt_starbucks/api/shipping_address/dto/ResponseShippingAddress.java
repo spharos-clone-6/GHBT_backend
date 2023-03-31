@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseShippingAddress {
 
+    private Long id;
+
     private String receiver;
 
     private String zipCode;
@@ -32,6 +34,7 @@ public class ResponseShippingAddress {
 
     public static ResponseShippingAddress from(ShippingAddress shippingAddress) {
         return ResponseShippingAddress.builder()
+            .id(shippingAddress.getId())
             .receiver(shippingAddress.getReceiver())
             .zipCode(shippingAddress.getZipCode())
             .addressNickname(shippingAddress.getAddressNickname())

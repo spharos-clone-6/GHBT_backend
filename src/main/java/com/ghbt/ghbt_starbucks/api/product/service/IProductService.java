@@ -39,5 +39,23 @@ public interface IProductService {
     Page<IProductDetail> volumeFilter(String[] filter, String search, Pageable pageable);
 
     void deleteProduct(Long ProductId);
+
+
+    //-----------------------------------------------------------------------
+    List<IProductDetail> getAllProductn();
+
+    List<IProductDetail> getCategoryNamen(String filter);
+
+    List<IProductDetail> getSearchProductn(String search);
+
+    List<Product> getListn();
+
+    List<IMenubar> menubarListn(String name);
+
+    List<IProductDetail> categoryFiltern(String[] filter, String search);
+
+    List<IProductDetail> seasonFiltern(String[] filter, String search);
+
+    List<IProductDetail> volumeFiltern(String[] filter, String search);
 }
 

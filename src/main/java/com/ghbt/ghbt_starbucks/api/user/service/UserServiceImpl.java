@@ -2,7 +2,6 @@ package com.ghbt.ghbt_starbucks.api.user.service;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
-import com.ghbt.ghbt_starbucks.global.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.api.user.dto.UpdateUserDto;
 import com.ghbt.ghbt_starbucks.api.user.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +33,12 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     public void deleteUser(Long userId) {
         iUserRepository.deleteById(userId);
+    }
+
+    @Override
+    @Transactional
+    public void checkShippingAddressAgreement(Long userId, boolean isCheck) {
+        User findUser = getUser(userId);
+        findUser.changeShippingAddressAgreement(isCheck);
     }
 }

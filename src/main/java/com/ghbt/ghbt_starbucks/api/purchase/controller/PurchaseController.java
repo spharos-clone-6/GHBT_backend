@@ -1,16 +1,17 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
-import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
-import com.ghbt.ghbt_starbucks.api.purchase.service.IPurchaseService;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
+import com.ghbt.ghbt_starbucks.api.purchase.service.PurchaseServiceImpl;
 import com.ghbt.ghbt_starbucks.global.security.annotation.LoginUser;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +25,19 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class PurchaseController {
 
-    private final IPurchaseService iPurchaseService;
+    private final PurchaseServiceImpl iPurchaseService;
 
-    //상품 구매
-    @Operation(summary = "구매하기(추가)", description = "productId(str), productName(str), price(int), quantity(int)," +
-        " purchaseGroup(Str), shippingAddress(str), shippingStatus(enum){SHIPPED, IN_DELIVERY, DELIVERED}, address(str) 로 입력해주세요")
+    @Operation(summary = "구매하기(장바구니", description = "장바구니를 통한 구매")
     @PostMapping
-    public ResponseEntity<Object> addPurchase(@RequestBody RequestPurchase requestPurchase,
+    public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchase requestPurchase,
         @LoginUser User loginUser) {
-        iPurchaseService.addPurchase(requestPurchase, loginUser);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        KakaoReadyResponse kakaoReadyResponse = iPurchaseService.startPayment(requestPurchase, loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(kakaoReadyResponse);
     }
 
     @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")
-
-    @Parameters({
-        @Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")
-    })
+    @Parameters({@Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")})
     @GetMapping("/{purchaseId}")
     public ResponsePurchase getPurchaseById(@PathVariable Long purchaseId) {
         return iPurchaseService.getPurchaseById(purchaseId);
@@ -52,18 +49,16 @@ public class PurchaseController {
         return iPurchaseService.getAllPurchaseByUserId(user);
     }
 
-    @Operation(summary = "배송지 변경", description = "배송지를 변경합니다. RequestBody 안의 배송지와 parameter 주문번호를 Long 으로 입력해주세요")
-    @PutMapping("/{purchaseId}")
-    public ResponseEntity<Objects> updatePurchase(@PathVariable Long purchaseId,
-        @RequestBody RequestPurchase requestPurchase) {
-        iPurchaseService.updatePurchase(requestPurchase, purchaseId);
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
     @Operation(summary = "청구서 출력", description = "유저정보로 배송지, 쿠폰, 카드를 출력")
     @GetMapping("/bill")
     public ResponseBill addBill(@LoginUser User user) {
         return iPurchaseService.getBill(user);
+    }
+
+    @Operation(summary = "프로세스 업데이트", description = "결제 완료시 processStatus값 업데이트")
+    @PutMapping
+    public void updateProcess(@RequestBody RequestPayResult requestPayResult, @LoginUser User user) {
+        iPurchaseService.updateProcess(requestPayResult, user);
     }
 }
 

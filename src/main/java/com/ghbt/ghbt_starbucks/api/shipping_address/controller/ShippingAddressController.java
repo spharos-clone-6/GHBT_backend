@@ -76,10 +76,18 @@ public class ShippingAddressController {
 
     //배송지 삭제.
     @DeleteMapping("/{shipping_address_id}")
-    @Operation(summary = "배송지 삭제", description = "상세 기능 : 배송지 아이디를 이용하여 배송지를 삭제합니다.")
+    @Operation(summary = "단건 배송지 삭제", description = "상세 기능 : 배송지 아이디를 이용하여 배송지를 삭제합니다.")
     public ResponseEntity<?> deleteShippingAddress(@PathVariable("shipping_address_id") Long shippingAddressId) {
         iShippingAddressService.deleteShippingAddress(shippingAddressId);
 
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    //배송지 전체 삭제.
+    @DeleteMapping()
+    @Operation(summary = "모든 배송지 삭제", description = "상세 기능 : 모든 배송지를 삭제합니다.")
+    public ResponseEntity<?> deleteShippingAddress(@LoginUser User loginUser) {
+        iShippingAddressService.deleteAllShippingAddress(loginUser);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

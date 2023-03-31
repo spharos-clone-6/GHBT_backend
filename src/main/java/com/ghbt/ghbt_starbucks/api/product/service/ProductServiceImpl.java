@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Data
@@ -63,7 +64,7 @@ public class ProductServiceImpl implements IProductService {
             .build();
         iSearchCategoryRepository.save(searchCategory);
     }
-
+    @Transactional(readOnly = true)
     @Override // 상품 단건 조회
     public IProductDetail getOneProductId(Long id) {
         IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
@@ -176,5 +177,86 @@ public class ProductServiceImpl implements IProductService {
     @Override // 상품삭제
     public void deleteProduct(Long ProductId) {
         iProductRepository.deleteById(ProductId);
+    }
+
+    @Override
+    public List<IProductDetail> getAllProductn() {
+        List<IProductDetail> productList = iSearchCategoryRepository.getAllProductn();
+        if (productList.isEmpty()) {
+            throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return productList;
+    }
+
+    @Override
+    public List<IProductDetail> getCategoryNamen(String filter) {
+        List<IProductDetail> productList = iSearchCategoryRepository.findCategoryNamen(filter);
+        if (productList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return productList;
+    }
+
+    @Override
+    public List<IProductDetail> getSearchProductn(String search) {
+        List<IProductDetail> productList = iSearchCategoryRepository.getProductNamen(search);
+        if (productList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return productList;
+    }
+
+    @Override
+    public List<Product> getListn() {
+        return iProductRepository.findAll();
+    }
+
+    @Override
+    public List<IMenubar> menubarListn(String name) {
+        List<IMenubar> menubar = iProductRepository.findByMenubarListn(name);
+        return menubar;
+    }
+
+    @Override
+    public List<IProductDetail> categoryFiltern(String[] filter, String search) {
+        List<IProductDetail> categoryList;
+        if (search.equals("-")) {
+            categoryList = iSearchCategoryRepository.findCategoryFiltern(filter);
+        } else {
+            categoryList = iSearchCategoryRepository.findSearchCategoryFiltern(filter, search);
+        }
+        if (categoryList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return categoryList;
+    }
+
+    @Override
+    public List<IProductDetail> seasonFiltern(String[] filter, String search) {
+        List<IProductDetail> seasonList;
+        if (search.equals("-")) {
+            seasonList = iSearchCategoryRepository.findSeasonFiltern(filter);
+        } else {
+            seasonList = iSearchCategoryRepository.findSearchSeasonFiltern(filter, search);
+        }
+        if (seasonList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+
+        return seasonList;
+    }
+
+    @Override
+    public List<IProductDetail> volumeFiltern(String[] filter, String search) {
+        List<IProductDetail> volumeList;
+        if (search.equals("-")) {
+            volumeList = iSearchCategoryRepository.findVolumeFiltern(filter);
+        } else {
+            volumeList = iSearchCategoryRepository.findSearchVolumeFiltern(filter, search);
+        }
+        if (volumeList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return volumeList;
     }
 }

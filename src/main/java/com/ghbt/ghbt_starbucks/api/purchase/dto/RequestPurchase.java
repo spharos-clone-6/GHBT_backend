@@ -1,7 +1,10 @@
 package com.ghbt.ghbt_starbucks.api.purchase.dto;
 
-import com.ghbt.ghbt_starbucks.api.purchase.model.ShippingStatus;
-import lombok.*;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -9,12 +12,15 @@ import lombok.*;
 @NoArgsConstructor
 public class RequestPurchase {
 
-    private Integer quantity;
-    private String purchaseGroup;
-    private ShippingStatus shippingStatus;
+    private List<ProductDetail> purchaseList;
     private String shippingAddress;
-    private String productId;
-    private String productName;
-    private Integer price;
+    private Long shippingPrice;
+
+    private Long couponId;
+    private Long couponPrice;
+
+    private String paymentType;
+    private String cashReceipts;
+    private Long totalPrice;
 
 }
