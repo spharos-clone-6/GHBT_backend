@@ -3,7 +3,7 @@ package com.ghbt.ghbt_starbucks.api.purchase.service;
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
@@ -14,24 +14,25 @@ import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePayment;
 import com.ghbt.ghbt_starbucks.api.purchase.model.ProcessStatus;
 import com.ghbt.ghbt_starbucks.api.purchase.model.PurchaseType;
 import com.ghbt.ghbt_starbucks.api.purchase.repository.IPurchaseRepository;
+import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.service.IShippingAddressService;
 import com.ghbt.ghbt_starbucks.api.user_has_coupon.service.IUserHasCouponService;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.dto.ResponseStarbucksCardReady;
 import com.ghbt.ghbt_starbucks.api.user_has_starbucks_card.service.IUserHasStarbucksCardService;
-import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchaseOld;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
+import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -66,11 +67,11 @@ public class PurchaseServiceImpl {
      * 카카오 결제
      */
     @Transactional
-    public ResponseKakaoReady kakaoApi(RequestPurchase requestPurchase, User user) {
-        UUID uuid = UUID.randomUUID();
+    public KakaoReadyResponse kakaoApi(RequestPurchase requestPurchase, User user) {
+        String orderId = generateOrderNumber();
         checkStock(requestPurchase);
-        temporarySaveBill(requestPurchase, user, uuid);
-        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, uuid, user.getId());
+        temporarySaveBill(requestPurchase, user, orderId);
+        KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, orderId, user.getId());
         return kakaoPayService.kakaoPayReady(kakaoPayOrderDto);
     }
 
@@ -78,14 +79,13 @@ public class PurchaseServiceImpl {
      * 스타벅스 결제
      */
     private ResponseStarbucksCardReady starbucksApi(RequestPurchase requestPurchase, User user) {
-        UUID uuid = UUID.randomUUID();
+        String orderId = generateOrderNumber();
         checkStock(requestPurchase);
-        temporarySaveBill(requestPurchase, user, uuid);
+        temporarySaveBill(requestPurchase, user, orderId);
 
         log.info("아직 지원하지 않는 서비스입니다.");
 
         return null;
-
     }
 
     private Integer getStock(ProductDetail productDetail) {
@@ -102,9 +102,10 @@ public class PurchaseServiceImpl {
         }
     }
 
-    private void temporarySaveBill(RequestPurchase requestPurchase, User user, UUID uuid) {
+    private void temporarySaveBill(RequestPurchase requestPurchase, User user, String orderId) {
+        ResponseShippingAddress shippingAddress = iShippingAddressService.getShippingAddress(requestPurchase.getShippingAddressId());
         requestPurchase.getPurchaseList().stream()
-            .forEach(p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, user, uuid)));
+            .forEach(p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, shippingAddress, user, orderId)));
     }
 
     private static void startPaymentLog(RequestPurchase requestPurchase) {
@@ -114,6 +115,14 @@ public class PurchaseServiceImpl {
         log.info("쿠폰 가격 " + requestPurchase.getCouponPrice() + "원");
         log.info("전체 가격 " + requestPurchase.getTotalPrice() + "원");
         log.info("=================");
+    }
+
+    private String generateOrderNumber() {
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        return IntStream.generate(() -> random.nextInt(8) + 1)
+            .limit(12)
+            .toString();
     }
 
     /**

@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum PurchaseType {
-    KAKAO_PAY("kakao-pay", "카카오페이"), STARBUCKS_CARD("starbucks-card", "스타벅스카드"),
+    KAKAO_PAY("kakao-pay", "카카오페이"),
+    STARBUCKS_CARD("starbucks-card", "스타벅스카드"),
     ;
     private String key;
     private String value;

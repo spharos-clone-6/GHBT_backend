@@ -1,6 +1,5 @@
 package com.ghbt.ghbt_starbucks.api.purchase.controller;
 
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPayResult;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseBill;
