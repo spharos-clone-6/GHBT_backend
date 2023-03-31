@@ -7,9 +7,7 @@ import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoCompleteResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.OrderProductDto;
-import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
-import com.ghbt.ghbt_starbucks.api.product.service.ProductServiceImpl;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.service.ShippingAddressServiceImpl;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
@@ -17,12 +15,7 @@ import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,6 +65,9 @@ public class KakaoPayService {
             KakaoReadyResponse.class
         );
 
+        redisService.deleteValues("PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")");
+        redisService.deleteValues("ORDER_PRODUCTS(" + kakaoPayOrderDto.getMemberId() + ")");
+
         redisService.setValuesWithTimeout(
             "PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")",
             kakaoPayOrderDto.getOrderId() + ","
@@ -88,10 +84,10 @@ public class KakaoPayService {
             5 * 60 * 1000
         );
 
-        log.info("[ 결제 승인 번호     ]: " + kakaoReadyResponse.getTid());
-        log.info("[ 결제 준비 일시     ]: " + kakaoReadyResponse.getCreated_at());
-        log.info("[ PC 승인 URL      ]: " + kakaoReadyResponse.getNext_redirect_pc_url());
-        log.info("[ MOBILE 승인 URL  ]: " + kakaoReadyResponse.getNext_redirect_mobile_url());
+        log.info("[결제 승인 번호  ]: " + kakaoReadyResponse.getTid());
+        log.info("[결제 준비 일시  ]: " + kakaoReadyResponse.getCreated_at());
+        log.info("[PC 승인 URL    ]: " + kakaoReadyResponse.getNext_redirect_pc_url());
+        log.info("[MOBILE 승인 URL]: " + kakaoReadyResponse.getNext_redirect_mobile_url());
 
         return kakaoReadyResponse;
     }
@@ -111,7 +107,9 @@ public class KakaoPayService {
             String[] productList = redisService.getValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")").split(",");
             List<OrderProductDto> products = Arrays.stream(productList)
                 .map(p -> p.split(":"))
-                .map(p -> new OrderProductDto(iProductRepository.findById(Long.valueOf(p[0])).get(), Long.valueOf(p[1])))
+                .map(p -> new OrderProductDto(iProductRepository.findById(Long.valueOf(p[0]))
+                    .orElseThrow(() -> new ServiceException("주문하신 상품은 판매가 중단되었습니다.", HttpStatus.BAD_REQUEST))
+                    , Long.valueOf(p[1])))
                 .collect(Collectors.toList());
 
             // 카카오 요청
@@ -132,13 +130,16 @@ public class KakaoPayService {
             if (kakaoApproveResponse.getAmount().getTotal() != Integer.parseInt(totalPrice)) {
                 throw new ServiceException("총 금액이 맞지 않습니다. 결제를 취소합니다.", HttpStatus.INTERNAL_SERVER_ERROR);
             } else {
-                log.info("[ 결제 성공        ]: " + loginUser.getEmail() + "님이 " + totalPrice + " 원이 결제되었습니다.");
+                log.info("[결제 성공]: " + loginUser.getEmail() + "님이 " + totalPrice + " 원이 결제되었습니다.");
             }
             return KakaoCompleteResponse.from(kakaoApproveResponse, products, shippingAddress, Long.valueOf(shippingPrice));
 
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ServiceException("결제 정보 저장이 제대로 이루어지지 않았습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
+            redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
         }
     }
 

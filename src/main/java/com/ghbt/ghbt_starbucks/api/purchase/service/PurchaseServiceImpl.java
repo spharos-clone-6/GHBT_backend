@@ -111,12 +111,9 @@ public class PurchaseServiceImpl {
     }
 
     private static void startPaymentLog(RequestPurchase requestPurchase) {
-        log.info("=================");
-        log.info("결제 타입 " + requestPurchase.getPaymentType());
-        log.info("상품 종류 " + requestPurchase.getPurchaseList().size() + "개");
-        log.info("쿠폰 가격 " + requestPurchase.getCouponPrice() + "원");
-        log.info("전체 가격 " + requestPurchase.getTotalPrice() + "원");
-        log.info("=================");
+        log.info("[결제 타입] " + requestPurchase.getPaymentType());
+        log.info("[상품 종류 개수] " + requestPurchase.getPurchaseList().size() + "개");
+        log.info("[전체 가격] " + requestPurchase.getTotalPrice() + "원");
     }
 
     private String generateOrderNumber() {
