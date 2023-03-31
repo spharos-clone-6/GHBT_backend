@@ -68,7 +68,6 @@ public class ProductServiceImpl implements IProductService {
     @Override // 상품 단건 조회
     public IProductDetail getOneProductId(Long id) {
         IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
-
         return productDetail;
     }
 

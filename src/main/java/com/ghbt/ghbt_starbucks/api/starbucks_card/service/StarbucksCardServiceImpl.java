@@ -27,7 +27,7 @@ public class StarbucksCardServiceImpl implements IStarbucksCardService {
     public List<ResponseStarbucksCard> getAllStarbucksCard() {
         List<StarbucksCard> starbucksCards = IStarbucksCardRepository.findAll();
         if (starbucksCards.isEmpty()) {
-            throw new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus());
+            throw new ServiceException(NOT_FOUND_STARBUCKS_CARD.getMessage(), NOT_FOUND_STARBUCKS_CARD.getHttpStatus());
         }
         return starbucksCards.stream()
             .map(ResponseStarbucksCard::from)
@@ -38,7 +38,7 @@ public class StarbucksCardServiceImpl implements IStarbucksCardService {
     public ResponseStarbucksCard getOneStarbucksCard(Long starbucksCardId) {
         StarbucksCard findStarbucksCard = IStarbucksCardRepository.findById(starbucksCardId)
             .orElseThrow(
-                () -> new ServiceException(NOT_FOUND_MOBILE_CARD.getMessage(), NOT_FOUND_MOBILE_CARD.getHttpStatus()));
+                () -> new ServiceException(NOT_FOUND_STARBUCKS_CARD.getMessage(), NOT_FOUND_STARBUCKS_CARD.getHttpStatus()));
 
         return ResponseStarbucksCard.from(findStarbucksCard);
     }
