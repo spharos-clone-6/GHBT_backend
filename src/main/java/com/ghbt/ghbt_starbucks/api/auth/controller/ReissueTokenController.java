@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reissue")
 @RequiredArgsConstructor
-public class refreshTokenController {
+public class ReissueTokenController {
 
     private final AuthService authService;
 
