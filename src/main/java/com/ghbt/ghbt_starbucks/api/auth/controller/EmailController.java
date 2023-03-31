@@ -1,8 +1,8 @@
 package com.ghbt.ghbt_starbucks.api.auth.controller;
 
-import com.ghbt.ghbt_starbucks.api.auth.dto.RequestAuthCode;
+import com.ghbt.ghbt_starbucks.api.auth.dto.RequestEmailAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.dto.RequestEmail;
-import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseAuthCode;
+import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseEmailAuthCode;
 import com.ghbt.ghbt_starbucks.api.auth.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,20 +21,20 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<ResponseAuthCode> getEmailCode(
+    public ResponseEntity<ResponseEmailAuthCode> getEmailCode(
         @RequestBody RequestEmail requestEmail,
         @Value("${spring.mail.username}") String adminEmail) {
 
-        ResponseAuthCode responseAuthCode = emailService.sendStarbucksAuthEmail(requestEmail.getEmail(), adminEmail);
+        ResponseEmailAuthCode responseEmailAuthCode = emailService.sendStarbucksAuthEmail(requestEmail.getEmail(), adminEmail);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(responseAuthCode);
+            .body(responseEmailAuthCode);
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<?> validateEmailCode(@RequestBody RequestAuthCode requestAuthCode) {
+    public ResponseEntity<?> validateEmailCode(@RequestBody RequestEmailAuthCode requestEmailAuthCode) {
 
-        if (emailService.isValidateAuthCode(requestAuthCode.getEmail(), requestAuthCode.getAuthCode())) {
+        if (emailService.isValidateAuthCode(requestEmailAuthCode.getEmail(), requestEmailAuthCode.getAuthCode())) {
             return ResponseEntity.status(HttpStatus.OK)
                 .build();
         } else {
