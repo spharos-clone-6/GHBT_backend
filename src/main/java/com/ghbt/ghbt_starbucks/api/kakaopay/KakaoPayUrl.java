@@ -9,13 +9,14 @@ public enum KakaoPayUrl {
     READY_TO_POST("https://kapi.kakao.com/v1/payment/ready"),
     APPROVE_TO_POST("https://kapi.kakao.com/v1/payment/approve"),
 
-    APPROVAL("http://localhost:8080/pay_success"),
-    CANCEL("http://localhost:8080/payment/cancel"),
-    FAIL("http://localhost:8080/payment/fail"),
+    APPROVAL("https://www.grapefruit-honey-black-tea.shop/pay_success"),
+    CANCEL("https://www.grapefruit-honey-black-tea.shop/payment/cancel"),
+    FAIL("https://www.grapefruit-honey-black-tea.shop/payment/fail"),
     ;
 
     /**
      * backend.grapefruit-honey-black-tea.shop localhost:8080 localhost:3000
+     * https://www.grapefruit-honey-black-tea.shop
      */
     private String url;
 

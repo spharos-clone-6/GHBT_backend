@@ -137,6 +137,7 @@ public class KakaoPayService {
             return KakaoCompleteResponse.from(kakaoApproveResponse, products, shippingAddress, Long.valueOf(shippingPrice));
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             throw new ServiceException("결제 정보 저장이 제대로 이루어지지 않았습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

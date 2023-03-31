@@ -25,6 +25,7 @@ import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchaseOld;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,7 @@ public class PurchaseServiceImpl {
      * 결제 진입점(분기 : 카카오결제, 스타벅스카드 결제)
      */
     public ResponsePayment startPayment(RequestPurchase requestPurchase, User user) {
+
         startPaymentLog(requestPurchase);
         if (PurchaseType.isKakaoPay(requestPurchase)) {
             return kakaoApi(requestPurchase, user);
@@ -68,7 +70,7 @@ public class PurchaseServiceImpl {
      */
     @Transactional
     public KakaoReadyResponse kakaoApi(RequestPurchase requestPurchase, User user) {
-        String orderId = generateOrderNumber();
+        String orderId = UUID.randomUUID().toString();
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, orderId, user.getId());
@@ -79,7 +81,7 @@ public class PurchaseServiceImpl {
      * 스타벅스 결제
      */
     private ResponseStarbucksCardReady starbucksApi(RequestPurchase requestPurchase, User user) {
-        String orderId = generateOrderNumber();
+        String orderId = UUID.randomUUID().toString();
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);
 
