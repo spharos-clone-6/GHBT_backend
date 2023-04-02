@@ -29,16 +29,32 @@ public class PurchaseController {
 
     @Operation(summary = "구매하기(장바구니", description = "장바구니를 통한 구매")
     @PostMapping
-    public ResponseEntity<Object> startPurchases(@RequestBody RequestPurchase requestPurchase, @LoginUser User loginUser) {
+    public ResponseEntity<Object> startPurchase(@RequestBody RequestPurchase requestPurchase,
+        @LoginUser User loginUser) {
         ResponsePayment responseReady = iPurchaseService.startPayment(requestPurchase, loginUser);
         return ResponseEntity.status(HttpStatus.OK)
             .body(responseReady);
+    }
+
+    @PostMapping("/end")
+    public ResponseEntity<?> endPurchase(@LoginUser User loginUser) {
+        iPurchaseService.endPayment(loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
+    }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<?> cancelPurchase(@LoginUser User loginUser) {
+        iPurchaseService.cancelPurchase(loginUser);
+        return ResponseEntity.status(HttpStatus.OK)
+            .build();
     }
 
     @Operation(summary = "구매내역 조회(단건)", description = "purchaseId를 long 으로 입력해주세요")
     @Parameters({@Parameter(name = "purchaseId", description = "구매내역 고유 번호", example = "1")})
     @GetMapping("/{purchaseId}")
     public ResponsePurchase getPurchaseById(@PathVariable Long purchaseId) {
+
         return iPurchaseService.getPurchaseById(purchaseId);
     }
 
