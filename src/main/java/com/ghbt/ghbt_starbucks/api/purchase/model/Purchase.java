@@ -68,5 +68,9 @@ public class Purchase extends BaseTimeEntity {
             .build();
     }
 
+    public static void changeProcessStatus(Purchase purchase) {
+        purchase.processStatus = ProcessStatus.PAYMENT_COMPLETE;
+    }
+
 }
 

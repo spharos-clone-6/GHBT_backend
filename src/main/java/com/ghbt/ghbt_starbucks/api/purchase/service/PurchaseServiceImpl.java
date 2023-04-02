@@ -24,10 +24,9 @@ import com.ghbt.ghbt_starbucks.api.purchase.model.Purchase;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchaseOld;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import java.util.Random;
+import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -48,6 +47,7 @@ public class PurchaseServiceImpl {
     private final IUserHasStarbucksCardService iUserHasStarbucksCardService;
     private final IShippingAddressService iShippingAddressService;
     private final KakaoPayService kakaoPayService;
+    private final RedisService redisService;
 
 
     /**
@@ -91,11 +91,9 @@ public class PurchaseServiceImpl {
     }
 
     private Integer getStock(ProductDetail productDetail) {
-        try {
-            return iProductRepository.findById(productDetail.getProductId()).get().getStock();
-        } catch (Exception e) {
-            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
-        }
+        return iProductRepository.findById(productDetail.getProductId())
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus()))
+            .getStock();
     }
 
     private void checkStock(RequestPurchase requestPurchase) {
@@ -105,23 +103,17 @@ public class PurchaseServiceImpl {
     }
 
     private void temporarySaveBill(RequestPurchase requestPurchase, User user, String orderId) {
-        ResponseShippingAddress shippingAddress = iShippingAddressService.getShippingAddress(requestPurchase.getShippingAddressId());
-        requestPurchase.getPurchaseList().stream()
-            .forEach(p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, shippingAddress, user, orderId)));
+        ResponseShippingAddress shippingAddress = iShippingAddressService.getShippingAddress(
+            requestPurchase.getShippingAddressId());
+        requestPurchase.getPurchaseList()
+            .forEach(
+                p -> iPurchaseRepository.save(Purchase.toEntity(p, requestPurchase, shippingAddress, user, orderId)));
     }
 
     private static void startPaymentLog(RequestPurchase requestPurchase) {
         log.info("[결제 타입] " + requestPurchase.getPaymentType());
         log.info("[상품 종류 개수] " + requestPurchase.getPurchaseList().size() + "개");
         log.info("[전체 가격] " + requestPurchase.getTotalPrice() + "원");
-    }
-
-    private String generateOrderNumber() {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        return IntStream.generate(() -> random.nextInt(8) + 1)
-            .limit(12)
-            .toString();
     }
 
     /**
@@ -173,5 +165,28 @@ public class PurchaseServiceImpl {
         purchase.forEach(purchaseStatus -> {
             purchaseStatus.setProcessStatus(ProcessStatus.PAYMENT_COMPLETE);
         });
+    }
+
+    public void endPayment(User loginUser) {
+        try {
+            String orderId = redisService.getValues("PAYMENT(" + loginUser.getId().toString() + ")").split(",")[0];
+            List<Purchase> purchaseByUuid = iPurchaseRepository.findAllByUuid(orderId);
+            purchaseByUuid.forEach(Purchase::changeProcessStatus);
+            redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
+            redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
+        } catch (Exception e) {
+            throw new ServiceException("결제 완료 과정 중 서버에서 문제가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void cancelPurchase(User loginUser) {
+        try {
+            String orderId = redisService.getValues("PAYMENT(" + loginUser.getId().toString() + ")").split(",")[0];
+            iPurchaseRepository.deleteAllByUuid(orderId);
+            redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
+            redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
+        } catch (Exception e) {
+            throw new ServiceException("결제 완료 과정 중 서버에서 문제가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

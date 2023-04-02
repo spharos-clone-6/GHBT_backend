@@ -137,9 +137,6 @@ public class KakaoPayService {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new ServiceException("결제 정보 저장이 제대로 이루어지지 않았습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-        } finally {
-            redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
-            redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
         }
     }
 
