@@ -50,6 +50,10 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "uuid")
     private String uuid;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purchase_type")
+    private PurchaseType purchaseType;
+
     public static Purchase toEntity(ProductDetail productDetail, RequestPurchase requestPurchase,
         ResponseShippingAddress responseShippingAddress, User user, String orderId) {
         return Purchase.builder()
@@ -57,12 +61,11 @@ public class Purchase extends BaseTimeEntity {
             .shippingAddress("(" + responseShippingAddress.getZipCode() + ") " + responseShippingAddress.getBaseAddress()
                 + responseShippingAddress.getDetailAddress())
             .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
-
             .productId(productDetail.getProductId())
             .productName(productDetail.getProductName())
             .price(productDetail.getProductPrice())
             .quantity(productDetail.getProductQuantity())
-
+            .purchaseType(PurchaseType.findPurchaseType(requestPurchase))
             .totalPrice(requestPurchase.getTotalPrice())
             .user(user)
             .build();
