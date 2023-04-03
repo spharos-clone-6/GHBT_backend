@@ -85,6 +85,7 @@ public class PurchaseServiceImpl {
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);
 
+
         log.info("아직 지원하지 않는 서비스입니다.");
 
         return null;
@@ -162,9 +163,7 @@ public class PurchaseServiceImpl {
 
     public void updateProcess(RequestPayResult requestPayResult, User user) {
         List<Purchase> purchase = iPurchaseRepository.findAllByUuid(requestPayResult.getPartner_order_id());
-        purchase.forEach(purchaseStatus -> {
-            purchaseStatus.setProcessStatus(ProcessStatus.PAYMENT_COMPLETE);
-        });
+        purchase.forEach(purchaseStatus -> purchaseStatus.setProcessStatus(ProcessStatus.PAYMENT_COMPLETE));
     }
 
     public void endPayment(User loginUser) {
