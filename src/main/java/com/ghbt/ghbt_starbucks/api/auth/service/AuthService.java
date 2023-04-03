@@ -2,6 +2,7 @@ package com.ghbt.ghbt_starbucks.api.auth.service;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.api.user.repository.IUserRepository;
+import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.JwtTokenProvider;
 import com.ghbt.ghbt_starbucks.global.security.dto.LoginDto;
 import com.ghbt.ghbt_starbucks.global.security.dto.SignupDto;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -35,6 +37,9 @@ public class AuthService {
     @Transactional
     public Long signupUser(SignupDto signupDto) {
         User user = User.signinUser(signupDto);
+        if (iUserRepository.existsByEmail(user.getEmail())) {
+            throw new ServiceException("이미 가입된 회원입니다.", HttpStatus.BAD_REQUEST);
+        }
         User savedUser = iUserRepository.save(user);
         return savedUser.getId();
     }

@@ -10,4 +10,5 @@ public interface IPurchaseRepository extends JpaRepository<Purchase, Long> {
 
     List<Purchase> findAllByUuid(String uuid);
 
+    void deleteAllByUuid(String uuid);
 }

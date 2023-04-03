@@ -13,7 +13,7 @@ import lombok.Setter;
 public class RequestPurchase {
 
     private List<ProductDetail> purchaseList;
-    private String shippingAddress;
+    private Long shippingAddressId;
     private Long shippingPrice;
 
     private Long couponId;

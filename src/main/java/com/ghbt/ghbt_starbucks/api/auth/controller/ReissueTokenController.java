@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/reissue")
 @RequiredArgsConstructor
-public class refreshTokenController {
+public class ReissueTokenController {
 
     private final AuthService authService;
 
@@ -30,7 +30,7 @@ public class refreshTokenController {
         if (reissuedTokenDto != null) {
             return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, "refresh-token=" + reissuedTokenDto.getRefreshToken()
-                    + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
+                    + "; domain= .grapefruit-honey-black-tea.shop; path=/; SameSite=None; Secure; httpOnly;")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedTokenDto.getAccessToken())
                 .build();
         } else {
@@ -41,7 +41,7 @@ public class refreshTokenController {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .header(HttpHeaders.SET_COOKIE, "refresh-token=" + ""
-                    + "; domain= localhost; Max-Age=0; path=/; SameSite=None; Secure; httpOnly;")
+                    + "; domain= .grapefruit-honey-black-tea.shop; Max-Age=0; path=/; SameSite=None; Secure; httpOnly;")
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .build();
         }

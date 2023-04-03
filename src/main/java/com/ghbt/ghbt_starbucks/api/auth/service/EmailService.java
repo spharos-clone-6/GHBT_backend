@@ -1,8 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.auth.service;
 
-import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseAuthCode;
+import com.ghbt.ghbt_starbucks.api.auth.dto.ResponseEmailAuthCode;
 import com.ghbt.ghbt_starbucks.api.user.repository.IUserRepository;
-import com.ghbt.ghbt_starbucks.api.user.service.IUserService;
 import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
@@ -26,7 +25,7 @@ public class EmailService {
     private final IUserRepository iUserRepository;
     private final long EXPIRED_AUTH_MILLISECONDS = 1000 * 60 * 3; //3분
 
-    public ResponseAuthCode sendStarbucksAuthEmail(String clientEmail, String adminEmail) {
+    public ResponseEmailAuthCode sendStarbucksAuthEmail(String clientEmail, String adminEmail) {
         StarBucksAuthEmail starBucksAuthEmail = StarBucksAuthEmail
             .builder()
             .emailSender(emailSender)
@@ -36,7 +35,7 @@ public class EmailService {
         String authCode = starBucksAuthEmail.sendEmail();
         redisService.setValuesWithTimeout("EMAIL(" + clientEmail + ")", authCode, EXPIRED_AUTH_MILLISECONDS);
 
-        return new ResponseAuthCode(authCode);
+        return new ResponseEmailAuthCode(authCode);
     }
 
     public boolean isValidateAuthCode(String clientEmail, String authCode) {

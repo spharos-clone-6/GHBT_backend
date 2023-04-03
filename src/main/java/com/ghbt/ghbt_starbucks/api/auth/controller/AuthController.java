@@ -30,8 +30,6 @@ public class AuthController {
     private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
 
-    private final long COOKIE_EXPIRATION = 90 * 24 * 60 * 60L;
-
     /**
      * 회원가입
      */
@@ -41,8 +39,7 @@ public class AuthController {
         String encodedPassword = encoder.encode(signupDto.getPassword());
         SignupDto signupDtoWithEncodedPassword = SignupDto.encodePassword(signupDto, encodedPassword);
         authService.signupUser(signupDtoWithEncodedPassword);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -57,7 +54,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
             .header(HttpHeaders.SET_COOKIE, "refresh-token=" + tokenDto.getRefreshToken()
-                + "; domain= localhost; path=/; SameSite=None; Secure; httpOnly;")
+                + "; domain= .grapefruit-honey-black-tea.shop; path=/; SameSite=None; Secure; httpOnly;")
             .build();
     }
 

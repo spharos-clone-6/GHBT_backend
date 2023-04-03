@@ -2,9 +2,9 @@ package com.ghbt.ghbt_starbucks.api.purchase.model;
 
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
+import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.utility.BaseTimeEntity;
-import java.util.UUID;
 import lombok.*;
 
 import javax.persistence.*;
@@ -50,20 +50,29 @@ public class Purchase extends BaseTimeEntity {
     @Column(name = "uuid")
     private String uuid;
 
-    public static Purchase toEntity(ProductDetail productDetail, RequestPurchase requestPurchase, User user, UUID uuid) {
-        return Purchase.builder()
-            .uuid(uuid.toString())
-            .shippingAddress(requestPurchase.getShippingAddress())
-            .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "purchase_type")
+    private PurchaseType purchaseType;
 
+    public static Purchase toEntity(ProductDetail productDetail, RequestPurchase requestPurchase,
+        ResponseShippingAddress responseShippingAddress, User user, String orderId) {
+        return Purchase.builder()
+            .uuid(orderId)
+            .shippingAddress("(" + responseShippingAddress.getZipCode() + ") " + responseShippingAddress.getBaseAddress()
+                + responseShippingAddress.getDetailAddress())
+            .processStatus(ProcessStatus.PAYMENT_INCOMPLETE)
             .productId(productDetail.getProductId())
             .productName(productDetail.getProductName())
             .price(productDetail.getProductPrice())
             .quantity(productDetail.getProductQuantity())
-
+            .purchaseType(PurchaseType.findPurchaseType(requestPurchase))
             .totalPrice(requestPurchase.getTotalPrice())
             .user(user)
             .build();
+    }
+
+    public static void changeProcessStatus(Purchase purchase) {
+        purchase.processStatus = ProcessStatus.PAYMENT_COMPLETE;
     }
 
 }

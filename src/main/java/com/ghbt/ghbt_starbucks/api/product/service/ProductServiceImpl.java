@@ -69,6 +69,7 @@ public class ProductServiceImpl implements IProductService {
     @Override // 상품 단건 조회
     public IProductDetail getOneProductId(Long id) {
         IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
+
         if (productDetail.getProductId() == null) {
             throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
         }
