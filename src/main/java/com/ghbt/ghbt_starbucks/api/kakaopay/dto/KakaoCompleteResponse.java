@@ -19,6 +19,7 @@ public class KakaoCompleteResponse {
     List<ProductDetailResponse> purchaseList;
     private String receiver;
     private String addressNickname;
+    private String zipCode;
     private String detailAddress;
     private String baseAddress;
     private String phoneNumber1;
@@ -33,6 +34,7 @@ public class KakaoCompleteResponse {
         return KakaoCompleteResponse.builder()
             .receiver(shippingAddress.getReceiver())
             .addressNickname(shippingAddress.getAddressNickname())
+            .zipCode(shippingAddress.getZipCode())
             .baseAddress(shippingAddress.getBaseAddress())
             .detailAddress(shippingAddress.getDetailAddress())
             .phoneNumber1(shippingAddress.getPhoneNumber1())
