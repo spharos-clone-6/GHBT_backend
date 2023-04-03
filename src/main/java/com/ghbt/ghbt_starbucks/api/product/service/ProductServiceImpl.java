@@ -64,11 +64,14 @@ public class ProductServiceImpl implements IProductService {
             .build();
         iSearchCategoryRepository.save(searchCategory);
     }
+
     @Transactional(readOnly = true)
     @Override // 상품 단건 조회
     public IProductDetail getOneProductId(Long id) {
         IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
-
+        if (productDetail.getProductId() == null) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return productDetail;
     }
 
@@ -101,6 +104,9 @@ public class ProductServiceImpl implements IProductService {
     @Override // 메뉴바 출력
     public Page<IMenubar> menubarList(String name, Pageable pageable) {
         Page<IMenubar> menubar = iProductRepository.findByMenubarList(name, pageable);
+        if (menubar.isEmpty()) {
+            throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return menubar;
     }
 
@@ -208,12 +214,19 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<Product> getListn() {
-        return iProductRepository.findAll();
+        List<Product> productList = iProductRepository.findAll();
+        if (productList.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
+        return productList;
     }
 
     @Override
     public List<IMenubar> menubarListn(String name) {
         List<IMenubar> menubar = iProductRepository.findByMenubarListn(name);
+        if (menubar.isEmpty()) {
+            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+        }
         return menubar;
     }
 
