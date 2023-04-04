@@ -1,6 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 
-import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetailResponse;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseProductDetail;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseKakaoComplete {
 
-    List<ProductDetailResponse> purchaseList;
+    List<ResponseProductDetail> purchaseList;
     private String orderId;
     private String receiver;
     private String addressNickname;
@@ -42,7 +42,7 @@ public class ResponseKakaoComplete {
             .notice(shippingAddress.getNotice())
             .shippingPrice(shippingPrice)
             .totalPrice(Long.valueOf(responseKakaoApprove.getAmount().getTotal()))
-            .purchaseList(products.stream().map(ProductDetailResponse::from).collect(Collectors.toList()))
+            .purchaseList(products.stream().map(ResponseProductDetail::from).collect(Collectors.toList()))
             .paymentType("kakao-pay")
             .cashReceipts("none")
             .build();

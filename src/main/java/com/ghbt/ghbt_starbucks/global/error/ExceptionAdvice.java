@@ -24,7 +24,7 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<?> notDeleted(EmptyResultDataAccessException e) {
-        log.error("[ EmptyResultDataAccessException ]" + " 500 " + "삭제할 데이터가 존재하지 않습니다.");
+        log.error("[ EmptyResultDataAccessException ]" + " " + e.toString() + " : " + e.getMessage());
         return ResponseEntity.status(500).body("삭제할 데이터가 존재하지 않습니다.");
     }
 }
