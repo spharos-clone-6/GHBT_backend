@@ -11,7 +11,7 @@ import com.ghbt.ghbt_starbucks.api.shipping_address.dto.RequestShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import com.ghbt.ghbt_starbucks.api.shipping_address.model.ShippingAddress;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import java.util.Comparator;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;

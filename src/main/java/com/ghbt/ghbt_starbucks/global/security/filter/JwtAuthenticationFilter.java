@@ -2,21 +2,16 @@ package com.ghbt.ghbt_starbucks.global.security.filter;
 
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
-import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import com.ghbt.ghbt_starbucks.global.security.JwtTokenProvider;
 import io.jsonwebtoken.IncorrectClaimException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
