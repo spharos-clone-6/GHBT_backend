@@ -1,7 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 
-import com.ghbt.ghbt_starbucks.api.product.model.Product;
-import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetailResponse;
+import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponseProductDetail;
 import com.ghbt.ghbt_starbucks.api.shipping_address.dto.ResponseShippingAddress;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KakaoCompleteResponse {
+public class ResponseKakaoComplete {
 
-    List<ProductDetailResponse> purchaseList;
+    List<ResponseProductDetail> purchaseList;
     private String orderId;
     private String receiver;
     private String addressNickname;
@@ -30,10 +29,10 @@ public class KakaoCompleteResponse {
     private String cashReceipts;
     private Long totalPrice;
 
-    public static KakaoCompleteResponse from(KakaoApproveResponse kakaoApproveResponse, List<OrderProductDto> products,
+    public static ResponseKakaoComplete from(ResponseKakaoApprove responseKakaoApprove, List<OrderProductDto> products,
         ResponseShippingAddress shippingAddress, Long shippingPrice) {
-        return KakaoCompleteResponse.builder()
-            .orderId(kakaoApproveResponse.getPartner_order_id())
+        return ResponseKakaoComplete.builder()
+            .orderId(responseKakaoApprove.getPartner_order_id())
             .receiver(shippingAddress.getReceiver())
             .addressNickname(shippingAddress.getAddressNickname())
             .zipCode(shippingAddress.getZipCode())
@@ -42,8 +41,8 @@ public class KakaoCompleteResponse {
             .phoneNumber1(shippingAddress.getPhoneNumber1())
             .notice(shippingAddress.getNotice())
             .shippingPrice(shippingPrice)
-            .totalPrice(Long.valueOf(kakaoApproveResponse.getAmount().getTotal()))
-            .purchaseList(products.stream().map(ProductDetailResponse::from).collect(Collectors.toList()))
+            .totalPrice(Long.valueOf(responseKakaoApprove.getAmount().getTotal()))
+            .purchaseList(products.stream().map(ResponseProductDetail::from).collect(Collectors.toList()))
             .paymentType("kakao-pay")
             .cashReceipts("none")
             .build();

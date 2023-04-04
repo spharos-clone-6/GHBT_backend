@@ -72,8 +72,8 @@ public class PurchaseController {
 
     @Operation(summary = "프로세스 업데이트", description = "결제 완료시 processStatus값 업데이트")
     @PutMapping
-    public void updateProcess(@RequestBody RequestPayResult requestPayResult, @LoginUser User user) {
-        iPurchaseService.updateProcess(requestPayResult, user);
+    public void updateProcess(@RequestBody RequestPayResult requestPayResult) {
+        iPurchaseService.updateProcess(requestPayResult);
     }
 }
 

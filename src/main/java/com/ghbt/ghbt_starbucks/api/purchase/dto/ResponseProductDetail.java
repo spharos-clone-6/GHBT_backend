@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDetailResponse {
+public class ResponseProductDetail {
 
     private Long productId;
     private String productName;
@@ -18,8 +18,8 @@ public class ProductDetailResponse {
     private Integer productPrice;
     private String productThumbnail;
 
-    public static ProductDetailResponse from(OrderProductDto orderProductDto) {
-        return ProductDetailResponse.builder()
+    public static ResponseProductDetail from(OrderProductDto orderProductDto) {
+        return ResponseProductDetail.builder()
             .productId(orderProductDto.getProduct().getId())
             .productName(orderProductDto.getProduct().getName())
             .productQuantity(orderProductDto.getProductQuantity())
