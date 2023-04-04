@@ -17,8 +17,10 @@ import lombok.NoArgsConstructor;
 public class KakaoCompleteResponse {
 
     List<ProductDetailResponse> purchaseList;
+    private String orderId;
     private String receiver;
     private String addressNickname;
+    private String zipCode;
     private String detailAddress;
     private String baseAddress;
     private String phoneNumber1;
@@ -31,8 +33,10 @@ public class KakaoCompleteResponse {
     public static KakaoCompleteResponse from(KakaoApproveResponse kakaoApproveResponse, List<OrderProductDto> products,
         ResponseShippingAddress shippingAddress, Long shippingPrice) {
         return KakaoCompleteResponse.builder()
+            .orderId(kakaoApproveResponse.getPartner_order_id())
             .receiver(shippingAddress.getReceiver())
             .addressNickname(shippingAddress.getAddressNickname())
+            .zipCode(shippingAddress.getZipCode())
             .baseAddress(shippingAddress.getBaseAddress())
             .detailAddress(shippingAddress.getDetailAddress())
             .phoneNumber1(shippingAddress.getPhoneNumber1())
