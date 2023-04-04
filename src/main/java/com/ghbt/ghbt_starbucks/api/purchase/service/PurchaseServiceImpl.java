@@ -25,8 +25,11 @@ import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchaseOld;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ResponsePurchase;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.security.redis.RedisService;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -70,7 +73,7 @@ public class PurchaseServiceImpl {
      */
     @Transactional
     public KakaoReadyResponse kakaoApi(RequestPurchase requestPurchase, User user) {
-        String orderId = UUID.randomUUID().toString();
+        String orderId = generateOrderId(requestPurchase);
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);
         KakaoPayOrderDto kakaoPayOrderDto = KakaoPayOrderDto.toKakaoOrder(requestPurchase, orderId, user.getId());
@@ -81,10 +84,9 @@ public class PurchaseServiceImpl {
      * 스타벅스 결제
      */
     private ResponseStarbucksCardReady starbucksApi(RequestPurchase requestPurchase, User user) {
-        String orderId = UUID.randomUUID().toString();
+        String orderId = generateOrderId(requestPurchase);
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);
-
 
         log.info("아직 지원하지 않는 서비스입니다.");
 
@@ -103,6 +105,21 @@ public class PurchaseServiceImpl {
         }
     }
 
+    private String generateOrderId(RequestPurchase requestPurchase) {
+
+        String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String productsNumbers = requestPurchase.getPurchaseList().stream()
+            .map(ProductDetail::getProductId)
+            .reduce(0L, (a, b) -> a + b)
+            .toString()
+            .substring(0, 1);
+        LongStream longStream = new Random(System.currentTimeMillis()).longs(6, 1, 10);
+        String randomNumbers = longStream.mapToObj(String::valueOf)
+            .collect(Collectors.joining());
+        log.info("[주문 번호 생성] : " + nowDate + productsNumbers + randomNumbers);
+        return nowDate + productsNumbers + randomNumbers;
+    }
+
     private void temporarySaveBill(RequestPurchase requestPurchase, User user, String orderId) {
         ResponseShippingAddress shippingAddress = iShippingAddressService.getShippingAddress(
             requestPurchase.getShippingAddressId());
@@ -112,9 +129,9 @@ public class PurchaseServiceImpl {
     }
 
     private static void startPaymentLog(RequestPurchase requestPurchase) {
-        log.info("[결제 타입] " + requestPurchase.getPaymentType());
-        log.info("[상품 종류 개수] " + requestPurchase.getPurchaseList().size() + "개");
-        log.info("[전체 가격] " + requestPurchase.getTotalPrice() + "원");
+        log.info("[결제 타입] : " + requestPurchase.getPaymentType());
+        log.info("[상품 종류 개수] : " + requestPurchase.getPurchaseList().size() + "개");
+        log.info("[전체 가격] : " + requestPurchase.getTotalPrice() + "원");
     }
 
     /**
