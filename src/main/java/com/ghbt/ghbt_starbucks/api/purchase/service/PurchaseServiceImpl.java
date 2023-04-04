@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -110,7 +109,7 @@ public class PurchaseServiceImpl {
         String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String productsNumbers = requestPurchase.getPurchaseList().stream()
             .map(ProductDetail::getProductId)
-            .reduce(0L, (a, b) -> a + b)
+            .reduce(0L, Long::sum)
             .toString()
             .substring(0, 1);
         LongStream longStream = new Random(System.currentTimeMillis()).longs(6, 1, 10);
@@ -139,7 +138,7 @@ public class PurchaseServiceImpl {
      */
     public ResponsePurchase getPurchaseById(Long id) {
         Purchase purchase = iPurchaseRepository.findById(id)
-            .orElseThrow(() -> new ServiceException("요청하신 주문내역은 존재하지 않습니다", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_ORDER_ERROR.getMessage(), NOT_FOUND_ORDER_ERROR.getHttpStatus()));
         return ResponsePurchase.builder()
             .quantity(purchase.getQuantity())
             .shippingAddress(purchase.getShippingAddress())
@@ -152,7 +151,7 @@ public class PurchaseServiceImpl {
     public List<ResponsePurchase> getAllPurchaseByUserId(User user) {
         List<Purchase> purchaseList = iPurchaseRepository.findAllByUserId(user.getId());
         if (purchaseList.isEmpty()) {
-            throw new ServiceException("주문내역이 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_ORDER_ERROR.getMessage(), NOT_FOUND_ORDER_ERROR.getHttpStatus());
         }
         return purchaseList.stream()
             .map(ResponsePurchase::from)
@@ -162,7 +161,7 @@ public class PurchaseServiceImpl {
     @Transactional
     public Long updatePurchase(RequestPurchaseOld requestPurchaseOld, Long purchaseId) {
         Purchase purchase = iPurchaseRepository.findById(purchaseId).orElseThrow(
-            () -> new ServiceException("요청하신 주문은 존재하지 않습니다", HttpStatus.NO_CONTENT));
+            () -> new ServiceException(NOT_FOUND_ORDER_ERROR.getMessage(), NOT_FOUND_ORDER_ERROR.getHttpStatus()));
         purchase.setShippingAddress(requestPurchaseOld.getShippingAddress());
         return purchase.getId();
     }
@@ -178,7 +177,7 @@ public class PurchaseServiceImpl {
             .build();
     }
 
-    public void updateProcess(RequestPayResult requestPayResult, User user) {
+    public void updateProcess(RequestPayResult requestPayResult) {
         List<Purchase> purchase = iPurchaseRepository.findAllByUuid(requestPayResult.getPartner_order_id());
         purchase.forEach(purchaseStatus -> purchaseStatus.setProcessStatus(ProcessStatus.PAYMENT_COMPLETE));
     }
@@ -191,7 +190,7 @@ public class PurchaseServiceImpl {
             redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
             redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
         } catch (Exception e) {
-            throw new ServiceException("결제 완료 과정 중 서버에서 문제가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ServiceException(FAIL_TO_SAVE_ORDER_LIST.getMessage(), FAIL_TO_SAVE_ORDER_LIST.getHttpStatus());
         }
     }
 
@@ -202,7 +201,7 @@ public class PurchaseServiceImpl {
             redisService.deleteValues("PAYMENT(" + loginUser.getId().toString() + ")");
             redisService.deleteValues("ORDER_PRODUCTS(" + loginUser.getId().toString() + ")");
         } catch (Exception e) {
-            throw new ServiceException("결제 완료 과정 중 서버에서 문제가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ServiceException(FAIL_TO_PAYMENT_CANCEL.getMessage(), FAIL_TO_PAYMENT_CANCEL.getHttpStatus());
         }
     }
 }
