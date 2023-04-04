@@ -2,7 +2,6 @@ package com.ghbt.ghbt_starbucks.global.security.exception;
 
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
-import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

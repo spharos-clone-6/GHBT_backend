@@ -1,7 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.search_category.repository;
 
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
 import java.util.List;
 import org.springframework.data.domain.Page;

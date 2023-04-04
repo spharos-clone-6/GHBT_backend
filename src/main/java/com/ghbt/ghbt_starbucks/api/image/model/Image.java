@@ -1,6 +1,5 @@
 package com.ghbt.ghbt_starbucks.api.image.model;
 
-import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

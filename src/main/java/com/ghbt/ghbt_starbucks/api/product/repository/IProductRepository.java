@@ -1,10 +1,8 @@
 package com.ghbt.ghbt_starbucks.api.product.repository;
 
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
