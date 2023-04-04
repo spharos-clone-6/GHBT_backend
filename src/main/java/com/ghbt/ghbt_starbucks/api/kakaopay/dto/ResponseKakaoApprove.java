@@ -3,7 +3,7 @@ package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 import lombok.Getter;
 
 @Getter
-public class KakaoApproveResponse {
+public class ResponseKakaoApprove {
 
     private String aid;
     private String tid;

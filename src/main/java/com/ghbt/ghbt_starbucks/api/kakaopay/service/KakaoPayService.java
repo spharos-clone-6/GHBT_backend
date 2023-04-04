@@ -1,10 +1,11 @@
 package com.ghbt.ghbt_starbucks.api.kakaopay.service;
 
 import static com.ghbt.ghbt_starbucks.api.kakaopay.KakaoPayUrl.*;
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoApproveResponse;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoCompleteResponse;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoApprove;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoComplete;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.OrderProductDto;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
@@ -21,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -45,7 +45,7 @@ public class KakaoPayService {
     /**
      * 결제 준비
      */
-    public KakaoReadyResponse kakaoPayReady(KakaoPayOrderDto kakaoPayOrderDto) {
+    public ResponseKakaoReady kakaoPayReady(KakaoPayOrderDto kakaoPayOrderDto) {
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         parameters.add("cid", cid);
@@ -59,19 +59,23 @@ public class KakaoPayService {
         parameters.add("cancel_url", CANCEL.getUrl());
         parameters.add("fail_url", FAIL.getUrl());
 
-        KakaoReadyResponse kakaoReadyResponse = new RestTemplate().postForObject(
+        ResponseKakaoReady responseKakaoReady = new RestTemplate().postForObject(
             READY_TO_POST.getUrl(),
             new HttpEntity<>(parameters, getHeaders()),
-            KakaoReadyResponse.class
+            ResponseKakaoReady.class
         );
 
         redisService.deleteValues("PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")");
         redisService.deleteValues("ORDER_PRODUCTS(" + kakaoPayOrderDto.getMemberId() + ")");
 
+        if (responseKakaoReady.getTid() == null) {
+            throw new ServiceException(KAKAO_PAYMENT_SERVER_ERROR.getMessage(), KAKAO_PAYMENT_SERVER_ERROR.getHttpStatus());
+        }
+
         redisService.setValuesWithTimeout(
             "PAYMENT(" + kakaoPayOrderDto.getMemberId() + ")",
             kakaoPayOrderDto.getOrderId() + ","
-                + kakaoReadyResponse.getTid() + ","
+                + responseKakaoReady.getTid() + ","
                 + kakaoPayOrderDto.getTotalPrice() + ","
                 + kakaoPayOrderDto.getShippingAddressId() + ","
                 + kakaoPayOrderDto.getShippingPrice(),
@@ -84,18 +88,18 @@ public class KakaoPayService {
             5 * 60 * 1000
         );
 
-        log.info("[결제 승인 번호  ]: " + kakaoReadyResponse.getTid());
-        log.info("[결제 준비 일시  ]: " + kakaoReadyResponse.getCreated_at());
-        log.info("[PC 승인 URL    ]: " + kakaoReadyResponse.getNext_redirect_pc_url());
-        log.info("[MOBILE 승인 URL]: " + kakaoReadyResponse.getNext_redirect_mobile_url());
+        log.info("[결제 승인 번호  ]: " + responseKakaoReady.getTid());
+        log.info("[결제 준비 일시  ]: " + responseKakaoReady.getCreated_at());
+        log.info("[PC 승인 URL    ]: " + responseKakaoReady.getNext_redirect_pc_url());
+        log.info("[MOBILE 승인 URL]: " + responseKakaoReady.getNext_redirect_mobile_url());
 
-        return kakaoReadyResponse;
+        return responseKakaoReady;
     }
 
     /**
      * 결제 승인
      */
-    public KakaoCompleteResponse approveKakaopayment(String pgToken, User loginUser) {
+    public ResponseKakaoComplete approveKakaopayment(String pgToken, User loginUser) {
         try {
             String[] orderIdAndTIdAndTotalPrice = redisService.getValues("PAYMENT(" + loginUser.getId().toString() + ")").split(",");
             String orderId = orderIdAndTIdAndTotalPrice[0];
@@ -108,7 +112,7 @@ public class KakaoPayService {
             List<OrderProductDto> products = Arrays.stream(productList)
                 .map(p -> p.split(":"))
                 .map(p -> new OrderProductDto(iProductRepository.findById(Long.valueOf(p[0]))
-                    .orElseThrow(() -> new ServiceException("주문하신 상품은 판매가 중단되었습니다.", HttpStatus.BAD_REQUEST))
+                    .orElseThrow(() -> new ServiceException(PRODUCT_DISCONTINUATION.getMessage(), PRODUCT_DISCONTINUATION.getHttpStatus()))
                     , Long.valueOf(p[1])))
                 .collect(Collectors.toList());
 
@@ -120,23 +124,23 @@ public class KakaoPayService {
             parameters.add("partner_user_id", loginUser.getId().toString());
             parameters.add("pg_token", pgToken);
 
-            KakaoApproveResponse kakaoApproveResponse = new RestTemplate().postForObject(
+            ResponseKakaoApprove responseKakaoApprove = new RestTemplate().postForObject(
                 APPROVE_TO_POST.getUrl(),
                 new HttpEntity<>(parameters, getHeaders()),
-                KakaoApproveResponse.class
+                ResponseKakaoApprove.class
             );
 
             ResponseShippingAddress shippingAddress = shippingAddressService.getShippingAddress(Long.valueOf(shippingAddressId));
-            if (kakaoApproveResponse.getAmount().getTotal() != Integer.parseInt(totalPrice)) {
-                throw new ServiceException("총 금액이 맞지 않습니다. 결제를 취소합니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            if (responseKakaoApprove.getAmount().getTotal() != Integer.parseInt(totalPrice)) {
+                throw new ServiceException(NOT_MATCH_TOTAL.getMessage(), NOT_MATCH_TOTAL.getHttpStatus());
             } else {
                 log.info("[결제 성공]: " + loginUser.getEmail() + "님이 " + totalPrice + " 원이 결제되었습니다.");
             }
-            return KakaoCompleteResponse.from(kakaoApproveResponse, products, shippingAddress, Long.valueOf(shippingPrice));
+            return ResponseKakaoComplete.from(responseKakaoApprove, products, shippingAddress, Long.valueOf(shippingPrice));
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new ServiceException("결제 정보 저장이 제대로 이루어지지 않았습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ServiceException(FAIL_TO_SAVE_PAYMENT_INFORMATION.getMessage(), FAIL_TO_SAVE_PAYMENT_INFORMATION.getHttpStatus());
         }
     }
 

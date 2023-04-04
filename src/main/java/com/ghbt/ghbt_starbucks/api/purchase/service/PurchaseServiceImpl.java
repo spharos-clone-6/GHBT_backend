@@ -3,7 +3,7 @@ package com.ghbt.ghbt_starbucks.api.purchase.service;
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoPayOrderDto;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoReadyResponse;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoReady;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
@@ -72,7 +72,7 @@ public class PurchaseServiceImpl {
      * 카카오 결제
      */
     @Transactional
-    public KakaoReadyResponse kakaoApi(RequestPurchase requestPurchase, User user) {
+    public ResponseKakaoReady kakaoApi(RequestPurchase requestPurchase, User user) {
         String orderId = generateOrderId(requestPurchase);
         checkStock(requestPurchase);
         temporarySaveBill(requestPurchase, user, orderId);

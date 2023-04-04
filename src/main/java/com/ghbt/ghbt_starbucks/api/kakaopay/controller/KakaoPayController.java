@@ -2,8 +2,7 @@ package com.ghbt.ghbt_starbucks.api.kakaopay.controller;
 
 import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
 
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoApproveResponse;
-import com.ghbt.ghbt_starbucks.api.kakaopay.dto.KakaoCompleteResponse;
+import com.ghbt.ghbt_starbucks.api.kakaopay.dto.ResponseKakaoComplete;
 import com.ghbt.ghbt_starbucks.api.kakaopay.service.KakaoPayService;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
@@ -26,14 +25,17 @@ public class KakaoPayController {
     private final KakaoPayService kakaoPayService;
 
     @GetMapping("/kakaopay-approve")
-    public ResponseEntity<KakaoCompleteResponse> approveKakaoPay(
+    public ResponseEntity<ResponseKakaoComplete> approveKakaoPay(
         @RequestParam String pgToken,
         @LoginUser User loginUser) {
-        KakaoCompleteResponse kakaoCompleteResponse = kakaoPayService.approveKakaopayment(pgToken, loginUser);
+        ResponseKakaoComplete responseKakaoComplete = kakaoPayService.approveKakaopayment(pgToken, loginUser);
         return ResponseEntity.status(HttpStatus.OK)
-            .body(kakaoCompleteResponse);
+            .body(responseKakaoComplete);
     }
 
+    /**
+     * 미사용 API
+     */
     @GetMapping("/cancel")
     public void cancel() {
         throw new ServiceException(KAKAO_PAYMENT_CANCEL.getMessage(), KAKAO_PAYMENT_CANCEL.getHttpStatus());

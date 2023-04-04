@@ -19,8 +19,11 @@ public enum ErrorCode {
     //결제
     KAKAO_PAYMENT_CANCEL("결제를 진행하는 중 취소하였습니다.", BAD_REQUEST, 400),
     KAKAO_PAYMENT_FAIL("결제가 취소되었습니다.", BAD_REQUEST, 400),
+    KAKAO_PAYMENT_SERVER_ERROR("카카오페이 결제 서버에 문제가 발생하였습니다.", INTERNAL_SERVER_ERROR, 500),
     NOT_FOUND_PAYMENT_TYPE("지원하지 않는 결제 방식입니다.", BAD_REQUEST, 400),
     OUT_OF_STOCK("재고가 부족합니다.", BAD_REQUEST, 400),
+    NOT_MATCH_TOTAL("총 금액이 맞지 않습니다. 결제를 취소합니다.", INTERNAL_SERVER_ERROR, 500),
+    FAIL_TO_SAVE_PAYMENT_INFORMATION("결제 정보 저장이 제대로 이루어지지 않았습니다.", INTERNAL_SERVER_ERROR, 500),
 
     //배송지
     NOT_FOUND_SHIPPING_ADDRESSES("등록된 배송지가 존재하지 않습니다.", NOT_FOUND, 404),
@@ -36,6 +39,7 @@ public enum ErrorCode {
 
     //상품
     NOT_FOUND_PRODUCT("등록된 물품이 존재하지 않습니다.", NOT_FOUND, 404),
+    PRODUCT_DISCONTINUATION("주문하신 상품은 판매가 중단되었습니다.", NOT_FOUND, 404),
 
     //카테고리
     NOT_FOUND_CATEGORY("등록된 카테고리가 존재하지 않습니다.", NOT_FOUND, 404),

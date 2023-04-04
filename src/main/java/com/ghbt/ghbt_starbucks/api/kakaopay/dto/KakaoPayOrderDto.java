@@ -3,7 +3,6 @@ package com.ghbt.ghbt_starbucks.api.kakaopay.dto;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.ProductDetail;
 import com.ghbt.ghbt_starbucks.api.purchase.dto.RequestPurchase;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
