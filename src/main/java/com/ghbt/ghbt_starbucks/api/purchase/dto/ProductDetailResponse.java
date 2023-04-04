@@ -1,7 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.purchase.dto;
 
 import com.ghbt.ghbt_starbucks.api.kakaopay.dto.OrderProductDto;
-import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

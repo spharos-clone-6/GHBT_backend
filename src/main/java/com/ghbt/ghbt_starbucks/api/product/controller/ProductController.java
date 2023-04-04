@@ -3,14 +3,8 @@ package com.ghbt.ghbt_starbucks.api.product.controller;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
-import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
-import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
 import com.ghbt.ghbt_starbucks.api.product.service.IProductService;
-import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
-import com.ghbt.ghbt_starbucks.api.search_category.repository.ISearchCategoryRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +14,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @Tag(name = "상품")

@@ -1,7 +1,6 @@
 package com.ghbt.ghbt_starbucks.api.user.service;
 
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.global.security.dto.SignupDto;
 import com.ghbt.ghbt_starbucks.api.user.dto.UpdateUserDto;
 
 public interface IUserService {

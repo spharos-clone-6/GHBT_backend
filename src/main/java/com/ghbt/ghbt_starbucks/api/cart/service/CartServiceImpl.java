@@ -4,7 +4,6 @@ import com.ghbt.ghbt_starbucks.api.cart.model.Cart;
 import com.ghbt.ghbt_starbucks.api.cart.repository.ICartRepository;
 import com.ghbt.ghbt_starbucks.api.cart.vo.RequestCart;
 import com.ghbt.ghbt_starbucks.api.cart.vo.ResponseCart;
-
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
@@ -13,11 +12,8 @@ import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

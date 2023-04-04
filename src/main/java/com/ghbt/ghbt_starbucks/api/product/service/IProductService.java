@@ -2,12 +2,8 @@ package com.ghbt.ghbt_starbucks.api.product.service;
 
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IProductDetail;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductListByCategory;
-import com.ghbt.ghbt_starbucks.api.product.Projection.IProductSearch;
 import com.ghbt.ghbt_starbucks.api.product.dto.RequestProduct;
-import com.ghbt.ghbt_starbucks.api.product.dto.ResponseProduct;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
-import com.ghbt.ghbt_starbucks.api.search_category.model.SearchCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

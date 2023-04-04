@@ -2,9 +2,7 @@ package com.ghbt.ghbt_starbucks.api.cart.repository;
 
 import com.ghbt.ghbt_starbucks.api.cart.model.Cart;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
