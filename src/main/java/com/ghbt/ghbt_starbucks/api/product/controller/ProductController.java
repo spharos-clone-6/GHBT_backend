@@ -27,7 +27,6 @@ public class ProductController {
 
     private final IProductService iProductService;
 
-
     @PostMapping // 상품 추가
     public ResponseEntity addProduct(@RequestBody List<RequestProduct> requestProductList) {
         for (RequestProduct requestProduct : requestProductList) {
@@ -87,20 +86,6 @@ public class ProductController {
         , @Param("filter") String[] filter) {
         return iProductService.seasonFilter(filter, name, pageable);
     }
-
-    //    @GetMapping("/search/filter") // 카테고리 필터링
-//    public List<IProductSearch> productFiltering(
-//        @Param("categories") String[] categories,
-//        @Param("size") String[] litter,
-//        @Param("season") String[] season) {
-//        return iProductService.productFilter(categories, litter, season);}
-
-    //    @GetMapping("/product/{keyWord}") // 검색 상품 조회 페이지
-//    public Page<Product> getAllProductWithPageByQueryMethod(@PathVariable String keyWord) {
-//        PageRequest pageRequest = PageRequest.of(0, 20);
-//        return iProductRepository.findByNameContains(keyWord, pageRequest);
-//    }
-//
 
     @PutMapping("/n/{product_id}") // 상품 업데이트
     public ResponseEntity updateProduct(
@@ -164,4 +149,15 @@ public class ProductController {
         , @Param("filter") String[] filter) {
         return iProductService.seasonFiltern(filter, name);
     }
+
+    /**
+     *  상태 : 미사용
+     *  기능 : 다중 필터링
+     *         @GetMapping("/search/filter")
+     *         public List<IProductSearch> productFiltering(
+     *         @Param("categories") String[] categories,
+     *         @Param("size") String[] litter,
+     *         @Param("season") String[] season) {
+     *         return iProductService.productFilter(categories, litter, season);}
+     */
 }

@@ -44,12 +44,9 @@ public class Cart extends BaseTimeEntity {
     public void perPersist() {
         this.deleted = this.deleted != null && this.deleted;
         this.checked = this.checked != null && this.checked;
-
     }
-
 
     public void updateQuantity(Integer quantity){
         this.quantity = quantity;
     }
-
 }

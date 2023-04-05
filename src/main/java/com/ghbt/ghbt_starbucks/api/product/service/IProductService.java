@@ -27,7 +27,6 @@ public interface IProductService {
 
     Page<IMenubar> menubarList(String name, Pageable pageable);
 
-    //    List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter); and 조건
     Page<IProductDetail> categoryFilter(String[] filter, String search, Pageable pageable);
 
     Page<IProductDetail> seasonFilter(String[] filter, String search, Pageable pageable);
@@ -36,8 +35,9 @@ public interface IProductService {
 
     void deleteProduct(Long ProductId);
 
-
-    //-----------------------------------------------------------------------
+    /**
+     *============================================= << 페이징 유 무 >> ======================================================
+     */
     List<IProductDetail> getAllProductn();
 
     List<IProductDetail> getCategoryNamen(String filter);
@@ -55,3 +55,6 @@ public interface IProductService {
     List<IProductDetail> volumeFiltern(String[] filter, String search);
 }
 
+/**
+ * List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter); and 조건
+ */
