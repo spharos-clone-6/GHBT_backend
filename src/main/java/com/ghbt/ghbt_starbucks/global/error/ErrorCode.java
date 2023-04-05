@@ -45,6 +45,8 @@ public enum ErrorCode {
     NOT_FOUND_COUPON("등록된 쿠폰이 존재하지 않습니다.", NOT_FOUND, 404),
     //이미지
     NOT_FOUND_IMAGE("등록된 이미지가 존재하지 않습니다.", NOT_FOUND, 404),
+    //이벤트
+    NOT_FOUND_EVENT("등록된 이벤트가 없습니다.", NO_CONTENT, 204),
     ;
 
     private final String message;

@@ -1,9 +1,12 @@
 package com.ghbt.ghbt_starbucks.api.event.service;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
 import com.ghbt.ghbt_starbucks.api.event.dto.RequestEvent;
 import com.ghbt.ghbt_starbucks.api.event.dto.ResponseEvent;
 import com.ghbt.ghbt_starbucks.api.event.model.Event;
 import com.ghbt.ghbt_starbucks.api.event.repository.IEventRepository;
+import com.ghbt.ghbt_starbucks.global.error.ErrorCode;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,7 @@ public class EventServiceImpl implements IEventService {
     @Override
     public ResponseEvent getEventById(Long id) {
         Event event = iEventRepository.findById(id)
-            .orElseThrow(() -> new ServiceException("등록된 이벤트가 없습니다..", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_EVENT.getMessage(), NOT_FOUND_EVENT.getHttpStatus()));
 
         return ResponseEvent.builder()
             .description(event.getDescription())
