@@ -23,8 +23,17 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select c.name as typeName , count(c.name) as typeCount from Category c left join ProductAndCategory pac on c.id = pac.categoryId.id left join pac.productId p where c.type ='대' and p.name like %:name% group by c.name ")
     List<IMenubar> findByMenubarListn(@Param("name") String name);
 
-//    @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.subType in :categories and s.season in :season and s.volume in :litter")
-//    List<IProductSearch> findCategoryList(@Param("categories") String[] categories,
-//        @Param("litter") String[] litter,
-//        @Param("season") String[] season);
+    /**
+     * 상태 : 미사용
+     * 기능 : 다중 필터
+     * @param categories
+     * @param litter
+     * @param season
+     * @return
+     * @Query(value = "select p from Product p left join SearchCategory s on s.productId.id = p.id where s.subType in :categories and s.season in :season and s.volume in :litter")
+     *     List<IProductSearch> findCategoryList(@Param("categories") String[] categories,
+     *         @Param("litter") String[] litter,
+     *         @Param("season") String[] season);
+     */
+
 }

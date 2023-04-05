@@ -1,5 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.product.service;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
 import com.ghbt.ghbt_starbucks.api.category.model.Category;
 import com.ghbt.ghbt_starbucks.api.category.repository.ICategoryRepository;
 import com.ghbt.ghbt_starbucks.api.product.Projection.IMenubar;
@@ -17,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public class ProductServiceImpl implements IProductService {
         IProductDetail productDetail = iSearchCategoryRepository.getOneProductId(id);
 
         if (productDetail.getProductId() == null) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productDetail;
     }
@@ -78,7 +79,7 @@ public class ProductServiceImpl implements IProductService {
     public Page<IProductDetail> getAllProduct(Pageable pageable) {
         Page<IProductDetail> productList = iSearchCategoryRepository.getAllProduct(pageable);
         if (productList.isEmpty()) {
-            throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -87,7 +88,7 @@ public class ProductServiceImpl implements IProductService {
     public Page<IProductDetail> getSearchProduct(String search, Pageable pageable) {
         Page<IProductDetail> productList = iSearchCategoryRepository.getProductName(search, pageable);
         if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -95,15 +96,13 @@ public class ProductServiceImpl implements IProductService {
     @Override // 상품 전체 페이징
     public Page<Product> getList(Pageable pageable) {
         return iProductRepository.findAll(pageable);
-
-
     }
 
     @Override // 메뉴바 출력
     public Page<IMenubar> menubarList(String name, Pageable pageable) {
         Page<IMenubar> menubar = iProductRepository.findByMenubarList(name, pageable);
         if (menubar.isEmpty()) {
-            throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return menubar;
     }
@@ -112,7 +111,7 @@ public class ProductServiceImpl implements IProductService {
     public Page<IProductDetail> getCategoryName(String filter, Pageable pageable) {
         Page<IProductDetail> productList = iSearchCategoryRepository.findCategoryName(filter, pageable);
         if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -127,7 +126,7 @@ public class ProductServiceImpl implements IProductService {
             categoryList = iSearchCategoryRepository.findSearchCategoryFilter(filter, pageable, search);
         }
         if (categoryList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return categoryList;
     }
@@ -141,7 +140,7 @@ public class ProductServiceImpl implements IProductService {
             volumeList = iSearchCategoryRepository.findSearchVolumeFilter(filter, pageable, search);
         }
         if (volumeList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return volumeList;
     }
@@ -155,22 +154,16 @@ public class ProductServiceImpl implements IProductService {
             seasonList = iSearchCategoryRepository.findSearchSeasonFilter(filter, pageable, search);
         }
         if (seasonList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return seasonList;
     }
 
-//    @Override // 필터 and 조건
-//    public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
-//        List<IProductSearch> products = iProductRepository.findCategoryList(categories, season, litter);
-//
-//        return products;
-//    }
 
     @Override // 상품 업데이터
     public Product updateProduct(Long ProductId, RequestProduct requestProduct) {
         Product product = iProductRepository.findById(requestProduct.getId())
-            .orElseThrow(() -> new ServiceException("찾으려는 ID의 상품이 없습니다", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus()));
         product.updateProduct(requestProduct.getName(), requestProduct.getPrice(), requestProduct.getDescription(),
             requestProduct.getStock(),
             requestProduct.getLikeCount(), requestProduct.getThumbnailUrl(), requestProduct.getIsBest());
@@ -187,7 +180,7 @@ public class ProductServiceImpl implements IProductService {
     public List<IProductDetail> getAllProductn() {
         List<IProductDetail> productList = iSearchCategoryRepository.getAllProductn();
         if (productList.isEmpty()) {
-            throw new ServiceException("상품이 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -196,7 +189,7 @@ public class ProductServiceImpl implements IProductService {
     public List<IProductDetail> getCategoryNamen(String filter) {
         List<IProductDetail> productList = iSearchCategoryRepository.findCategoryNamen(filter);
         if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -205,7 +198,7 @@ public class ProductServiceImpl implements IProductService {
     public List<IProductDetail> getSearchProductn(String search) {
         List<IProductDetail> productList = iSearchCategoryRepository.getProductNamen(search);
         if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -214,7 +207,7 @@ public class ProductServiceImpl implements IProductService {
     public List<Product> getListn() {
         List<Product> productList = iProductRepository.findAll();
         if (productList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return productList;
     }
@@ -223,7 +216,7 @@ public class ProductServiceImpl implements IProductService {
     public List<IMenubar> menubarListn(String name) {
         List<IMenubar> menubar = iProductRepository.findByMenubarListn(name);
         if (menubar.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return menubar;
     }
@@ -237,7 +230,7 @@ public class ProductServiceImpl implements IProductService {
             categoryList = iSearchCategoryRepository.findSearchCategoryFiltern(filter, search);
         }
         if (categoryList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return categoryList;
     }
@@ -251,7 +244,7 @@ public class ProductServiceImpl implements IProductService {
             seasonList = iSearchCategoryRepository.findSearchSeasonFiltern(filter, search);
         }
         if (seasonList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
 
         return seasonList;
@@ -266,8 +259,19 @@ public class ProductServiceImpl implements IProductService {
             volumeList = iSearchCategoryRepository.findSearchVolumeFiltern(filter, search);
         }
         if (volumeList.isEmpty()) {
-            throw new ServiceException("검색 결과가 없습니다.", HttpStatus.NO_CONTENT);
+            throw new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus());
         }
         return volumeList;
     }
+
+    /**
+     *  상태 : 미사용
+     *  기능 : 다중 필터
+     *     @Override
+     *     public List<IProductSearch> productFilter(String[] categories, String[] season, String[] litter) {
+     *         List<IProductSearch> products = iProductRepository.findCategoryList(categories, season, litter);
+     *         return products;
+     *     }
+     */
+
 }

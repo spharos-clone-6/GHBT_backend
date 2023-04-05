@@ -18,10 +18,13 @@ public class Product extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private Integer price;
+
     @Column(nullable = false)
     private String description;
 
@@ -42,7 +45,6 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer likeCount;
-
 
     @PrePersist
     public void prePersist() {
