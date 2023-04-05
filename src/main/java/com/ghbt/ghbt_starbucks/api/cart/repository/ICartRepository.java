@@ -20,8 +20,7 @@ public interface ICartRepository extends JpaRepository<Cart, Long> {
     @Query(value = "SELECT c FROM Cart c LEFT JOIN c.user u LEFT JOIN c.product p WHERE p.id = :productId and u.id = :userId")
     Cart findByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 
-    @Query(value = " SELECT c FROM Cart c join fetch c.user u join fetch c.product p WHERE c.id = :cartId" )
+    @Query(value = " SELECT c FROM Cart c join fetch c.user u join fetch c.product p WHERE c.id = :cartId")
     Optional<Cart> findByCartId(@Param("cartId") Long cartId);
-
 
 }

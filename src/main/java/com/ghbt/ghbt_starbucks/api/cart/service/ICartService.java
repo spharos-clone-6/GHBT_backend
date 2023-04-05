@@ -13,12 +13,9 @@ public interface ICartService {
 
     ResponseCart getCart(Long cartId);
 
-
-    //
     List<ResponseCart> getAllCartByUserId(Long userId);
 
     List<ResponseCart> getAllCartByUserIdAndIce(Long userId);
-
 
     void deleteCart(Long Id);
 

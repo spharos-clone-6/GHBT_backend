@@ -1,5 +1,7 @@
 package com.ghbt.ghbt_starbucks.api.cart.service;
 
+import static com.ghbt.ghbt_starbucks.global.error.ErrorCode.*;
+
 import com.ghbt.ghbt_starbucks.api.cart.model.Cart;
 import com.ghbt.ghbt_starbucks.api.cart.repository.ICartRepository;
 import com.ghbt.ghbt_starbucks.api.cart.vo.RequestCart;
@@ -7,12 +9,10 @@ import com.ghbt.ghbt_starbucks.api.cart.vo.ResponseCart;
 import com.ghbt.ghbt_starbucks.api.product.model.Product;
 import com.ghbt.ghbt_starbucks.api.product.repository.IProductRepository;
 import com.ghbt.ghbt_starbucks.api.user.model.User;
-import com.ghbt.ghbt_starbucks.api.user.repository.IUserRepository;
 import com.ghbt.ghbt_starbucks.global.error.ServiceException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -23,7 +23,6 @@ public class CartServiceImpl implements ICartService {
 
 
     private final ICartRepository iCartRepository;
-    private final IUserRepository iUserRepository;
     private final IProductRepository iProductRepository;
 
     @Override
@@ -37,7 +36,7 @@ public class CartServiceImpl implements ICartService {
             //소프트 딜리트 되어있는 경우
             if (iscart.getDeleted()) {
                 Cart preCart = iCartRepository.findById(iscart.getId())
-                    .orElseThrow(() -> new ServiceException("등록되어있는 장바구니가 없습니다..", HttpStatus.NO_CONTENT));
+                    .orElseThrow(() -> new ServiceException(NOT_FOUND_CART.getMessage(), NOT_FOUND_CART.getHttpStatus()));
                 preCart.setDeleted(false);
                 preCart.setQuantity(requestCart.getQuantity());
                 iCartRepository.save(preCart);
@@ -49,7 +48,7 @@ public class CartServiceImpl implements ICartService {
             return;
         }
         Product product = iProductRepository.findById(requestCart.getProductId())
-            .orElseThrow(() -> new ServiceException("등록되어있는 물품이 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_PRODUCT.getMessage(), NOT_FOUND_PRODUCT.getHttpStatus()));
 
         //장바구니에 등록되어 있는지 확인
         Cart cart = Cart.builder()
@@ -63,7 +62,7 @@ public class CartServiceImpl implements ICartService {
     @Override
     public ResponseCart getCart(Long cartId) {
         Cart cart = iCartRepository.findById(cartId)
-            .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_CART.getMessage(), NOT_FOUND_CART.getHttpStatus()));
 
         return ResponseCart.builder()
             .id(cart.getId())
@@ -83,7 +82,6 @@ public class CartServiceImpl implements ICartService {
             .stream()
             .map(ResponseCart::from)
             .collect(Collectors.toList());
-
     }
 
     @Override
@@ -94,7 +92,6 @@ public class CartServiceImpl implements ICartService {
             .stream()
             .map(ResponseCart::from)
             .collect(Collectors.toList());
-
     }
 
     @Override
@@ -105,7 +102,7 @@ public class CartServiceImpl implements ICartService {
     @Override
     public ResponseCart updateCart(Long cartId, Integer quantity) {
         Cart nowCart = iCartRepository.findByCartId(cartId)
-            .orElseThrow(() -> new ServiceException("등록된 장바구니가 없습니다.", HttpStatus.NO_CONTENT));
+            .orElseThrow(() -> new ServiceException(NOT_FOUND_CART.getMessage(), NOT_FOUND_CART.getHttpStatus()));
 
         nowCart.updateQuantity(quantity);
         iCartRepository.save(nowCart);

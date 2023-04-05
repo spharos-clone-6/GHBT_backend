@@ -19,7 +19,6 @@ public class ResponseCart {
     private User user;
     private Product product;
     private Boolean deleted;
-
     private Boolean checked;
 
     public static ResponseCart from(Cart cart) {
