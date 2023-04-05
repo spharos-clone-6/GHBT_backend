@@ -37,8 +37,8 @@ public enum ErrorCode {
     //장바구니
     NOT_FOUND_CART("등록된 장바구니가 존재하지 않습니다.", NO_CONTENT, 204),
     //상품
-    NOT_FOUND_PRODUCT("등록된 물품이 존재하지 않습니다.", NOT_FOUND, 204),
-    PRODUCT_DISCONTINUATION("주문하신 상품은 판매가 중단되었습니다.", NOT_FOUND, 204),
+    NOT_FOUND_PRODUCT("등록된 물품이 존재하지 않습니다.", NO_CONTENT, 204),
+    PRODUCT_DISCONTINUATION("주문하신 상품은 판매가 중단되었습니다.", NO_CONTENT, 204),
     //카테고리
     NOT_FOUND_CATEGORY("등록된 카테고리가 존재하지 않습니다.", NOT_FOUND, 404),
     //쿠폰
