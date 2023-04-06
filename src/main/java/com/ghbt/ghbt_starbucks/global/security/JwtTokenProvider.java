@@ -41,8 +41,7 @@ public class JwtTokenProvider implements InitializingBean {
     private final Long ACCESS_TOKEN_VALIDATE_MILLISECONDS = 12 * 60 * 60 * 1000L;        //2시간
     private final Long REFRESH_TOKEN_VALIDATE_MILLISECONDS = 7 * 24 * 60 * 60 * 1000L;  //7일
 
-    public JwtTokenProvider(UserDetailsServiceImpl userDetailsService,
-        RedisService redisService,
+    public JwtTokenProvider(UserDetailsServiceImpl userDetailsService, RedisService redisService,
         @Value("${jwt.secret}") String secretKey) {
         this.userDetailsService = userDetailsService;
         this.redisService = redisService;

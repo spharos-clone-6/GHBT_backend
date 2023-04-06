@@ -90,7 +90,9 @@ public class AuthService {
     //토큰 재발급
     @Transactional
     public TokenDto reissue(String requestRefreshToken) {
-
+        if (requestRefreshToken == null) {
+            throw new ServiceException(NO_LOGIN_USER_HAS_NO_TOKEN.getMessage(), NO_LOGIN_USER_HAS_NO_TOKEN.getHttpStatus());
+        }
         Authentication authentication = jwtTokenProvider.getAuthentication(requestRefreshToken);
         String principal = getPrincipal(requestRefreshToken);
 
