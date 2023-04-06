@@ -16,7 +16,6 @@ public enum ErrorCode {
     INVALID_JWT("올바르지 않은 JWT 형식입니다", UNAUTHORIZED, 401),
     NOT_FOUND_USER("존재하지 않는 유저입니다.", UNAUTHORIZED, 401),
     ALREADY_EXISTENCE_USER("이미 가입된 회원입니다.", BAD_REQUEST, 400),
-    NO_LOGIN_USER_HAS_NO_TOKEN("로그인하지 않은 유저는 토큰이 없습니다.", ACCEPTED, 202),
     //결제
     KAKAO_PAYMENT_CANCEL("결제를 진행하는 중 취소하였습니다.", BAD_REQUEST, 400),
     KAKAO_PAYMENT_FAIL("결제가 취소되었습니다.", BAD_REQUEST, 400),
